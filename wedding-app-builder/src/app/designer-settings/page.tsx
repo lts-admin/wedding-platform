@@ -57,7 +57,9 @@ export default function DesignerSettings() {
 
 
     const stepLabels = [
-        WorkStatus.Submitted,
+        authStatus === WorkStatus.Submitted || !authStatus ?
+            (authStatus === WorkStatus.Submitted ? "Submitted" : "Not Submitted")
+            : null,
         WorkStatus.TestFlightPending,
         WorkStatus.TestFlightSent,
         WorkStatus.WaitingForUserFeedback,
@@ -68,14 +70,26 @@ export default function DesignerSettings() {
         WorkStatus.SubmittedToAppStore,
         WorkStatus.AppStoreRejected,
         WorkStatus.ReleasedByApple
-    ];
+    ].filter(Boolean); // removes null if first label is excluded
 
+
+    const cancellableStatuses = new Set<WorkStatusType>([
+        WorkStatus.Submitted,
+        WorkStatus.TestFlightPending,
+        WorkStatus.TestFlightSent,
+        WorkStatus.WaitingForUserFeedback,
+        WorkStatus.InReviewByUser,
+        WorkStatus.ChangesInProgress,
+        WorkStatus.ReadyForFinalApproval,
+        WorkStatus.ApprovedForAppStore,
+        WorkStatus.SubmittedToAppStore
+    ]);
     const getProgressStep = () => {
-        console.log("auth", authStatus);
         if (!authStatus) return 0;
-        const index = stepLabels.indexOf(authStatus as typeof stepLabels[number]);
+        const index = stepLabels.indexOf(authStatus);
         return index >= 0 ? index : 0;
     };
+
 
 
     const handleLogout = async () => {
@@ -186,13 +200,13 @@ export default function DesignerSettings() {
 
 
 
-                <div className="mt-6 flex gap-4">
+                <div className="mt-6 flex justify-center gap-4">
                     <Button
                         variant="outline"
                         className="bg-[#1A1A1A] text-white border border-gray-500 hover:bg-gray-800 px-4 py-2 rounded-md text-sm"
                         onClick={() => router.push("/app-info")}
                     >
-                        View My App Information
+                        View My Wedding Details
                     </Button>
                     <Button
                         variant="destructive"
@@ -201,13 +215,17 @@ export default function DesignerSettings() {
                     >
                         Log Out
                     </Button>
-                    <Button
-                        variant="ghost"
-                        onClick={handleCancelRequest}
-                        className="text-sm border border-red-500 text-red-500 hover:bg-red-900 px-4 py-2 rounded-md"
-                    >
-                        Cancel Submission
-                    </Button>
+
+                    {authStatus && cancellableStatuses.has(authStatus) && (
+                        <Button
+                            variant="ghost"
+                            onClick={handleCancelRequest}
+                            className="text-sm border border-red-500 text-red-500 hover:bg-red-900 px-4 py-2 rounded-md"
+                        >
+                            Cancel Submission
+                        </Button>
+                    )}
+
                 </div>
             </div>
         </div>

@@ -49,8 +49,8 @@ export type FormState = {
     itineraryBride: string;
     itineraryGroom: string;
     enableSettings: boolean;
-    faqs: string;
-    contactInfo: string;
+    faqs: { question: string; answer: string }[];
+    contactInfo: { name: string, phone: string, email: string }[];
     storyParagraphs: string[];
     storyImages: { file: File | null; caption: string }[];
     enableWeddingParty: boolean;
@@ -69,4 +69,6 @@ export type FormState = {
     showRSVPButton: boolean;
     enableRegistry: boolean;
     isSubmitted: boolean,
+    enableAdminPassword: boolean,
+    adminAppPassword: string,
 };

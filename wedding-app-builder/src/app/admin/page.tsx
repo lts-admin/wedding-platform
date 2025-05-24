@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,6 +13,7 @@ import { app } from "@/lib/firebaseConfig";
 import { WorkStatus } from "@/types/WorkStatus";
 
 const db = getFirestore(app);
+const ADMIN_PASSWORD = "wedadmin2025"; // Change as needed
 
 const statusColors: Record<string, string> = {
     Submitted: "bg-gray-600",
@@ -43,7 +43,10 @@ const statusFlow = [
     WorkStatus.AppStoreRejected,
     WorkStatus.ReleasedByApple
 ];
+
 export default function AdminDashboard() {
+    const [authenticated, setAuthenticated] = useState(false);
+    const [passwordInput, setPasswordInput] = useState("");
     const [requests, setRequests] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("All");
@@ -52,6 +55,8 @@ export default function AdminDashboard() {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
+        if (!authenticated) return;
+
         const fetchRequests = async () => {
             const snapshot = await getDocs(collection(db, "workRequests"));
             const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -59,12 +64,10 @@ export default function AdminDashboard() {
             setLoading(false);
         };
         fetchRequests();
-    }, []);
+    }, [authenticated]);
 
     const filteredRequests =
-        filter === "All"
-            ? requests
-            : requests.filter((r) => r.authStatus === filter);
+        filter === "All" ? requests : requests.filter((r) => r.authStatus === filter);
 
     const moveToNextStatus = async () => {
         if (!selectedRequest) return;
@@ -74,11 +77,23 @@ export default function AdminDashboard() {
         await updateDoc(doc(db, "workRequests", selectedRequest.id), {
             authStatus: nextStatus,
             feedback: modalInput,
-            assignee: nextStatus === WorkStatus.TestFlightSent ? selectedRequest.coupleName : selectedRequest.assignee,
+            assignee:
+                nextStatus === WorkStatus.TestFlightSent
+                    ? selectedRequest.coupleName
+                    : selectedRequest.assignee,
             lastUpdated: serverTimestamp(),
-            ...(nextStatus === WorkStatus.ReleasedByApple && { dateCompleted: serverTimestamp() })
+            ...(nextStatus === WorkStatus.ReleasedByApple && {
+                dateCompleted: serverTimestamp()
+            })
         });
 
+        setRequests((prev) =>
+            prev.map((r) =>
+                r.id === selectedRequest.id
+                    ? { ...r, authStatus: nextStatus, feedback: modalInput }
+                    : r
+            )
+        );
         setSelectedRequest(null);
         setModalInput("");
         setShowModal(false);
@@ -95,6 +110,13 @@ export default function AdminDashboard() {
             lastUpdated: serverTimestamp()
         });
 
+        setRequests((prev) =>
+            prev.map((r) =>
+                r.id === selectedRequest.id
+                    ? { ...r, authStatus: prevStatus, feedback: modalInput }
+                    : r
+            )
+        );
         setSelectedRequest(null);
         setModalInput("");
         setShowModal(false);
@@ -114,15 +136,13 @@ export default function AdminDashboard() {
     const handlePrimaryAction = async (request: any) => {
         if (request.authStatus === WorkStatus.Submitted) {
             const nextStatus = WorkStatus.TestFlightPending;
-
             await updateDoc(doc(db, "workRequests", request.id), {
                 authStatus: nextStatus,
                 lastUpdated: serverTimestamp()
             });
 
-            // Update local state immediately
-            setRequests(prev =>
-                prev.map(r =>
+            setRequests((prev) =>
+                prev.map((r) =>
                     r.id === request.id
                         ? { ...r, authStatus: nextStatus, lastUpdated: new Date() }
                         : r
@@ -134,6 +154,34 @@ export default function AdminDashboard() {
         }
     };
 
+    if (!authenticated) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center text-white p-6">
+                <div className="bg-gray-900 p-6 rounded-xl w-full max-w-sm shadow-lg">
+                    <h2 className="text-xl font-bold mb-4">Admin Access</h2>
+                    <input
+                        type="password"
+                        placeholder="Enter password"
+                        value={passwordInput}
+                        onChange={(e) => setPasswordInput(e.target.value)}
+                        className="w-full p-2 mb-4 bg-gray-800 border border-gray-600 rounded text-white"
+                    />
+                    <button
+                        onClick={() => {
+                            if (passwordInput === ADMIN_PASSWORD) {
+                                setAuthenticated(true);
+                            } else {
+                                alert("Incorrect password");
+                            }
+                        }}
+                        className="bg-pink-500 text-white font-bold w-full py-2 rounded"
+                    >
+                        Enter
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-black text-white p-6">

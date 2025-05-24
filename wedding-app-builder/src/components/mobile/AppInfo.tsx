@@ -69,8 +69,8 @@ export default function Home() {
         itineraryGroom: "",
         enableSettings: true,
         enableTravel: true,
-        faqs: "",
-        contactInfo: "",
+        faqs: [],
+        contactInfo: [],
         enableWeddingParty: true,
         weddingParty: {
             bride: [],
@@ -88,6 +88,8 @@ export default function Home() {
         showRSVPButton: true,
         enableRegistry: true,
         isSubmitted: false,
+        enableAdminPassword: false,
+        adminAppPassword: ""
     });
 
     const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>([]);

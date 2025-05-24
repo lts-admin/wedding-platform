@@ -144,15 +144,38 @@ export default function Preview({ form, goBack }: Props) {
                 );
             case "settings":
                 return (
-                    <div className="text-sm space-y-2">
-                        <p>
-                            <strong>FAQs:</strong> {form.faqs}
-                        </p>
-                        <p>
-                            <strong>Contact Info:</strong> {form.contactInfo}
-                        </p>
+                    <div className="text-sm space-y-6">
+                        {/* FAQs Section */}
+                        <div>
+                            <h3 className="text-pink-500 font-semibold mb-2">FAQs:</h3>
+                            <ul className="space-y-3">
+                                {Array.isArray(form.faqs) && form.faqs.map((faq, index) => (
+                                    <li key={index}>
+                                        <p className="font-bold">{faq.question}</p>
+                                        <p className="text-gray-300">{faq.answer}</p>
+                                    </li>
+                                ))}
+
+                            </ul>
+                        </div>
+
+                        {/* Contact Info Section */}
+                        <div>
+                            <h3 className="text-pink-500 font-semibold mb-2">Contact Info:</h3>
+                            <ul className="space-y-3">
+                                {Array.isArray(form.contactInfo) && form.contactInfo.map((contact, index) => (
+                                    <li key={index}>
+                                        <p>{contact.name}</p>
+                                        <p>{contact.phone}</p>
+                                        <p>{contact.email}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 );
+
+
             default:
                 return null;
         }

@@ -1,11 +1,35 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
+
 export default function HomePage() {
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPopup(true), 800); // Delay to show popup
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <main className="bg-[#0D0208] text-[#E4D7DE] font-sans min-h-screen overflow-x-hidden">
+    <main className="bg-[#0D0208] text-[#E4D7DE] font-sans min-h-screen overflow-x-hidden relative">
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white text-black p-6 rounded-2xl shadow-lg max-w-md text-center animate-fade-in">
+            <h2 className="text-2xl font-bold mb-4">Welcome to WedDesigner!</h2>
+            <p className="mb-6">Create your dream wedding app in minutes. Let’s get started!</p>
+            <button
+              className="bg-pink-500 text-black px-6 py-2 rounded font-semibold"
+              onClick={() => setShowPopup(false)}
+            >
+              Let's Go
+            </button>
+          </div>
+        </div>
+      )}
+
       <header className="w-full flex justify-between items-center px-12 py-6">
         <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
           <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
@@ -19,7 +43,6 @@ export default function HomePage() {
         </nav>
         <div className="flex gap-6 items-center font-bold">
           <Link href="#" className="text-sm">Download app</Link>
-          {/* <Link href="/app-info" className="text-sm">Log in</Link> */}
           <Link href="/log-in" className="text-sm">Log in</Link>
           <button className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm">Try it free</button>
         </div>
