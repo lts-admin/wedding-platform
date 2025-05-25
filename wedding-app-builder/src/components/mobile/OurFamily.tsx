@@ -3,9 +3,8 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { FormState, FamilyMember } from "@/types/FormState";
-
+import Image from "next/image";
 
 
 type FamilySide = "bride" | "groom";
@@ -107,11 +106,14 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
 
                                     {member.image && typeof member.image !== "string" && (
                                         <div className="text-white text-xs flex items-center gap-2">
-                                            <img
+                                            <Image
                                                 src={URL.createObjectURL(member.image)}
                                                 alt="Preview"
-                                                className="h-20 w-20 object-cover rounded border border-pink-300"
+                                                width={80}
+                                                height={80}
+                                                className="object-cover rounded border border-pink-300"
                                             />
+
                                             <button
                                                 type="button"
                                                 onClick={() => updateMember(side as FamilySide, index, "image", null)}
@@ -191,10 +193,12 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
 
                         {pet.image && typeof pet.image !== "string" && (
                             <div className="flex items-center gap-2">
-                                <img
+                                <Image
                                     src={URL.createObjectURL(pet.image)}
                                     alt="Pet Preview"
-                                    className="h-20 w-20 object-cover rounded border border-pink-300"
+                                    width={80}
+                                    height={80}
+                                    className="object-cover rounded border border-pink-300"
                                 />
                                 <button
                                     type="button"

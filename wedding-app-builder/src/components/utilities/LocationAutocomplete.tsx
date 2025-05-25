@@ -9,9 +9,8 @@ type Props = {
     onChange: (value: string) => void;
 };
 
-const LocationAutocomplete: React.FC<Props> = ({ value, onChange }) => {
+const LocationAutocomplete: React.FC<Props> = ({ onChange }) => {
     const {
-        ready,
         value: inputValue,
         suggestions: { status, data },
         setValue,

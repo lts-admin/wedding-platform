@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../lib/firebaseConfig";
 import Link from "next/link";
+import Image
+    from "next/image";
 
 export default function LoginPage() {
     const [isSignup, setIsSignup] = useState(false);
@@ -146,8 +148,12 @@ export default function LoginPage() {
                         }}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-600 text-white hover:bg-[#2A1A1A] transition"
                     >
-                        <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
-                        <span className="font-medium">Continue with Google</span>
+                        <Image
+                            src="/google-icon.svg"
+                            alt="Google"
+                            width={20}
+                            height={20}
+                        />                        <span className="font-medium">Continue with Google</span>
                     </button>
                 </div>
 

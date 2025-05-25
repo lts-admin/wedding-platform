@@ -4,13 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-
-type Props = {
-    goNext: () => void;
-    goBack: () => void;
-};
-
-
 export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: any) {
     const isSubmitted = form.isSubmitted;
     return (

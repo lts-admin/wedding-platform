@@ -5,13 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
-
-type Props = {
-    form: FormState;
-    setForm: React.Dispatch<React.SetStateAction<FormState>>;
-    goNext: () => void;
-    goBack: () => void;
-};
+import Image from "next/image";
 
 type WeddingProps = {
     form: FormState;
@@ -134,10 +128,12 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
 
                         {member.image && typeof member.image !== "string" && (
                             <div className="text-white text-xs flex items-center gap-2">
-                                <img
+                                <Image
                                     src={URL.createObjectURL(member.image)}
                                     alt="Preview"
-                                    className="h-20 w-20 object-cover rounded border border-pink-300"
+                                    width={80}
+                                    height={80}
+                                    className="object-cover rounded border border-pink-300"
                                 />
                                 <button
                                     type="button"

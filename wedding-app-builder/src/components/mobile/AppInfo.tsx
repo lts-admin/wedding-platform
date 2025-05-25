@@ -15,7 +15,7 @@ import Settings from "@/components/mobile/Settings";
 import Preview from "@/components/mobile/Preview";
 import { FormState } from "@/types/FormState";
 import { useRouter } from "next/navigation";
-import { Save, User } from "lucide-react";
+import { User } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebaseConfig";
 import { useAuth } from "@/context/AuthContext";
@@ -159,8 +159,6 @@ export default function Home() {
             console.error("Error logging out:", error);
         }
     };
-
-    const safeStep = Math.min(step, sidebarItems.length - 1);
 
 
     return (

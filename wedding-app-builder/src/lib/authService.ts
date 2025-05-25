@@ -5,7 +5,7 @@ import {
     sendEmailVerification,
     signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 
 // Sign up and store extra data in Firestore

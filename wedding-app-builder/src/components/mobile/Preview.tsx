@@ -15,8 +15,7 @@ import {
 } from "lucide-react";
 import { collection, query, orderBy, limit, getFirestore, doc, setDoc, getDoc, getDocs, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebaseConfig";
 
 const db = getFirestore();
@@ -30,7 +29,6 @@ export default function Preview({ form, goBack }: Props) {
     const [activeTab, setActiveTab] = useState("home");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { user } = useAuth();
-    const router = useRouter();
 
     useEffect(() => {
         const fetchSubmissionStatus = async () => {
@@ -90,13 +88,13 @@ export default function Preview({ form, goBack }: Props) {
             case "family":
                 return (
                     <div className="text-sm space-y-2">
-                        <h4 className="font-bold">Bride's Side</h4>
+                        <h4 className="font-bold">Bride&apos;s Side</h4>
                         {form.familyDetails.bride.map((m, i) => (
                             <p key={i}>
                                 {m.name} - {m.relation}
                             </p>
                         ))}
-                        <h4 className="font-bold mt-2">Groom's Side</h4>
+                        <h4 className="font-bold mt-2">Groom&apos;s Side</h4>
                         {form.familyDetails.groom.map((m, i) => (
                             <p key={i}>
                                 {m.name} - {m.relation}
@@ -115,13 +113,13 @@ export default function Preview({ form, goBack }: Props) {
             case "party":
                 return (
                     <div className="text-sm space-y-2">
-                        <h4 className="font-bold">Bride's Side</h4>
+                        <h4 className="font-bold">Bride&apos;s Side</h4>
                         {form.weddingParty.bride.map((m, i) => (
                             <p key={i}>
                                 {m.name} - {m.role} ({m.relation})
                             </p>
                         ))}
-                        <h4 className="font-bold mt-2">Groom's Side</h4>
+                        <h4 className="font-bold mt-2">Groom&apos;s Side</h4>
                         {form.weddingParty.groom.map((m, i) => (
                             <p key={i}>
                                 {m.name} - {m.role} ({m.relation})
