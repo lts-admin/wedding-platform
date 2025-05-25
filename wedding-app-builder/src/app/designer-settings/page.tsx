@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { signOut, sendPasswordResetEmail } from "firebase/auth";
 import { WorkStatus, WorkStatusType } from '@/types/WorkStatus';
+import Link from 'next/link';
 
 export default function DesignerSettings() {
     const { user, loading } = useAuth();
@@ -138,7 +139,7 @@ export default function DesignerSettings() {
             <header className="absolute top-6 left-6">
                 <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
                     <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
-                    <a href="/">WedDesigner</a>
+                    <Link href="/">WedDesigner</Link>
                 </div>
             </header>
             <div className="max-w-2xl mx-auto bg-[#1E0F0F] p-8 rounded-2xl shadow-lg">

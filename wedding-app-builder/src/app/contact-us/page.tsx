@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebaseConfig';
+import Link from 'next/link';
 
 export default function ContactUsPage() {
     const [form, setForm] = useState({
@@ -38,7 +39,7 @@ export default function ContactUsPage() {
             <header className="absolute top-6 left-6">
                 <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
                     <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
-                    <a href="/">WedDesigner</a>
+                    <Link href="/">WedDesigner</Link>
                 </div>
             </header>
             <div className="w-full max-w-2xl">

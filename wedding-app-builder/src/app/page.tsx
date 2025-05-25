@@ -33,7 +33,7 @@ export default function HomePage() {
       <header className="w-full flex justify-between items-center px-12 py-6">
         <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
           <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
-          <a href="/">WedDesigner</a>
+          <Link href="/">WedDesigner</Link>
         </div>
         <nav className="flex gap-8 text-sm font-bold">
           <Link href="/">Home</Link>

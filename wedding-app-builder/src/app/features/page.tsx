@@ -34,7 +34,7 @@ export default function FeaturesSection() {
             <header className="sticky top-0 z-50 bg-[#0D0208] w-full flex justify-between items-center px-12 py-6 border-b border-pink-500">
                 <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
                     <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
-                    <a href="/">WedDesigner</a>
+                    <Link href="/">WedDesigner</Link>
                 </div>
                 <nav className="flex gap-8 text-sm">
                     <Link href="/">Home</Link>

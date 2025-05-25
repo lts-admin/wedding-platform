@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { app } from "@/lib/firebaseConfig";
 import { WorkStatus } from "@/types/WorkStatus";
+import Link from "next/link";
 
 const db = getFirestore(app);
 const ADMIN_PASSWORD = "wedadmin2025";
@@ -196,7 +197,7 @@ export default function AdminDashboard() {
             <header className="absolute top-6 left-6">
                 <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
                     <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
-                    <a href="/">WedDesigner</a>
+                    <Link href="/">WedDesigner</Link>
                 </div>
             </header>
 
