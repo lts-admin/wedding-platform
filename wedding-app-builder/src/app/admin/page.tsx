@@ -9,11 +9,12 @@ import {
     doc,
     serverTimestamp
 } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { app } from "@/lib/firebaseConfig";
 import { WorkStatus } from "@/types/WorkStatus";
 
 const db = getFirestore(app);
-const ADMIN_PASSWORD = "wedadmin2025"; // Change as needed
+const ADMIN_PASSWORD = "wedadmin2025";
 
 const statusColors: Record<string, string> = {
     Submitted: "bg-gray-600",
@@ -45,6 +46,7 @@ const statusFlow = [
 ];
 
 export default function AdminDashboard() {
+    const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
     const [passwordInput, setPasswordInput] = useState("");
     const [requests, setRequests] = useState<any[]>([]);
@@ -154,6 +156,12 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleViewDetails = (userId: string) => {
+        if (userId) {
+            router.push(`/app-info?adminView=${userId}`);
+        }
+    };
+
     if (!authenticated) {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center text-white p-6">
@@ -219,6 +227,7 @@ export default function AdminDashboard() {
                         <tr>
                             <th className="p-2 border-b">ID</th>
                             <th className="p-2 border-b">Couple</th>
+                            <th className="p-2 border-b">View Wedding Form</th>
                             <th className="p-2 border-b">Zip URL</th>
                             <th className="p-2 border-b">Auth Status</th>
                             <th className="p-2 border-b">Date Created</th>
@@ -233,6 +242,14 @@ export default function AdminDashboard() {
                                 <td className="p-2">{r.id}</td>
                                 <td className="p-2">{r.coupleName}</td>
                                 <td className="p-2">
+                                    <button
+                                        className="text-blue-400 underline"
+                                        onClick={() => handleViewDetails(r.userId)}
+                                    >
+                                        View Details
+                                    </button>
+                                </td>
+                                <td className="p-2">
                                     <a
                                         href={r.zipFileUrl}
                                         target="_blank"
@@ -244,8 +261,7 @@ export default function AdminDashboard() {
                                 </td>
                                 <td className="p-2">
                                     <span
-                                        className={`px-2 py-1 rounded text-xs font-bold ${statusColors[r.authStatus] || "bg-gray-500"
-                                            }`}
+                                        className={`px-2 py-1 rounded text-xs font-bold ${statusColors[r.authStatus] || "bg-gray-500"}`}
                                     >
                                         {r.authStatus}
                                     </span>

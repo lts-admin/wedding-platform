@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,15 +15,12 @@ import Settings from "@/components/mobile/Settings";
 import Preview from "@/components/mobile/Preview";
 import { FormState } from "@/types/FormState";
 import { useRouter } from "next/navigation";
-import { Save } from "lucide-react";
-import LocationAutocomplete from "@/components/utilities/LocationAutocomplete";
+import { Save, User } from "lucide-react";
 import { signOut } from "firebase/auth";
-import { auth } from "../../lib/firebaseConfig";
+import { auth, db } from "@/lib/firebaseConfig";
 import { useAuth } from "@/context/AuthContext";
 import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebaseConfig";
-import { User } from "lucide-react";
 
 const CustomSwitch = ({ checked, onToggle, disabled = false }: { checked: boolean; onToggle: () => void; disabled?: boolean }) => (
     <button
@@ -43,7 +40,6 @@ type SidebarItem = {
     key: string;
     condition?: boolean;
 };
-
 
 export default function Home() {
     const [step, setStep] = useState(0);
@@ -92,8 +88,6 @@ export default function Home() {
         adminAppPassword: ""
     });
 
-    const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>([]);
-
     useEffect(() => {
         const fetchSavedForm = async () => {
             if (!user) return;
@@ -107,7 +101,6 @@ export default function Home() {
                     if (data?.zipGenerated || data.isSubmitted) {
                         setIsSubmitted(true);
                     }
-                    console.log("Form loaded from Firestore");
                 }
             } catch (err) {
                 console.error("Failed to load form:", err);
@@ -117,21 +110,18 @@ export default function Home() {
         fetchSavedForm();
     }, [user]);
 
-    useEffect(() => {
-        const items: SidebarItem[] = [
-            { label: "Couple Details", key: "appInfo" },
-            { label: "Save the Date", key: "saveDate", condition: form.enableSaveDate },
-            { label: "Our Story", key: "ourStory", condition: form.enableStory },
-            { label: "RSVP & Gallery", key: "rsvpGallery", condition: form.enableRSVP || form.enableGallery },
-            { label: "Our Family", key: "ourFamily", condition: form.enableFamily },
-            { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty },
-            { label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
-            { label: "Travel", key: "travel", condition: form.enableTravel },
-            { label: "Settings", key: "settings", condition: form.enableSettings },
-            { label: "Preview", key: "preview" },
-        ];
-        setSidebarItems(items.filter(item => item.condition !== false));
-    }, [form]);
+    const sidebarItems: SidebarItem[] = useMemo(() => [
+        { label: "Couple Details", key: "appInfo" },
+        { label: "Save the Date", key: "saveDate", condition: form.enableSaveDate },
+        { label: "Our Story", key: "ourStory", condition: form.enableStory },
+        { label: "RSVP & Gallery", key: "rsvpGallery", condition: form.enableRSVP || form.enableGallery },
+        { label: "Our Family", key: "ourFamily", condition: form.enableFamily },
+        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty },
+        { label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
+        { label: "Travel", key: "travel", condition: form.enableTravel },
+        { label: "Settings", key: "settings", condition: form.enableSettings },
+        { label: "Preview", key: "preview" },
+    ].filter(item => item.condition !== false), [form]);
 
     useEffect(() => {
         if (!user) return;
@@ -169,6 +159,8 @@ export default function Home() {
             console.error("Error logging out:", error);
         }
     };
+
+    const safeStep = Math.min(step, sidebarItems.length - 1);
 
 
     return (
