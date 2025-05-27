@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { FormState, FamilyMember } from "@/types/FormState";
 import Image from "next/image";
 
-
 type FamilySide = "bride" | "groom";
 
 type Props = {
@@ -16,9 +15,9 @@ type Props = {
     goBack: () => void;
 };
 
-
 export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
     const isSubmitted = form.isSubmitted;
+
     const addMember = (side: FamilySide) => {
         setForm((prev) => {
             const updated = [...prev.familyDetails[side], { name: "", relation: "", image: null }];
@@ -58,18 +57,22 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
         }));
     };
 
-
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pt-20 lg:pt-10 px-4">
             <h2 className="text-2xl font-semibold text-pink-400">Our Family Section</h2>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["bride", "groom"].map((side) => (
                     <div key={side} className="space-y-4">
                         <div className="flex justify-between items-center">
                             <h2 className="text-pink-300 pb-2 font-bold">
                                 {side === "bride" ? "Bride's Side" : "Groom's Side"}
                             </h2>
-                            <Button className="bg-pink-500 text-black" size="sm" onClick={() => addMember(side as FamilySide)} disabled={isSubmitted}>
+                            <Button
+                                className="bg-pink-500 text-black text-sm px-3 py-1"
+                                size="sm"
+                                onClick={() => addMember(side as FamilySide)}
+                                disabled={isSubmitted}
+                            >
                                 + Add
                             </Button>
                         </div>
@@ -79,14 +82,14 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                     placeholder="Name"
                                     value={member.name}
                                     onChange={(e) => updateMember(side as FamilySide, index, "name", e.target.value)}
-                                    className="mb-2 text-white font-bold"
+                                    className="mb-2 text-white font-bold px-3 py-2 text-sm rounded w-full"
                                     disabled={isSubmitted}
                                 />
                                 <Input
                                     placeholder="Relation"
                                     value={member.relation}
                                     onChange={(e) => updateMember(side as FamilySide, index, "relation", e.target.value)}
-                                    className="mb-2 text-white font-bold"
+                                    className="mb-2 text-white font-bold px-3 py-2 text-sm rounded w-full"
                                     disabled={isSubmitted}
                                 />
                                 <div className="space-y-2">
@@ -105,7 +108,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                     </label>
 
                                     {member.image && typeof member.image !== "string" && (
-                                        <div className="text-white text-xs flex items-center gap-2">
+                                        <div className="flex flex-col sm:flex-row items-center gap-2 mt-2">
                                             <Image
                                                 src={URL.createObjectURL(member.image)}
                                                 alt="Preview"
@@ -113,7 +116,6 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                                 height={80}
                                                 className="object-cover rounded border border-pink-300"
                                             />
-
                                             <button
                                                 type="button"
                                                 onClick={() => updateMember(side as FamilySide, index, "image", null)}
@@ -125,10 +127,9 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                             </button>
                                         </div>
                                     )}
-
                                 </div>
 
-                                <div className="flex justify-end pt-4 ">
+                                <div className="flex justify-end pt-4">
                                     <Button
                                         onClick={() => removeMember(side as FamilySide, index)}
                                         className="bg-white text-xs text-red-500 font-bold hover:underline"
@@ -139,15 +140,18 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                 </div>
                             </div>
                         ))}
-
                     </div>
                 ))}
             </div>
+
             <div>
                 <h2 className="text-pink-300 pb-2 font-bold">Pets</h2>
                 {form.familyDetails.pets.map((pet, index) => (
-                    <div key={index} className="flex flex-col gap-2 mb-4 bg-[#1A1A1A] p-3 rounded border border-pink-400">
-                        <div className="flex items-center gap-2">
+                    <div
+                        key={index}
+                        className="flex flex-col gap-2 mb-4 bg-[#1A1A1A] p-3 rounded border border-pink-400"
+                    >
+                        <div className="flex flex-col sm:flex-row items-center gap-2">
                             <Input
                                 value={pet.name}
                                 placeholder="Pet Name - Type"
@@ -155,9 +159,8 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                     const newPets = [...form.familyDetails.pets];
                                     newPets[index].name = e.target.value;
                                     updatePets(newPets);
-
                                 }}
-                                className="text-white font-bold flex-1"
+                                className="text-white font-bold px-3 py-2 text-sm rounded w-full"
                                 disabled={isSubmitted}
                             />
                             <Button
@@ -192,7 +195,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                         </label>
 
                         {pet.image && typeof pet.image !== "string" && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-col sm:flex-row items-center gap-2 mt-2">
                                 <Image
                                     src={URL.createObjectURL(pet.image)}
                                     alt="Pet Preview"
@@ -219,21 +222,22 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                 ))}
 
                 <Button
-                    className="bg-pink-500 text-black"
+                    className="bg-pink-500 text-black text-sm px-3 py-1"
                     size="sm"
-                    onClick={() => updatePets([
-                        ...form.familyDetails.pets,
-                        { name: "", image: null }
-                    ])}
+                    onClick={() => updatePets([...form.familyDetails.pets, { name: "", image: null }])}
                     disabled={isSubmitted}
                 >
                     + Add Pet
                 </Button>
-
             </div>
+
             <div className="flex justify-start gap-4 pt-4">
-                <Button variant="outline" className="font-bold" onClick={goBack}>Back</Button>
-                <Button className="bg-purple-500 text-black font-bold" onClick={goNext}>Next</Button>
+                <Button variant="outline" className="font-bold" onClick={goBack}>
+                    Back
+                </Button>
+                <Button className="bg-purple-500 text-black font-bold" onClick={goNext}>
+                    Next
+                </Button>
             </div>
         </div>
     );
