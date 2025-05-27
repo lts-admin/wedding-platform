@@ -82,79 +82,69 @@ export default function HomePage() {
 
       {/* Hero */}
       <section className="text-center py-20 px-6 sm:px-8">
-        <h1 className="text-4xl sm:text-6xl lg:text-[100px] font-serif font-bold leading-tight mb-12">
-          Design the perfect <br /> wedding app
+        <h1 className="text-4xl sm:text-6xl lg:text-[100px] font-bold leading-tight mb-12 text-center" style={{ fontFamily: "'Great Vibes', cursive" }}>
+          Design your perfect <br /> wedding app
         </h1>
-        <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] bg-black overflow-hidden">
+
+
+        <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
           <Image
-            src="/mobile-placeholder.png"
+            src="/assets/Image2.png"
             alt="App Preview"
             fill
-            className="object-cover rounded-[44px] opacity-70"
+            className="object-cover rounded-[44px]"
           />
-          <button className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-pink-500 text-black px-6 py-3 rounded-md text-lg font-medium">
+        </div>
+        <div className="py-6">
+          <button className="py-6 bg-pink-500 text-white px-6 py-3 rounded-md text-lg font-medium">
             Start Designing
           </button>
         </div>
+
       </section>
 
       {/* Section 1 */}
       <section className="px-6 sm:px-8 py-24 bg-gradient-to-b from-[#0D0208] to-[#1a0a12]">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold">Build, test, and deploy with ease.</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold">Build, test, and deploy with ease.</h2>
             <p className="text-lg sm:text-xl text-white">Create a personalized wedding app effortlessly.</p>
             <button className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium">
               Generate App
             </button>
           </div>
-          <Image
-            src="/wedding-app-floral.png"
-            alt="Wedding App Preview"
-            width={500}
-            height={500}
-            className="rounded-xl shadow-lg"
-          />
+          <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
+            <Image
+              src="/assets/itinerary.png"
+              alt="Wedding App Preview"
+              fill
+              className="object-cover rounded-[44px]"
+              priority
+            />
+          </div>
+
         </div>
       </section>
 
       {/* Section 2 */}
       <section className="px-6 sm:px-8 py-24 bg-[#0D0208]">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <Image
-            src="/test-on-phone.jpg"
-            alt="Test on your phone"
-            width={500}
-            height={500}
-            className="rounded-xl shadow-md"
-          />
+          <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
+            <Image
+              src="/assets/rsvp.png"
+              alt="Test on your phone"
+              fill
+              priority
+              className="object-cover rounded-[44px]"
+            />
+          </div>
           <div className="space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold">Test on your phone</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold">Test on your phone</h2>
             <p className="text-lg sm:text-xl">Download the app and test it instantly.</p>
-            <button className="bg-pink-500 text-black text-lg px-6 py-3 rounded-md font-medium">
+            <button className="bg-pink-500 text-white text-lg px-6 py-3 rounded-md font-medium">
               Download Now
             </button>
           </div>
-        </div>
-      </section>
-
-      {/* Section 3 */}
-      <section className="px-6 sm:px-8 py-24 bg-[#0D0208]">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold">Deploy to Apple Store</h2>
-            <p className="text-lg sm:text-xl">Guided steps for releasing your app.</p>
-            <button className="bg-pink-500 text-black text-lg px-6 py-3 rounded-md font-medium">
-              Start Deployment
-            </button>
-          </div>
-          <Image
-            src="/deploy-apple.jpg"
-            alt="Deploy to Apple Store"
-            width={500}
-            height={500}
-            className="rounded-xl shadow-md"
-          />
         </div>
       </section>
 
@@ -162,7 +152,7 @@ export default function HomePage() {
       <footer className="bg-[#0D0208] text-[#E4D7DE] px-6 sm:px-8 py-24">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
           <div>
-            <h3 className="text-3xl font-serif font-bold mb-4">Get in Touch</h3>
+            <h3 className="text-3xl  font-bold mb-4">Get in Touch</h3>
             <p className="text-lg mb-6">Need help? Contact us for assistance.</p>
             <form className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-4">
@@ -171,7 +161,7 @@ export default function HomePage() {
               </div>
               <input type="email" placeholder="Email" className="w-full bg-lightpink text-white px-4 py-2 rounded-md" />
               <textarea placeholder="Message" className="w-full bg-lightpink text-white px-4 py-2 rounded-md h-24" />
-              <button type="submit" className="bg-pink-500 text-black px-4 py-2 rounded-md">Submit</button>
+              <button type="submit" className="bg-pink-500 text-white px-4 py-2 rounded-md">Submit</button>
             </form>
           </div>
         </div>
