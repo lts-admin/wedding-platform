@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react"; // for hamburger icons
 import "./globals.css";
+import router from "next/router";
 
 export default function HomePage() {
   const [showPopup, setShowPopup] = useState(false);
@@ -34,8 +35,11 @@ export default function HomePage() {
 
       {/* Header */}
       <header className="w-full flex items-center justify-between px-6 py-4 lg:px-12 lg:py-6 border-b border-pink-500 relative z-10">
-        <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
-          <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
+        <div className="flex items-center gap-2 text-white-500 font-bold text-2xl">
+          <div className="w-6 h-6 border-[2.5px] border-white-500 rounded-full" />
+          {/* <Link href="/">
+            <Image src="/assets/logo.png" alt="Logo" height={50} width={50} />
+          </Link> */}
           <Link href="/">WedDesigner</Link>
         </div>
 
@@ -55,9 +59,12 @@ export default function HomePage() {
           <Link href="#">Contact</Link>
         </nav>
         <div className="hidden lg:flex gap-6 items-center font-bold">
-          <Link href="#" className="text-sm">Download app</Link>
-          <Link href="/log-in" className="text-sm">Log in</Link>
-          <button className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm">Try it free</button>
+          {/* <Link href="#" className="text-sm">Download app</Link> */}
+          <button
+            className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm"
+            onClick={() => router.push('/log-in')}
+          >Log in</button>
+          <button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</button>
         </div>
 
         {/* Mobile Menu */}

@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import router from "next/router";
 
 export default function FeaturesSection() {
     const features = [
@@ -44,8 +45,11 @@ export default function FeaturesSection() {
                 </nav>
                 <div className="flex gap-6 items-center">
                     <Link href="#" className="text-sm">Download app</Link>
-                    <Link href="/app-info" className="text-sm">Log in</Link>
-                    <button className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm">Try it free</button>
+                    <button
+                        className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm"
+                        onClick={() => router.push('/log-in')}
+                    >Log in</button>
+                    <button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</button>
                 </div>
             </header>
 
