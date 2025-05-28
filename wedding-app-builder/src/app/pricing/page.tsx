@@ -59,7 +59,7 @@ export default function PricingPage() {
                 <nav className="flex gap-8 text-sm">
                     <Link href="/">Home</Link>
                     <Link href="/features">Features</Link>
-                    <Link href="/pricing">Pricing</Link>
+                    {/* <Link href="/pricing">Pricing</Link> */}
                     <Link href="#">Contact</Link>
                 </nav>
                 <div className="flex gap-6 items-center">

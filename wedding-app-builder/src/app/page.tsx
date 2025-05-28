@@ -6,8 +6,10 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react"; // for hamburger icons
 import "./globals.css";
 import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+  const router = useRouter();
   const [showPopup, setShowPopup] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -18,7 +20,7 @@ export default function HomePage() {
 
   return (
     <main className="bg-[#0D0208] text-[#E4D7DE] font-sans min-h-screen overflow-x-hidden relative">
-      {showPopup && (
+      {/* {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-white text-black p-6 rounded-2xl shadow-lg max-w-md text-center animate-fade-in">
             <h2 className="text-2xl font-bold mb-4">Welcome to WedDesigner!</h2>
@@ -31,12 +33,12 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Header */}
       <header className="w-full flex items-center justify-between px-6 py-4 lg:px-12 lg:py-6 border-b border-pink-500 relative z-10">
-        <div className="flex items-center gap-2 text-white-500 font-bold text-2xl">
-          <div className="w-6 h-6 border-[2.5px] border-white-500 rounded-full" />
+        <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
+          <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
           {/* <Link href="/">
             <Image src="/assets/logo.png" alt="Logo" height={50} width={50} />
           </Link> */}
@@ -55,7 +57,7 @@ export default function HomePage() {
         <nav className="hidden lg:flex gap-8 text-sm font-bold">
           <Link href="/">Home</Link>
           <Link href="/features">Features</Link>
-          <Link href="/pricing">Pricing</Link>
+          {/* <Link href="/pricing">Pricing</Link> */}
           <Link href="#">Contact</Link>
         </nav>
         <div className="hidden lg:flex gap-6 items-center font-bold">
@@ -103,7 +105,7 @@ export default function HomePage() {
           />
         </div>
         <div className="py-6">
-          <button className="py-6 bg-pink-500 text-white px-6 py-3 rounded-md text-lg font-medium">
+          <button className="py-6 bg-pink-500 text-white px-6 py-3 rounded-md text-lg font-medium" onClick={() => router.push("/log-in")}>
             Start Designing
           </button>
         </div>
