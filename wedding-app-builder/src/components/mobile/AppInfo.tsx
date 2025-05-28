@@ -167,7 +167,7 @@ export default function Home() {
                     <div className="mt-auto flex flex-col gap-2">
                         <Button
                             variant="outline"
-                            className="text-white border border-gray-500 hover:bg-gray-800 text-sm"
+                            className="text-white border border-gray-500 hover:bg-gray-800 text-sm font-bold"
                             onClick={() => {
                                 setSidebarOpen(false);
                                 router.push("/designer-settings");
@@ -181,6 +181,17 @@ export default function Home() {
                             className="bg-pink-500 text-black px-4 py-2 font-bold text-sm"
                         >
                             Log Out
+                        </Button>
+                        <div className="py-6"></div>
+                        <Button
+                            variant="outline"
+                            className="text-white border border-gray-500 hover:bg-gray-800 text-sm hover:font-bold"
+                            onClick={() => {
+                                setSidebarOpen(false);
+                                router.push("/contact-us");
+                            }}
+                        >
+                            Need help?
                         </Button>
                     </div>
                 </div>

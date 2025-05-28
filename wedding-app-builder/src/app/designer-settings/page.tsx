@@ -227,6 +227,15 @@ export default function DesignerSettings() {
                         </Button>
                     )}
 
+                    <Button
+                        variant="outline"
+                        className="text-white border border-gray-500 hover:bg-gray-800 text-sm"
+                        onClick={() => {
+                            router.push("/contact-us");
+                        }}
+                    >
+                        Contact Support
+                    </Button>
                 </div>
             </div>
         </div>

@@ -21,7 +21,7 @@ export default function FeaturesSection() {
                 <nav className="flex gap-8 text-sm font-bold">
                     <Link href="/">Home</Link>
                     <Link href="/features">Features</Link>
-                    <Link href="#">Contact</Link>
+                    <Link href="/contact-us">Contact</Link>
                 </nav>
                 <div className="flex gap-6 items-center font-bold">
                     {/* <Link href="#" className="text-sm">Download app</Link> */}

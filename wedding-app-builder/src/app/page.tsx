@@ -58,7 +58,7 @@ export default function HomePage() {
           <Link href="/">Home</Link>
           <Link href="/features">Features</Link>
           {/* <Link href="/pricing">Pricing</Link> */}
-          <Link href="#">Contact</Link>
+          <Link href="/contact-us">Contact</Link>
         </nav>
         <div className="hidden lg:flex gap-6 items-center font-bold">
           {/* <Link href="#" className="text-sm">Download app</Link> */}
