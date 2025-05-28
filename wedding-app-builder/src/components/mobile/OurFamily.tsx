@@ -59,16 +59,16 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
 
     return (
         <div className="space-y-6 pt-20 lg:pt-10 px-4">
-            <h2 className="text-2xl font-semibold text-pink-400">Our Family Section</h2>
+            <h2 className="text-2xl font-semibold text-blue-400">Our Family Section</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["bride", "groom"].map((side) => (
                     <div key={side} className="space-y-4">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-pink-300 pb-2 font-bold">
+                            <h2 className="text-black pb-2 font-bold">
                                 {side === "bride" ? "Bride's Side" : "Groom's Side"}
                             </h2>
                             <Button
-                                className="bg-pink-500 text-black text-sm px-3 py-1"
+                                className="bg-pink-400 text-black font-bold text-sm px-3 py-1"
                                 size="sm"
                                 onClick={() => addMember(side as FamilySide)}
                                 disabled={isSubmitted}
@@ -82,27 +82,26 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                     placeholder="Name"
                                     value={member.name}
                                     onChange={(e) => updateMember(side as FamilySide, index, "name", e.target.value)}
-                                    className="mb-2 text-white font-bold px-3 py-2 text-sm rounded w-full"
+                                    className="mb-2 bg-beige text-black font-bold px-3 py-2 text-sm rounded w-full"
                                     disabled={isSubmitted}
                                 />
                                 <Input
                                     placeholder="Relation"
                                     value={member.relation}
                                     onChange={(e) => updateMember(side as FamilySide, index, "relation", e.target.value)}
-                                    className="mb-2 text-white font-bold px-3 py-2 text-sm rounded w-full"
+                                    className="mb-2 bg-beige text-black font-bold px-3 py-2 text-sm rounded w-full"
                                     disabled={isSubmitted}
                                 />
                                 <div className="space-y-2">
-                                    <label className="block cursor-pointer bg-white text-xs text-red-500 font-bold rounded px-3 py-2 text-center hover:bg-pink-100 transition">
-                                        Choose Image
-                                        <input
+                                    <label className="block cursor-pointer bg-beige text-xs text-red-500 font-bold rounded px-3 py-2 text-center hover:bg-pink-100 transition">
+                                        <Input
                                             type="file"
                                             accept="image/*"
                                             onChange={(e) => {
                                                 const file = e.target.files?.[0] || null;
                                                 updateMember(side as FamilySide, index, "image", file);
                                             }}
-                                            className="hidden"
+                                            className="border-black  5px "
                                             disabled={isSubmitted}
                                         />
                                     </label>
@@ -145,11 +144,11 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
             </div>
 
             <div>
-                <h2 className="text-pink-300 pb-2 font-bold">Pets</h2>
+                <h2 className="text-black pb-2 font-bold">Pets</h2>
                 {form.familyDetails.pets.map((pet, index) => (
                     <div
                         key={index}
-                        className="flex flex-col gap-2 mb-4 bg-[#1A1A1A] p-3 rounded border border-pink-400"
+                        className="flex flex-col gap-2 mb-4 bg-beige p-3 rounded border border-pink-400"
                     >
                         <div className="flex flex-col sm:flex-row items-center gap-2">
                             <Input
@@ -179,8 +178,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                         </div>
 
                         <label className="block cursor-pointer bg-white text-xs text-red-500 font-bold rounded px-3 py-1 text-center w-fit hover:bg-pink-100 transition">
-                            Choose Image
-                            <input
+                            <Input
                                 type="file"
                                 accept="image/*"
                                 onChange={(e) => {
@@ -189,7 +187,6 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                                     newPets[index].image = file;
                                     updatePets(newPets);
                                 }}
-                                className="hidden"
                                 disabled={isSubmitted}
                             />
                         </label>
@@ -222,7 +219,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                 ))}
 
                 <Button
-                    className="bg-pink-500 text-black text-sm px-3 py-1"
+                    className="bg-pink-400 text-black font-bold text-sm px-3 py-1"
                     size="sm"
                     onClick={() => updatePets([...form.familyDetails.pets, { name: "", image: null }])}
                     disabled={isSubmitted}
@@ -232,10 +229,10 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
             </div>
 
             <div className="flex justify-start gap-4 pt-4">
-                <Button variant="outline" className="font-bold" onClick={goBack}>
+                <Button variant="outline" className="text-black font-bold" onClick={goBack}>
                     Back
                 </Button>
-                <Button className="bg-purple-500 text-black font-bold" onClick={goNext}>
+                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
                     Next
                 </Button>
             </div>

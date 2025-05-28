@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
+import { X } from "lucide-react";
 
 interface OurStoryProps {
     form: FormState;
@@ -16,11 +17,18 @@ interface OurStoryProps {
 
 const OurStory: React.FC<OurStoryProps> = ({ form, setForm, goNext, goBack }) => {
     const isSubmitted = form.isSubmitted;
+
     const handleAddParagraph = () => {
         setForm(prev => ({
             ...prev,
             storyParagraphs: [...(prev.storyParagraphs || []), ""],
         }));
+    };
+
+    const handleRemoveParagraph = (index: number) => {
+        const updated = [...(form.storyParagraphs || [])];
+        updated.splice(index, 1);
+        setForm(prev => ({ ...prev, storyParagraphs: updated }));
     };
 
     const handleParagraphChange = (index: number, value: string) => {
@@ -36,6 +44,12 @@ const OurStory: React.FC<OurStoryProps> = ({ form, setForm, goNext, goBack }) =>
         }));
     };
 
+    const handleRemoveImage = (index: number) => {
+        const updated = [...(form.storyImages || [])];
+        updated.splice(index, 1);
+        setForm(prev => ({ ...prev, storyImages: updated }));
+    };
+
     const handleImageChange = (index: number, file: File | null) => {
         const updated = [...(form.storyImages || [])];
         updated[index].file = file;
@@ -49,55 +63,74 @@ const OurStory: React.FC<OurStoryProps> = ({ form, setForm, goNext, goBack }) =>
     };
 
     return (
-        <div className="max-w-xxl mx-auto space-y-8 text-[#E4D7DE]">
+        <div className="max-w-2xl space-y-8 text-[#E4D7DE]">
             <h2 className="text-2xl font-semibold text-pink-400">Our Story</h2>
 
             <div className="space-y-4">
                 {(form.storyParagraphs || []).map((text, idx) => (
-                    <Textarea
-                        key={idx}
-                        className="bg-[#1A1A1A] text-white border border-pink-300"
-                        value={text}
-                        onChange={(e) => handleParagraphChange(idx, e.target.value)}
-                        placeholder={`Paragraph ${idx + 1}`}
-                        disabled={isSubmitted}
-                    />
+                    <div key={idx} className="relative">
+                        <Textarea
+                            className="bg-beige text-black border border-pink-300 pr-10"
+                            value={text}
+                            onChange={(e) => handleParagraphChange(idx, e.target.value)}
+                            placeholder={`Paragraph ${idx + 1}`}
+                            disabled={isSubmitted}
+                        />
+                        {!isSubmitted && (
+                            <button
+                                onClick={() => handleRemoveParagraph(idx)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove paragraph"
+                            >
+                                <X size={16} />
+                            </button>
+                        )}
+                    </div>
                 ))}
-                <Button onClick={handleAddParagraph} className="bg-pink-500 text-black font-bold" disabled={isSubmitted}>
+                <Button onClick={handleAddParagraph} className="bg-pink-400 text-black font-bold" disabled={isSubmitted}>
                     + Add Paragraph
                 </Button>
             </div>
 
             <div className="space-y-4">
                 {(form.storyImages || []).map((img, idx) => (
-                    <div key={idx} className="space-y-2 border p-4 rounded-md">
-                        <Label className="text-pink-300">Image {idx + 1}</Label>
+                    <div key={idx} className="space-y-2 border p-4 rounded-md relative">
+                        {!isSubmitted && (
+                            <button
+                                onClick={() => handleRemoveImage(idx)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove image"
+                            >
+                                <X size={16} />
+                            </button>
+                        )}
+                        <Label className="text-black">Image {idx + 1}</Label>
                         <Input
                             type="file"
                             accept="image/*"
                             onChange={(e) => handleImageChange(idx, e.target.files?.[0] || null)}
-                            className="bg-[#1A1A1A] text-white border border-pink-300"
+                            className="bg-beige text-black border border-pink-300"
                             disabled={isSubmitted}
                         />
                         <Input
                             placeholder="Caption"
                             value={img.caption}
                             onChange={(e) => handleCaptionChange(idx, e.target.value)}
-                            className="bg-[#1A1A1A] text-white border border-pink-300"
+                            className="bg-beige text-black border border-pink-300"
                             disabled={isSubmitted}
                         />
                     </div>
                 ))}
-                <Button onClick={handleAddImage} className="bg-pink-500 text-black font-bold" disabled={isSubmitted}>
+                <Button onClick={handleAddImage} className="bg-pink-400 text-black font-bold" disabled={isSubmitted}>
                     + Add Image
                 </Button>
             </div>
 
             <div className="flex justify-between">
-                <Button variant="outline" onClick={goBack} className="font-bold">
+                <Button variant="outline" onClick={goBack} className="text-black font-bold">
                     Back
                 </Button>
-                <Button className="bg-purple-500 text-black font-bold" onClick={goNext}>
+                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
                     Next
                 </Button>
             </div>

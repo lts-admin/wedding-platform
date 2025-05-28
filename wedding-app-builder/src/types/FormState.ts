@@ -70,5 +70,14 @@ export type FormState = {
     enableRegistry: boolean;
     isSubmitted: boolean,
     enableAdminPassword: boolean,
-    adminAppPassword: string,
+    adminAppPassword?: string,
+    selectedFont: "Serif" | "Sans" | "Script";
+    selectedColor: string;
+    selectedLayout: string;
+    enableRSVPNotification: boolean;
+    enableEventNotification: boolean;
+    enablePlannerUpdates: boolean;
+    rsvpDeadline?: string;
+
+
 };

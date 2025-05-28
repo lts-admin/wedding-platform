@@ -69,25 +69,25 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
     }, [form.enableRSVP, form.showRSVPButton, setForm]);
 
     return (
-        <div className="max-w-xxl mx-auto space-y-8 text-[#E4D7DE]">
-            <h2 className="text-2xl font-semibold text-pink-400">Save The Date</h2>
+        <div className="max-w-xxl space-y-8 text-[#E4D7DE]">
+            <h2 className="text-2xl font-semibold text-blue-700">Save The Date</h2>
 
             <div>
-                <Label className="text-pink-300 pb-2 font-bold">
+                <Label className="text-black pb-2 font-bold">
                     Upload Save The Date Image
                 </Label>
                 <Input
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
-                    className="bg-[#1A1A1A] text-white border border-pink-300"
+                    className="bg-beige text-black border border-pink-300"
                     disabled={isSubmitted}
                 />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                    <Label className="text-pink-300 pb-2 font-bold">Enable Countdown</Label>
+                    <Label className="text-black pb-2 font-bold">Enable Countdown</Label>
                     <div className="flex items-center gap-4 pt-2">
                         <CustomSwitch
                             disabled={isSubmitted}
@@ -95,40 +95,40 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                             onToggle={() => handleToggle("enableCountdown")}
 
                         />
-                        <span>{form.enableCountdown ? "Enabled" : "Disabled"}</span>
+                        <span className="text-black ">{form.enableCountdown ? "Enabled" : "Disabled"}</span>
                     </div>
                 </div>
 
                 <div>
-                    <Label className="text-pink-300 pb-2 font-bold">Make Home Screen</Label>
+                    <Label className="text-black pb-2 font-bold">Make Home Screen</Label>
                     <div className="flex items-center gap-4 pt-2" >
                         <CustomSwitch
                             disabled={isSubmitted}
                             checked={form.isHomeScreen}
                             onToggle={() => handleToggle("isHomeScreen")}
                         />
-                        <span>{form.isHomeScreen ? "Enabled" : "Disabled"}</span>
+                        <span className="text-black ">{form.isHomeScreen ? "Enabled" : "Disabled"}</span>
                     </div>
                 </div>
 
                 <div>
-                    <Label className="text-pink-300 pb-2 font-bold">Insert RSVP Button</Label>
+                    <Label className="text-black pb-2 font-bold">Insert RSVP Button</Label>
                     <div className="flex items-center gap-4 pt-2">
                         <CustomSwitch
                             disabled={isSubmitted}
                             checked={form.showRSVPButton}
                             onToggle={() => handleToggle("showRSVPButton")}
                         />
-                        <span>{form.showRSVPButton ? "Enabled" : "Disabled"}</span>
+                        <span className="text-black ">{form.showRSVPButton ? "Enabled" : "Disabled"}</span>
                     </div>
                 </div>
             </div>
 
             <div className="flex justify-between pt-6">
-                <Button variant="outline" onClick={goBack} className="font-bold">
+                <Button variant="outline" onClick={goBack} className="text-black font-bold">
                     Back
                 </Button>
-                <Button className="bg-purple-500 text-black font-bold" onClick={goNext}>
+                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
                     Next
                 </Button>
             </div>

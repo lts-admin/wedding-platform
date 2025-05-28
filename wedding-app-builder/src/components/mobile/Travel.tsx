@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
+import { X } from "lucide-react";
 
 interface TravelProps {
     form: FormState;
@@ -12,7 +13,7 @@ interface TravelProps {
     goBack: () => void;
 }
 
-const Travel: React.FC<TravelProps> = ({ form, goNext, goBack }) => {
+const Travel: React.FC<TravelProps> = ({ form, setForm, goNext, goBack }) => {
     const isSubmitted = form.isSubmitted;
     const [hotels, setHotels] = useState<string[]>([""]);
     const [venues, setVenues] = useState<string[]>([""]);
@@ -32,39 +33,72 @@ const Travel: React.FC<TravelProps> = ({ form, goNext, goBack }) => {
         setVenues(updated);
     };
 
+    const handleRemoveHotel = (index: number) => {
+        const updated = [...hotels];
+        updated.splice(index, 1);
+        setHotels(updated);
+    };
+
+    const handleRemoveVenue = (index: number) => {
+        const updated = [...venues];
+        updated.splice(index, 1);
+        setVenues(updated);
+    };
+
     return (
-        <div className="max-w-xxl mx-auto space-y-8 text-[#E4D7DE]">
+        <div className="max-w-2xl space-y-8 text-cocoa">
             <h2 className="text-2xl font-semibold text-pink-400">Travel & Accommodations</h2>
 
             <div className="space-y-4">
-                <h3 className="text-lg text-pink-300 font-bold">Venue Details</h3>
+                <h3 className="text-lg text-mauve font-bold">Venue Details</h3>
                 {venues.map((venue, idx) => (
-                    <Textarea
-                        key={idx}
-                        value={venue}
-                        onChange={(e) => handleVenueChange(idx, e.target.value)}
-                        placeholder={`Venue ${idx + 1}`}
-                        className="bg-[#1A1A1A] text-white border border-pink-300"
-                    />
+                    <div key={idx} className="relative">
+                        <Textarea
+                            value={venue}
+                            onChange={(e) => handleVenueChange(idx, e.target.value)}
+                            placeholder={`Venue ${idx + 1}`}
+                            className="w-full bg-petal text-cocoa border border-mauve pr-10"
+                            disabled={isSubmitted}
+                        />
+                        {!isSubmitted && (
+                            <button
+                                onClick={() => handleRemoveVenue(idx)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove venue"
+                            >
+                                <X size={16} />
+                            </button>
+                        )}
+                    </div>
                 ))}
-                <Button onClick={handleAddVenue} className="bg-pink-500 text-black font-bold" disabled={isSubmitted}>
+                <Button onClick={handleAddVenue} className="bg-pink-400 text-white font-bold" disabled={isSubmitted}>
                     + Add Venue
                 </Button>
             </div>
 
             <div className="space-y-4">
-                <h3 className="text-lg text-pink-300 font-bold">Hotel Block Info</h3>
+                <h3 className="text-lg text-mauve font-bold">Hotel Block Info</h3>
                 {hotels.map((hotel, idx) => (
-                    <Textarea
-                        key={idx}
-                        value={hotel}
-                        onChange={(e) => handleHotelChange(idx, e.target.value)}
-                        placeholder={`Hotel ${idx + 1}`}
-                        className="bg-[#1A1A1A] text-white border border-pink-300"
-                        disabled={isSubmitted}
-                    />
+                    <div key={idx} className="relative">
+                        <Textarea
+                            value={hotel}
+                            onChange={(e) => handleHotelChange(idx, e.target.value)}
+                            placeholder={`Hotel ${idx + 1}`}
+                            className="w-full bg-petal text-cocoa border border-mauve pr-10"
+                            disabled={isSubmitted}
+                        />
+                        {!isSubmitted && (
+                            <button
+                                onClick={() => handleRemoveHotel(idx)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove hotel"
+                            >
+                                <X size={16} />
+                            </button>
+                        )}
+                    </div>
                 ))}
-                <Button onClick={handleAddHotel} className="bg-pink-500 text-black font-bold" disabled={isSubmitted}>
+                <Button onClick={handleAddHotel} className="bg-pink-400 text-white font-bold" disabled={isSubmitted}>
                     + Add Hotel
                 </Button>
             </div>
@@ -73,7 +107,7 @@ const Travel: React.FC<TravelProps> = ({ form, goNext, goBack }) => {
                 <Button variant="outline" onClick={goBack} className="font-bold">
                     Back
                 </Button>
-                <Button className="bg-purple-500 text-black font-bold" onClick={goNext}>
+                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
                     Next
                 </Button>
             </div>
