@@ -53,14 +53,14 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#140A0A] text-white flex items-center justify-center px-4">
+        <div className="min-h-screen bg-[#FFF5F7] text-black flex items-center justify-center px-4">
             <header className="absolute top-6 left-6">
                 <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
                     <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
                     <a href="/">WedDesigner</a>
                 </div>
             </header>
-            <div className="w-full max-w-md p-8 bg-[#1E0F0F] rounded-2xl shadow-lg">
+            <div className="w-full max-w-md p-8 bg-[#FFF5F7] rounded-2xl shadow-lg">
                 <h1 className="text-3xl font-semibold text-pink-500 mb-6 text-center">
                     {isSignup ? "Create an Account" : "Welcome Back"}
                 </h1>
@@ -71,7 +71,7 @@ export default function LoginPage() {
                             placeholder="Full Name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full p-3 rounded-xl bg-[#2A1A1A] text-white border border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                            className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
                             required
                         />
                     )}
@@ -81,7 +81,7 @@ export default function LoginPage() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 rounded-xl bg-[#2A1A1A] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
                         required
                     />
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 rounded-xl bg-[#2A1A1A] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        className="w-full p-3 rounded-xl bg-[#FFF5F7]text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
                         required
                     />
 
@@ -101,16 +101,16 @@ export default function LoginPage() {
                                 placeholder="Re-enter Password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full p-3 rounded-xl bg-[#2A1A1A] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             />
 
-                            <label className="flex items-center text-sm text-gray-300">
+                            <label className="flex items-center text-sm text-black">
                                 <input
                                     type="checkbox"
                                     checked={updatesOptIn}
                                     onChange={() => setUpdatesOptIn(!updatesOptIn)}
-                                    className="mr-2 accent-pink-500"
+                                    className="mr-2  text-black"
                                 />
                                 I want to receive updates about my app via email
                             </label>
@@ -127,7 +127,7 @@ export default function LoginPage() {
                     </button>
                 </form>
 
-                <p className="mt-6 text-sm text-center text-gray-300">
+                <p className="mt-6 text-sm text-center text-black">
                     {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
                     <button
                         onClick={() => setIsSignup(!isSignup)}
@@ -146,14 +146,15 @@ export default function LoginPage() {
                                 setError(err.message);
                             }
                         }}
-                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-600 text-white hover:bg-[#2A1A1A] transition"
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-600 text-black hover:bg-gray-300 transition"
                     >
                         <Image
-                            src="/google-icon.svg"
+                            src="/google_icon.png"
                             alt="Google"
-                            width={20}
-                            height={20}
-                        />                        <span className="font-medium">Continue with Google</span>
+                            width={30}
+                            height={30}
+                        />
+                        <span className="font-medium">Continue with Google</span>
                     </button>
                 </div>
 
