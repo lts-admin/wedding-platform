@@ -9,15 +9,10 @@ const OUTPUT_DIR = path.join(__dirname, '../generated_apps');
 async function generateFlutterApp(formData) {
   const appId = uuidv4();
   const appPath = path.join(OUTPUT_DIR, appId);
-
   //await fs.copy(TEMPLATE_PATH, appPath);
 
   await fs.copy(TEMPLATE_PATH, appPath, {
-    filter: (src) => {
-      // Skip copying this test file if it exists
-      if (src.includes("widget_test.dart")) return false;
-      return true;
-    }
+    filter: (src) => !src.includes("widget_test.dart")
   });
 
   // === MAIN.DART ===
@@ -27,12 +22,13 @@ async function generateFlutterApp(formData) {
   mainDartContent = mainDartContent
     .replace(/{{COUPLE_NAME}}/g, formData.coupleName)
     .replace(/{{WEDDING_DATE}}/g, formData.weddingDate)
-    .replace(/{{WEDDING_LOCATION}}/g, formData.weddingLocation);
-
-  if (formData.appPassword) {
-    mainDartContent = mainDartContent.replace(/{{APP_PASSWORD}}/g, formData.appPassword);
-  }
-
+    .replace(/{{WEDDING_LOCATION}}/g, formData.weddingLocation || '')
+    .replace(/{{APP_PASSWORD}}/g, formData.appPassword || '')
+    .replace(/{{SELECTED_COLOR}}/g, formData.selectedColor || '#B0848B')
+    .replace(/{{SELECTED_FONT}}/g, formData.selectedFont || 'Sans')
+    .replace(/{{ENABLE_RSVP_NOTIFICATION}}/g, `${formData.enableRSVPNotification}`)
+    .replace(/{{ENABLE_EVENT_NOTIFICATION}}/g, `${formData.enableEventNotification}`)
+    .replace(/{{ENABLE_PLANNER_UPDATES}}/g, `${formData.enablePlannerUpdates}`);
 
   await fs.writeFile(mainDartPath, mainDartContent);
 
@@ -92,7 +88,7 @@ async function generateFlutterApp(formData) {
 
   itineraryDartContent = itineraryDartContent
     .replace(/{{WEDDING_DATE}}/g, formData.weddingDate)
-    .replace(/{{WEDDING_LOCATION}}/g, formData.weddingLocation);
+    .replace(/{{WEDDING_LOCATION}}/g, formData.weddingLocation || '');
 
   await fs.writeFile(itineraryDartPath, itineraryDartContent);
 
@@ -155,6 +151,42 @@ async function generateFlutterApp(formData) {
   partyDartContent = injectPartyBlock(partyDartContent, 'GROOM_PARTY', formData.weddingParty?.groom || []);
 
   await fs.writeFile(partyDartPath, partyDartContent);
+
+  // === LAYOUT.DART ===
+  const layoutPath = path.join(appPath, 'lib', 'common', 'layout.dart');
+  let layoutContent = await fs.readFile(layoutPath, 'utf8');
+
+  const screenToggles = {
+    enableFamily: {
+      importLine: `import 'package:flutter_template/our_family.dart';`,
+      widgetPattern: `IconButton\\([^\\)]*OurFamilyScreen\\(\\)[^\\)]*\\)`,
+    },
+    enableGallery: {
+      importLine: `import 'package:flutter_template/photo_gallery.dart';`,
+      widgetPattern: `IconButton\\([^\\)]*DriveGalleryScreen\\(\\)[^\\)]*\\)`,
+    },
+    enableItinerary: {
+      importLine: `import 'package:flutter_template/itinerary.dart';`,
+      widgetPattern: `IconButton\\([^\\)]*ItineraryScreen\\(\\)[^\\)]*\\)`,
+    },
+    enableSettings: {
+      importLine: `import 'package:flutter_template/settings.dart';`,
+      widgetPattern: `IconButton\\([^\\)]*SettingsScreen\\(\\)[^\\)]*\\)`,
+    },
+  };
+
+  for (const [key, { importLine, widgetPattern }] of Object.entries(screenToggles)) {
+    if (!formData[key]) {
+      layoutContent = layoutContent.replace(new RegExp(`^${importLine}`, 'm'), `// ${importLine}`);
+      layoutContent = layoutContent.replace(
+        new RegExp(widgetPattern, 'g'),
+        (match) => match.split('\n').map(line => `// ${line}`).join('\n')
+      );
+    }
+  }
+
+  await fs.writeFile(layoutPath, layoutContent);
+
 
   // === SHEET ID INJECTION ===
   const sheetIdMatch = (formData.rsvpSheetUrl || '').match(/\/d\/([a-zA-Z0-9-_]+)/);

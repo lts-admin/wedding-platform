@@ -48,6 +48,7 @@ export default function Home() {
         coupleName: "",
         weddingDate: "",
         weddingLocation: "",
+        appName: "",
         enableRSVP: true,
         rsvpSheetUrl: "",
         enableGallery: true,
@@ -251,6 +252,25 @@ export default function Home() {
                                 disabled={isSubmitted}
                             />
                         </div>
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <Label className="text-blue-500 font-bold">Name of App</Label>
+                                <div className="relative group cursor-pointer">
+                                    <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
+                                    <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
+                                        Enter the name you would want for your wedding app.
+                                    </div>
+                                </div>
+                            </div>
+                            <Input
+                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
+                                value={form.appName}
+                                onChange={(e) => handleChange("appName", e.target.value)}
+                                disabled={isSubmitted}
+                            />
+                        </div>
+
+
                         <div className="font-bold text-lg">All screens are enabled by default. Please review and select the ones you would like to include in your custom mobile wedding app.</div>
                         <div className="flex flex-wrap gap-3 justify-center">
                             {screenToggles.map(({ label, field }) => (

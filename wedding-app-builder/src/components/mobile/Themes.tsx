@@ -35,7 +35,7 @@ const Themes: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
             <div>
                 <p className="mb-2 font-serif text-lg">Font Style</p>
                 <div className="flex gap-4 flex-wrap">
-                    {fontOptions.map((font) => (
+                    {fontOptions.map((font: any) => (
                         <button
                             key={font}
                             className={classNames(
@@ -44,7 +44,7 @@ const Themes: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
                                     ? "border-mauve bg-white text-cocoa"
                                     : "border-gray-300 hover:border-mauve"
                             )}
-                        //onClick={() => setSelectedFont(font)}
+                            onClick={() => setSelectedFont(font)}
                         >
                             <span className={font === "Script" ? "italic" : ""}>{font}</span>
                         </button>

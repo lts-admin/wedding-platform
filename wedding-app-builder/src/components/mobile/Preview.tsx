@@ -13,10 +13,30 @@ import {
     Users2,
     BookOpen,
 } from "lucide-react";
-import { collection, query, orderBy, limit, getFirestore, doc, setDoc, getDoc, getDocs, serverTimestamp } from "firebase/firestore";
+import {
+    collection,
+    query,
+    orderBy,
+    limit,
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    getDocs,
+    serverTimestamp,
+} from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebaseConfig";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog";
 
 const db = getFirestore();
 
@@ -28,6 +48,8 @@ type Props = {
 export default function Preview({ form, goBack }: Props) {
     const [activeTab, setActiveTab] = useState("home");
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -63,7 +85,7 @@ export default function Preview({ form, goBack }: Props) {
                                 </p>
                             ))
                         ) : (
-                            <p className="text-sm text-gray-500">No story added.</p>
+                            <p className="text-sm text-black">No story added.</p>
                         )}
                     </div>
                 );
@@ -81,7 +103,7 @@ export default function Preview({ form, goBack }: Props) {
                                 View Gallery Folder
                             </a>
                         ) : (
-                            <p className="text-xs text-gray-500">No gallery link provided.</p>
+                            <p className="text-xs text-black">No gallery link provided.</p>
                         )}
                     </div>
                 );
@@ -143,37 +165,33 @@ export default function Preview({ form, goBack }: Props) {
             case "settings":
                 return (
                     <div className="text-sm space-y-6">
-                        {/* FAQs Section */}
                         <div>
-                            <h3 className="text-pink-500 font-semibold mb-2">FAQs:</h3>
+                            <h3 className="text-black font-semibold mb-2">FAQs:</h3>
                             <ul className="space-y-3">
-                                {Array.isArray(form.faqs) && form.faqs.map((faq, index) => (
-                                    <li key={index}>
-                                        <p className="font-bold">{faq.question}</p>
-                                        <p className="text-gray-300">{faq.answer}</p>
-                                    </li>
-                                ))}
-
+                                {Array.isArray(form.faqs) &&
+                                    form.faqs.map((faq, index) => (
+                                        <li key={index}>
+                                            <p className="font-bold">{faq.question}</p>
+                                            <p className="text-gray-300">{faq.answer}</p>
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
-
-                        {/* Contact Info Section */}
                         <div>
-                            <h3 className="text-pink-500 font-semibold mb-2">Contact Info:</h3>
+                            <h3 className="text-black font-semibold mb-2">Contact Info:</h3>
                             <ul className="space-y-3">
-                                {Array.isArray(form.contactInfo) && form.contactInfo.map((contact, index) => (
-                                    <li key={index}>
-                                        <p>{contact.name}</p>
-                                        <p>{contact.phone}</p>
-                                        <p>{contact.email}</p>
-                                    </li>
-                                ))}
+                                {Array.isArray(form.contactInfo) &&
+                                    form.contactInfo.map((contact, index) => (
+                                        <li key={index}>
+                                            <p>{contact.name}</p>
+                                            <p>{contact.phone}</p>
+                                            <p>{contact.email}</p>
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                     </div>
                 );
-
-
             default:
                 return null;
         }
@@ -189,46 +207,40 @@ export default function Preview({ form, goBack }: Props) {
         ...(form.enableSettings ? [{ id: "settings", label: "Settings", icon: <Settings size={18} /> }] : []),
     ];
 
-
     const handleGenerateApp = async () => {
-        const confirmed = window.confirm("Are you sure? You won't be able to make changes after this step.");
-        if (!confirmed || !user) return;
+        if (!user) return;
+
         setIsSubmitted(true);
-        alert("Thank you for submitting your app! You will receive an email with instructions in the next 24 hours to download your personal wedding mobile application.");
+        console.log("form", form);
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(form),
         });
 
-        if (!response.ok) {
-            alert("Something went wrong generating the app.");
-            return;
-        }
+        if (!response.ok) return;
 
         const blob = await response.blob();
-
-        // 🔼 Upload ZIP to Firebase Storage
         const zipPath = `zips/${user.uid}/wedding_app.zip`;
         const storageRef = ref(storage, zipPath);
         await uploadBytes(storageRef, blob);
         const downloadURL = await getDownloadURL(storageRef);
 
-
-
-        // 🔄 Update weddingApps document
         const appDocRef = doc(db, "weddingApps", user.uid);
-        await setDoc(appDocRef, {
-            ...form,
-            isSubmitted: true,
-            zipGenerated: true,
-            formCompleted: true,
-            feedbackReceived: false,
-            published: false,
-            generatedAt: serverTimestamp(),
-        }, { merge: true });
+        await setDoc(
+            appDocRef,
+            {
+                ...form,
+                isSubmitted: true,
+                zipGenerated: true,
+                formCompleted: true,
+                feedbackReceived: false,
+                published: false,
+                generatedAt: serverTimestamp(),
+            },
+            { merge: true }
+        );
 
-        // 💾 Save ZIP metadata to weddingAppZips collection
         const zipDocRef = doc(db, "weddingAppZips", user.uid);
         await setDoc(zipDocRef, {
             userId: user.uid,
@@ -236,78 +248,105 @@ export default function Preview({ form, goBack }: Props) {
             zipPath,
             generatedAt: serverTimestamp(),
         });
-        const workRequestsCollection = collection(db, "workRequests");
 
+        const workRequestsCollection = collection(db, "workRequests");
         const latestQuery = query(workRequestsCollection, orderBy("__name__", "desc"), limit(1));
         const latestSnap = await getDocs(latestQuery);
         let newId = 1;
-
         if (!latestSnap.empty) {
             const latestId = parseInt(latestSnap.docs[0].id);
             if (!isNaN(latestId)) {
                 newId = latestId + 1;
             }
         }
-        // ✅ NEW: Create work request
+
         const workRequestRef = doc(db, "workRequests", newId.toString());
         await setDoc(workRequestRef, {
             assignee: "Satya Vinjamuri",
             userId: user.uid,
             coupleName: form.coupleName,
             zipFileUrl: downloadURL,
-            authStatus: WorkStatus.Submitted, // default status
+            authStatus: WorkStatus.Submitted,
             feedback: "",
             dateCreated: serverTimestamp(),
-            dateCompleted: null
+            dateCompleted: null,
         });
     };
 
-
     return (
         <div>
-            <h2 className="text-2xl font-semibold text-pink-400">
-                Preview of your Custom App
-            </h2>
-            <div className="flex flex-col items-center justify-center py-12">
-                <div className="relative bg-white shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200">
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-gray-300 rounded-b-xl z-10" />
-                    <div className="p-6 pt-8 overflow-y-auto pb-20 transition-opacity duration-300 ease-in-out">
-                        {renderContent()}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-neutral-100 p-2 rounded-b-[40px] flex justify-around text-xs border-t">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`flex flex-col items-center transition-colors duration-200 ${activeTab === tab.id
-                                    ? "text-blue-600 font-semibold"
-                                    : "text-gray-600"
-                                    } `}
-                            >
-                                {tab.icon}
-                                <span>{tab.label}</span>
-                            </button>
-                        ))}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-12">
+                <div className="flex flex-col items-center lg:items-start">
+                    <h2 className="text-2xl font-semibold text-pink-400 mb-4">Preview of your Custom App</h2>
+                    <div className="relative shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200 text-black">
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-gray-300 rounded-b-xl z-10" />
+                        <div className="p-6 pt-8 overflow-y-auto pb-20 h-full" style={{ backgroundColor: form.selectedColor || "#ffffff", fontFamily: form.selectedFont }}>
+                            {renderContent()}
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-neutral-100 p-2 rounded-b-[40px] flex justify-around text-xs border-t">
+                            {tabs.map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`flex flex-col items-center ${activeTab === tab.id ? "text-blue-600 font-semibold" : "text-gray-600"}`}
+                                >
+                                    {tab.icon}
+                                    <span>{tab.label}</span>
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-4 pt-4">
-                    <Button
-                        className="w-[300px] bg-purple-500 text-black font-bold"
-                        onClick={handleGenerateApp}
-                        disabled={isSubmitted}
-                    >
-                        {isSubmitted ? "Submitted" : "Generate App"}
+                <div className="flex flex-col items-center gap-4">
+                    <Button className="w-[200px] bg-pink-400 text-black font-bold" onClick={() => setShowConfirmModal(true)} disabled={isSubmitted}>
+                        {isSubmitted ? "Submitted" : "Build My App"}
                     </Button>
-                    <Button
-                        variant="outline"
-                        className="w-[300px] font-bold"
-                        onClick={goBack}
-                    >
+                    <Button variant="outline" className="w-[200px] font-bold" onClick={goBack}>
                         Back
                     </Button>
                 </div>
             </div>
+
+            <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+                <DialogContent className="bg-[#f5f5dc] text-black">
+                    <DialogHeader>
+                        <DialogTitle className="text-black">Are you sure?</DialogTitle>
+                        <DialogDescription className="text-black">
+                            You won't be able to make changes after this step.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="flex justify-end gap-2">
+                        <Button variant="outline" className="text-black" onClick={() => setShowConfirmModal(false)}>Cancel</Button>
+                        <Button
+                            onClick={async () => {
+                                setShowConfirmModal(false);
+                                await handleGenerateApp();
+                                setShowSuccessModal(true);
+                            }}
+                            variant="outline"
+                            className="text-black"
+                        >
+                            Yes, Continue
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+                <DialogContent className="bg-[#f5f5dc] text-black">
+                    <DialogHeader>
+                        <DialogTitle>Thank you!</DialogTitle>
+                        <DialogDescription>
+                            You will receive an email with instructions in the next 24 hours on how you can download your personal wedding mobile app.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button onClick={() => setShowSuccessModal(false)}>OK</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
         </div>
     );
 }

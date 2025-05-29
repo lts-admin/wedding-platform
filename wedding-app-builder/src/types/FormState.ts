@@ -31,6 +31,7 @@ export type FormState = {
     coupleName: string;
     weddingDate: string;
     weddingLocation: string;
+    appName: string;
     enableRSVP: boolean;
     rsvpSheetUrl: string;
     enableGallery: boolean;
@@ -78,6 +79,4 @@ export type FormState = {
     enableEventNotification: boolean;
     enablePlannerUpdates: boolean;
     rsvpDeadline?: string;
-
-
 };
