@@ -1,3 +1,12 @@
-/app-generator/node_modules
-/app-generator/generated_apps
-/app-generator/templates/*
+# Ignore node_modules and build output
+**/node_modules/
+**/.next/
+**/.DS_Store
+**/.env.local
+
+# Ignore generated ZIPs and template contents
+/app-generator/generated_apps/
+/app-generator/templates/
+
+# Optional: Ignore logs or lock files
+*.log

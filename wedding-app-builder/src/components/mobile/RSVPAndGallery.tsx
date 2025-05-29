@@ -11,7 +11,16 @@ export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: a
             <h2 className="text-2xl font-semibold text-blue-400">RSVP & Gallery</h2>
             {form.enableRSVP && (
                 <div>
-                    <Label className="text-black pb-2 font-bold">RSVP Google Sheet Link</Label>
+                    <div className="flex items-center gap-2">
+                        <Label className="text-black font-bold">RSVP Google Sheet Link</Label>
+                        <div className="relative group cursor-pointer">
+                            <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
+                            <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
+                                Paste a link to your RSVP Google Sheet. Make sure it's set to “Anyone with the link can view” so your app can access it.
+                            </div>
+                        </div>
+                    </div>
+
                     <Input
                         value={form.rsvpSheetUrl}
                         onChange={(e) => handleChange("rsvpSheetUrl", e.target.value)}
@@ -21,7 +30,16 @@ export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: a
             )}
             {form.enableGallery && (
                 <div>
-                    <Label className="text-black pb-2 font-bold">Gallery Google Drive Folder Link</Label>
+                    <div className="flex items-center gap-2">
+                        <Label className="text-black font-bold">Gallery Google Drive Folder Link</Label>
+                        <div className="relative group cursor-pointer">
+                            <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
+                            <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
+                                Paste the shared link to your Drive folder. Set it to “Anyone with the link can view” so guests can see your wedding gallery.
+                            </div>
+                        </div>
+                    </div>
+
                     <Input
                         value={form.galleryDriveUrl}
                         onChange={(e) => handleChange("galleryDriveUrl", e.target.value)}
