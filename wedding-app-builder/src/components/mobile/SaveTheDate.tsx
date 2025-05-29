@@ -70,7 +70,7 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
 
     return (
         <div className="max-w-xxl space-y-8 text-[#E4D7DE]">
-            <h2 className="text-2xl font-semibold text-blue-700">Save The Date</h2>
+            <h2 className="text-2xl font-semibold text-pink-400">Save The Date</h2>
 
             <div>
                 <Label className="text-black pb-2 font-bold">

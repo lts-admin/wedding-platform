@@ -66,7 +66,7 @@ export default function HomePage() {
             className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm"
             onClick={() => router.push('/log-in')}
           >Log in</button>
-          <button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</button>
+          <Link href="/app-info" className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</Link>
         </div>
 
         {/* Mobile Menu */}

@@ -46,7 +46,7 @@ const Itinerary: React.FC<ItineraryProps> = ({ form, setForm, goNext, goBack }) 
         label: string
     ) => (
         <div className="space-y-4">
-            <h3 className="text-pink-500 pb-2 font-semibold">{label}</h3>
+            <h3 className="text-black pb-2 font-semibold">{label}</h3>
             {form[section].map((event, index) => (
                 <div key={index} className="border p-4 rounded-md space-y-2 relative">
                     {!isSubmitted && (
@@ -109,7 +109,7 @@ const Itinerary: React.FC<ItineraryProps> = ({ form, setForm, goNext, goBack }) 
 
     return (
         <div className="max-w-2xl space-y-6">
-            <h2 className="text-2xl font-semibold text-blue-500">Wedding Itinerary</h2>
+            <h2 className="text-2xl font-semibold text-pink-400">Wedding Itinerary</h2>
             {renderEventInputs("weddingEvents", "Wedding Events")}
             {renderEventInputs("brideEvents", "Bride Events")}
             {renderEventInputs("groomEvents", "Groom Events")}

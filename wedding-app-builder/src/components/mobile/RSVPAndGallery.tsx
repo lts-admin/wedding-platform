@@ -8,7 +8,7 @@ export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: a
     const isSubmitted = form.isSubmitted;
     return (
         <div className="max-w-xxl space-y-4">
-            <h2 className="text-2xl font-semibold text-blue-400">RSVP & Gallery</h2>
+            <h2 className="text-2xl font-semibold text-pink-400">RSVP & Gallery</h2>
             {form.enableRSVP && (
                 <div>
                     <div className="flex items-center gap-2">

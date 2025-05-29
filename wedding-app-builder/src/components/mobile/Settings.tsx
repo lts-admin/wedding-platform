@@ -65,7 +65,7 @@ const Settings: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
 
     return (
         <div className="max-w-2xl space-y-6 text-cocoa">
-            <h2 className="text-2xl font-bold text-blue-500">Settings</h2>
+            <h2 className="text-2xl font-bold text-pink-400">Settings</h2>
 
             <div>
                 <Label className="text-mauve pb-2 font-semibold">FAQs</Label>

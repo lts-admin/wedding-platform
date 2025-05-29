@@ -164,7 +164,7 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-blue-500">Wedding Party</h2>
+            <h2 className="text-2xl font-semibold text-pink-400">Wedding Party</h2>
             <div className="grid grid-cols-2 gap-6">
                 {renderPartySide("bride", "Bride's Side")}
                 {renderPartySide("groom", "Groom's Side")}

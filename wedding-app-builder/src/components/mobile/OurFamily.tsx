@@ -59,7 +59,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
 
     return (
         <div>
-            <h2 className="text-2xl font-semibold text-blue-400">Our Family Section</h2>
+            <h2 className="text-2xl font-semibold text-pink-400">Our Family Section</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["bride", "groom"].map((side) => (
                     <div key={side} className="space-y-4">

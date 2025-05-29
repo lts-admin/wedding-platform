@@ -83,9 +83,9 @@ export default function Home() {
         selectedFont: "Serif",
         selectedColor: "",
         selectedLayout: "",
-        enableRSVPNotification: true,
-        enableEventNotification: true,
-        enablePlannerUpdates: true,
+        enableRSVPNotification: false,
+        enableEventNotification: false,
+        enablePlannerUpdates: false,
         backgroundImage: "",
     });
 
@@ -224,9 +224,9 @@ export default function Home() {
             <section className="flex-1 px-4 sm:px-6 md:px-8 pt-20 lg:pt-10 space-y-6">
                 {sidebarItems[step]?.key === "appInfo" && (
                     <div className="max-w-2xl space-y-6">
-                        <h2 className="text-2xl font-semibold text-pink-500">Wedding Details</h2>
+                        <h2 className="text-2xl font-semibold text-pink-400">Wedding Details</h2>
                         <div>
-                            <Label className="text-blue-500 pb-2 font-bold">Couple Name</Label>
+                            <Label className="text-black pb-2 font-bold">Couple Name</Label>
                             <Input
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.coupleName}
@@ -235,7 +235,7 @@ export default function Home() {
                             />
                         </div>
                         <div>
-                            <Label className="text-blue-500 pb-2 font-bold">Wedding Date</Label>
+                            <Label className="text-black pb-2 font-bold">Wedding Date</Label>
                             <Input
                                 type="date"
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
@@ -245,7 +245,7 @@ export default function Home() {
                             />
                         </div>
                         <div>
-                            <Label className="text-blue-500 pb-2 font-bold">Wedding Location</Label>
+                            <Label className="text-black pb-2 font-bold">Wedding Location</Label>
                             <Input
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.weddingLocation}
@@ -255,7 +255,7 @@ export default function Home() {
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-1">
-                                <Label className="text-blue-500 font-bold">Name of App</Label>
+                                <Label className="text-black font-bold">Name of App</Label>
                                 <div className="relative group cursor-pointer">
                                     <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                                     <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
@@ -335,43 +335,43 @@ export default function Home() {
         </main>
         //     <div className="grid grid-cols-2 gap-4">
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Save The Date</Label>
+        //         <Label className="text-black pb-2">Save The Date</Label>
         //         <CustomSwitch checked={form.enableSaveDate} onToggle={() => handleToggle("enableSaveDate")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Our Story</Label>
+        //         <Label className="text-black pb-2">Our Story</Label>
         //         <CustomSwitch checked={form.enableStory} onToggle={() => handleToggle("enableStory")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Enable RSVP</Label>
+        //         <Label className="text-black pb-2">Enable RSVP</Label>
         //         <CustomSwitch checked={form.enableRSVP} onToggle={() => handleToggle("enableRSVP")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Enable Gallery</Label>
+        //         <Label className="text-black pb-2">Enable Gallery</Label>
         //         <CustomSwitch checked={form.enableGallery} onToggle={() => handleToggle("enableGallery")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Our Family Section</Label>
+        //         <Label className="text-black pb-2">Our Family Section</Label>
         //         <CustomSwitch checked={form.enableFamily} onToggle={() => handleToggle("enableFamily")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Wedding Party</Label>
+        //         <Label className="text-black pb-2">Wedding Party</Label>
         //         <CustomSwitch checked={form.enableWeddingParty} onToggle={() => handleToggle("enableWeddingParty")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Wedding Itinerary</Label>
+        //         <Label className="text-black pb-2">Wedding Itinerary</Label>
         //         <CustomSwitch checked={form.enableItinerary} onToggle={() => handleToggle("enableItinerary")} disabled={isSubmitted} />
         //     </div>
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Travel</Label>
+        //         <Label className="text-black pb-2">Travel</Label>
         //         <CustomSwitch checked={form.enableTravel} onToggle={() => handleToggle("enableTravel")} disabled={isSubmitted} />
         //     </div>
         //     {/* <div>
-        //                             <Label className="text-blue-500 pb-2">Registry</Label>
+        //                             <Label className="text-black pb-2">Registry</Label>
         //                             <CustomSwitch checked={form.enableRegistry} onToggle={() => handleToggle("enableRegistry")} />
         //                         </div> */}
         //     <div>
-        //         <Label className="text-blue-500 pb-2">Settings (FAQs)</Label>
+        //         <Label className="text-black pb-2">Settings (FAQs)</Label>
         //         <CustomSwitch checked={form.enableSettings} onToggle={() => handleToggle("enableSettings")} disabled={isSubmitted} />
         //     </div>
         // </div>
