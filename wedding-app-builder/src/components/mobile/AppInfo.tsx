@@ -275,7 +275,7 @@ export default function Home() {
                         <div className="font-bold text-lg">All screens are enabled by default. Please review and select the ones you would like to include in your custom mobile wedding app.</div>
                         <div className="flex flex-wrap gap-3 justify-center">
                             {screenToggles.map(({ label, field }) => (
-                                <button
+                                <Button
                                     key={field}
                                     className={`px-4 py-2 rounded-full border text-sm font-bold transition 
         ${form[field] ? "bg-pink-400 text-white border-white" : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
@@ -283,7 +283,7 @@ export default function Home() {
                                     disabled={isSubmitted}
                                 >
                                     {label}
-                                </button>
+                                </Button>
                             ))}
                         </div>
 

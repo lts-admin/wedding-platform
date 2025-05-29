@@ -57,7 +57,7 @@ const Travel: React.FC<TravelProps> = ({ form, setForm, goNext, goBack }) => {
                             value={venue}
                             onChange={(e) => handleVenueChange(idx, e.target.value)}
                             placeholder={`Venue ${idx + 1}`}
-                            className="w-full bg-petal text-cocoa border border-mauve pr-10"
+                            className="w-full bg-petal text-cocoa border border-pink-300 pr-10"
                             disabled={isSubmitted}
                         />
                         {!isSubmitted && (
@@ -84,7 +84,7 @@ const Travel: React.FC<TravelProps> = ({ form, setForm, goNext, goBack }) => {
                             value={hotel}
                             onChange={(e) => handleHotelChange(idx, e.target.value)}
                             placeholder={`Hotel ${idx + 1}`}
-                            className="w-full bg-petal text-cocoa border border-mauve pr-10"
+                            className="w-full bg-petal text-cocoa border border-pink-300 pr-10"
                             disabled={isSubmitted}
                         />
                         {!isSubmitted && (

@@ -68,6 +68,13 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
         }
     }, [form.enableRSVP, form.showRSVPButton, setForm]);
 
+    const screenToggles: { label: string; field: keyof typeof form; tooltip: string; }[] = [
+        { label: "Enable Countdown", field: "enableCountdown", tooltip: "This will enable a countdown widget to appear on home screen of app  " },
+        { label: "Make Home Screen", field: "isHomeScreen", tooltip: "This will enable the save the date screen to be the home screen of app" },
+        { label: "Insert RSVP Button", field: "showRSVPButton", tooltip: "This will enable an RSVP button to appear on home screen of app" },
+    ];
+
+
     return (
         <div className="max-w-xxl space-y-8 text-[#E4D7DE]">
             <h2 className="text-2xl font-semibold text-pink-400">Save The Date</h2>
@@ -94,45 +101,28 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                     </div>
                 )}
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                    <Label className="text-black pb-2 font-bold">Enable Countdown</Label>
-                    <div className="flex items-center gap-4 pt-2">
-                        <CustomSwitch
+            <div className="flex flex-wrap gap-4">
+                {screenToggles.map(({ label, field, tooltip }) => (
+                    <div className="relative group">
+                        <Button
+                            className={`px-4 py-2 rounded-full border text-sm font-bold transition 
+      ${form[field]
+                                    ? "bg-pink-400 text-white border-white"
+                                    : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
+                            onClick={() => handleToggle(field)}
                             disabled={isSubmitted}
-                            checked={form.enableCountdown}
-                            onToggle={() => handleToggle("enableCountdown")}
+                        >
+                            {label}
+                        </Button>
 
-                        />
-                        <span className="text-black ">{form.enableCountdown ? "Enabled" : "Disabled"}</span>
+                        <div className="absolute z-10 hidden group-hover:block w-32 p-2 bg-gray-500 text-white text-xs rounded shadow-lg top-full left-1/2 -translate-x-1/2 mt-1 whitespace-normal text-center">
+                            {tooltip}
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <Label className="text-black pb-2 font-bold">Make Home Screen</Label>
-                    <div className="flex items-center gap-4 pt-2" >
-                        <CustomSwitch
-                            disabled={isSubmitted}
-                            checked={form.isHomeScreen}
-                            onToggle={() => handleToggle("isHomeScreen")}
-                        />
-                        <span className="text-black ">{form.isHomeScreen ? "Enabled" : "Disabled"}</span>
-                    </div>
-                </div>
-
-                <div>
-                    <Label className="text-black pb-2 font-bold">Insert RSVP Button</Label>
-                    <div className="flex items-center gap-4 pt-2">
-                        <CustomSwitch
-                            disabled={isSubmitted}
-                            checked={form.showRSVPButton}
-                            onToggle={() => handleToggle("showRSVPButton")}
-                        />
-                        <span className="text-black ">{form.showRSVPButton ? "Enabled" : "Disabled"}</span>
-                    </div>
-                </div>
+                ))}
             </div>
+
 
             <div className="flex justify-start gap-4 pt-12">
                 <Button variant="outline" onClick={goBack} className="text-black font-bold">
