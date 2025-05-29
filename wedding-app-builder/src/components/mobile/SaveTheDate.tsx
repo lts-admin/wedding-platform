@@ -83,6 +83,16 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                     className="bg-beige text-black border border-pink-300"
                     disabled={isSubmitted}
                 />
+                {form.saveTheDateImage && (
+                    <div className="mt-4">
+                        <p className="text-black font-medium">Current Image:</p>
+                        <img
+                            src={URL.createObjectURL(form.saveTheDateImage)}
+                            alt="Selected"
+                            className="w-48 h-auto rounded border mt-2"
+                        />
+                    </div>
+                )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -124,7 +134,7 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                 </div>
             </div>
 
-            <div className="flex justify-between pt-6">
+            <div className="flex justify-start gap-4 pt-12">
                 <Button variant="outline" onClick={goBack} className="text-black font-bold">
                     Back
                 </Button>

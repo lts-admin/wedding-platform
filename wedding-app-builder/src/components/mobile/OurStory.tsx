@@ -126,7 +126,7 @@ const OurStory: React.FC<OurStoryProps> = ({ form, setForm, goNext, goBack }) =>
                 </Button>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-start gap-4 pt-12">
                 <Button variant="outline" onClick={goBack} className="text-black font-bold">
                     Back
                 </Button>

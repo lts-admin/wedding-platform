@@ -86,6 +86,7 @@ export default function Home() {
         enableRSVPNotification: true,
         enableEventNotification: true,
         enablePlannerUpdates: true,
+        backgroundImage: "",
     });
 
     useEffect(() => {
@@ -325,7 +326,7 @@ export default function Home() {
                     <Notifications form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
                 )}
                 {sidebarItems[step]?.key === "themes" && (
-                    <Themes form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
+                    <Themes form={form} goNext={goNext} goBack={goBack} />
                 )}
                 {sidebarItems[step]?.key === "preview" && (
                     <Preview form={form} goBack={goBack} />

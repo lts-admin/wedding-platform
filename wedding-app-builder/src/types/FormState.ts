@@ -75,6 +75,7 @@ export type FormState = {
     selectedFont: "Serif" | "Sans" | "Script";
     selectedColor: string;
     selectedLayout: string;
+    backgroundImage: string | File | null;
     enableRSVPNotification: boolean;
     enableEventNotification: boolean;
     enablePlannerUpdates: boolean;

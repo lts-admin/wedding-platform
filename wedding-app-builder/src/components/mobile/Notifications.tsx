@@ -92,7 +92,7 @@ export default function Notifications({
                 </label>
             </div>
 
-            <div className="flex justify-between pt-6">
+            <div className="flex justify-start gap-4 pt-12">
                 <Button variant="outline" className="font-bold" onClick={goBack}>
                     Back
                 </Button>

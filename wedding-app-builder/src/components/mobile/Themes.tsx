@@ -6,36 +6,41 @@ import { FormState } from "@/types/FormState";
 
 type Props = {
     form: FormState;
-    handleChange: (field: keyof FormState, value: string | boolean) => void;
     goNext: () => void;
     goBack: () => void;
 };
 
-const fontOptions = ["Serif", "Sans", "Script"];
+const fontOptions = ["Serif", "Sans", "Script"] as const;
 const colorOptions = ["#A17956", "#EECAC4", "#B0848B", "#826056", "#3C314D"];
 const layoutOptions = ["layout1", "layout2"];
 
-const Themes: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
+const Themes: React.FC<Props> = ({ form, goNext, goBack }) => {
     const [selectedFont, setSelectedFont] = useState(form.selectedFont || "Script");
     const [selectedColor, setSelectedColor] = useState(form.selectedColor || colorOptions[0]);
     const [selectedLayout, setSelectedLayout] = useState(form.selectedLayout || "layout1");
 
     // Persist theme selections to form state
-    useEffect(() => {
-        handleChange("selectedFont", selectedFont);
-        handleChange("selectedColor", selectedColor);
-        handleChange("selectedLayout", selectedLayout);
-    }, [selectedFont, selectedColor, selectedLayout]);
+    // useEffect(() => {
+    //     handleChange("selectedFont", selectedFont);
+    //     handleChange("selectedColor", selectedColor);
+    //     handleChange("selectedLayout", selectedLayout);
+    // }, [selectedFont, selectedColor, selectedLayout]);
+
+    // Mock AI image generation
+    const generateAIImage = async (prompt: string): Promise<string> => {
+        await new Promise((res) => setTimeout(res, 1000)); // simulate delay
+        return "https://source.unsplash.com/800x600/?floral,wedding";
+    };
 
     return (
-        <div className="max-w-2xl   bg-petal p-6 rounded-xl space-y-6">
+        <div className="max-w-2xl bg-petal p-6 rounded-xl space-y-6">
             <h2 className="text-2xl font-semibold text-pink-400">Build & Customize</h2>
 
             {/* Font Selector */}
             <div>
                 <p className="mb-2 font-serif text-lg">Font Style</p>
                 <div className="flex gap-4 flex-wrap">
-                    {fontOptions.map((font: any) => (
+                    {fontOptions.map((font) => (
                         <button
                             key={font}
                             className={classNames(
@@ -61,7 +66,9 @@ const Themes: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
                             key={color}
                             className={classNames(
                                 "w-8 h-8 rounded-full border-2 transition-all",
-                                selectedColor === color ? "border-white shadow-lg" : "border-gray-300 hover:border-mauve"
+                                selectedColor === color
+                                    ? "border-white shadow-lg"
+                                    : "border-gray-300 hover:border-mauve"
                             )}
                             style={{ backgroundColor: color }}
                             onClick={() => setSelectedColor(color)}
@@ -70,24 +77,55 @@ const Themes: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
                 </div>
             </div>
 
-            {/* Layout Selector */}
+            {/* Background Image Selection */}
             <div>
-                <p className="mb-2 font-serif text-lg">Layout</p>
-                <div className="flex gap-4">
-                    {layoutOptions.map((layout) => (
+                <p className="mb-2 font-serif text-lg">App Background</p>
+
+                <div className="flex flex-col gap-4">
+                    <div>
+                        <label className="block mb-1 text-black font-medium">Upload Image</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                // if (file) {
+                                //     handleChange("backgroundImage", file);
+                                // }
+                            }}
+                            className="text-black bg-white border rounded-md p-2"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-1 text-black font-medium">Or use AI to generate</label>
                         <button
-                            key={layout}
-                            className={classNames(
-                                "w-12 h-16 border rounded-md",
-                                selectedLayout === layout
-                                    ? "border-mauve bg-white"
-                                    : "border-gray-300 hover:border-mauve"
-                            )}
-                            onClick={() => setSelectedLayout(layout)}
+                            type="button"
+                            onClick={async () => {
+                                const prompt = "Floral wedding background in soft pastels";
+                                const generatedImageUrl = await generateAIImage(prompt);
+                                //handleChange("backgroundImage", generatedImageUrl);
+                            }}
+                            className="bg-mauve text-white px-4 py-2 rounded-md hover:brightness-110"
                         >
-                            <span className="sr-only">{layout}</span>
+                            Generate AI Background
                         </button>
-                    ))}
+                    </div>
+
+                    {form.backgroundImage && (
+                        <div className="mt-4">
+                            <p className="text-black font-medium">Selected Background:</p>
+                            <img
+                                src={
+                                    typeof form.backgroundImage === "string"
+                                        ? form.backgroundImage
+                                        : URL.createObjectURL(form.backgroundImage)
+                                }
+                                alt="Selected Background"
+                                className="w-full h-auto max-h-64 mt-2 rounded-md"
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -111,7 +149,7 @@ const Themes: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
                 <p className="text-black text-sm mt-2">July 30, 2025</p>
             </div>
 
-            <div className="flex justify-between pt-4">
+            <div className="flex justify-start gap-4 pt-12">
                 <button
                     onClick={goBack}
                     className="border border-mauve text-cocoa font-bold px-4 py-2 rounded-md hover:text-black transition"

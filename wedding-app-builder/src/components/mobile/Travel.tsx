@@ -103,7 +103,7 @@ const Travel: React.FC<TravelProps> = ({ form, setForm, goNext, goBack }) => {
                 </Button>
             </div>
 
-            <div className="flex justify-between pt-6">
+            <div className="flex justify-start gap-4 pt-12">
                 <Button variant="outline" onClick={goBack} className="font-bold">
                     Back
                 </Button>

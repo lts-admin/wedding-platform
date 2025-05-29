@@ -58,7 +58,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
     };
 
     return (
-        <div className="space-y-6 pt-20 lg:pt-10 px-4">
+        <div>
             <h2 className="text-2xl font-semibold text-blue-400">Our Family Section</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["bride", "groom"].map((side) => (
@@ -144,7 +144,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
             </div>
 
             <div>
-                <h2 className="text-black pb-2 font-bold">Pets</h2>
+                <h2 className="text-black pb-2 pt-6 font-bold">Pets</h2>
                 {form.familyDetails.pets.map((pet, index) => (
                     <div
                         key={index}
@@ -228,7 +228,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                 </Button>
             </div>
 
-            <div className="flex justify-start gap-4 pt-4">
+            <div className="flex justify-start gap-4 pt-12">
                 <Button variant="outline" className="text-black font-bold" onClick={goBack}>
                     Back
                 </Button>

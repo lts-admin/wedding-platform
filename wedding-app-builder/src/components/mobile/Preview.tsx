@@ -37,6 +37,7 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import Countdown from "@/components/utilities/Countdown";
 
 const db = getFirestore();
 
@@ -69,10 +70,60 @@ export default function Preview({ form, goBack }: Props) {
         switch (activeTab) {
             case "home":
                 return (
-                    <div className="space-y-2 text-center">
-                        <p className="text-xl font-serif font-bold">{form.coupleName}</p>
-                        <p className="text-sm text-gray-700">{form.weddingDate}</p>
+                    <div className="space-y-2 text-center" style={{ fontFamily: form.selectedFont }}>
+                        <p className="text-xl font-bold py-6">SAVE THE DATE</p>
+                        <p className="text-xl font-bold py-6">Join us for the wedding of<br />{form.coupleName}</p>
+                        <p className="text-lg text-black">
+                            {new Date(`${form.weddingDate}T00:00:00`).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
+                        </p>
+
+                        <p className="text-xl text-black">{form.weddingLocation}</p>
+                        <div className="flex justify-center">
+                            {form.saveTheDateImage && (
+                                <img
+                                    src={URL.createObjectURL(form.saveTheDateImage)}
+                                    alt="Save the Date Preview"
+                                    className="w-32 h-32 object-cover rounded"
+                                />
+                            )}
+                        </div>
+                        <div className="flex justify-center">
+                            {form.enableRSVP && (
+                                <Button className="bg-black text-white">RSVP</Button>
+                            )}
+                        </div>
+                        {form.enableCountdown && (
+                            <Countdown weddingDate={form.weddingDate} />
+                        )}
+                    </div>
+                );
+
+            case "rsvp":
+                return (
+                    <div className="space-y-2 text-center" style={{ fontFamily: form.selectedFont }}>
+                        <p className="text-xl font-bold py-6">SAVE THE DATE</p>
+                        <p className="text-xl font-bold" >{form.coupleName}</p>
+                        <p className="text-xl text-black">{form.weddingDate}</p>
                         <p className="text-sm text-gray-700">{form.weddingLocation}</p>
+                        <div className="flex justify-center">
+                            {form.saveTheDateImage && (
+                                <img
+                                    src={URL.createObjectURL(form.saveTheDateImage)}
+                                    alt="Save the Date Preview"
+                                    className="w-32 h-32 object-cover rounded"
+                                />
+                            )}
+                        </div>
+                        <div className="flex justify-center">
+                            {form.enableRSVP && (
+                                <Button className="bg-black text-white">RSVP</Button>
+                            )}
+                        </div>
                     </div>
                 );
             case "story":
