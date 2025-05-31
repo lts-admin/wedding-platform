@@ -50,6 +50,7 @@ export default function AdminDashboard() {
     const router = useRouter();
     const [authenticated, setAuthenticated] = useState(false);
     const [passwordInput, setPasswordInput] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
     const [requests, setRequests] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("All");
@@ -57,6 +58,18 @@ export default function AdminDashboard() {
     const [modalInput, setModalInput] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [contactRequests, setContactRequests] = useState<any[]>([]);
+
+    useEffect(() => {
+        const session = localStorage.getItem("admin-auth");
+        if (session) {
+            const expiresAt = new Date(session);
+            if (new Date() < expiresAt) {
+                setAuthenticated(true);
+            } else {
+                localStorage.removeItem("admin-auth");
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (!authenticated) return;
@@ -76,6 +89,16 @@ export default function AdminDashboard() {
         fetchData();
     }, [authenticated]);
 
+    const handleLogin = () => {
+        if (passwordInput === ADMIN_PASSWORD) {
+            const expiration = new Date();
+            expiration.setMinutes(expiration.getMinutes() + (rememberMe ? 1440 : 15)); // 24 hours or 15 min
+            localStorage.setItem("admin-auth", expiration.toISOString());
+            setAuthenticated(true);
+        } else {
+            alert("Incorrect password");
+        }
+    };
 
     const filteredRequests =
         filter === "All" ? requests : requests.filter((r) => r.authStatus === filter);
@@ -183,14 +206,16 @@ export default function AdminDashboard() {
                         onChange={(e) => setPasswordInput(e.target.value)}
                         className="w-full p-2 mb-4 bg-gray-800 border border-gray-600 rounded text-white"
                     />
+                    <div className="flex items-center gap-2 mb-4">
+                        <input
+                            type="checkbox"
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                        />
+                        <label>Remember Me (24 hrs)</label>
+                    </div>
                     <button
-                        onClick={() => {
-                            if (passwordInput === ADMIN_PASSWORD) {
-                                setAuthenticated(true);
-                            } else {
-                                alert("Incorrect password");
-                            }
-                        }}
+                        onClick={handleLogin}
                         className="bg-pink-500 text-white font-bold w-full py-2 rounded"
                     >
                         Enter
