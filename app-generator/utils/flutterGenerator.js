@@ -153,7 +153,7 @@ async function generateFlutterApp(formData) {
   await fs.writeFile(partyDartPath, partyDartContent);
 
   // === LAYOUT.DART ===
-  const layoutPath = path.join(appPath, 'lib', 'common', 'layout.dart');
+  const layoutPath = path.join(appPath, 'lib', 'common', 'layout', 'layout.dart');
   let layoutContent = await fs.readFile(layoutPath, 'utf8');
 
   const screenToggles = {

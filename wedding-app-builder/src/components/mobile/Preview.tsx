@@ -38,6 +38,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import Countdown from "@/components/utilities/Countdown";
+import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
 
 const db = getFirestore();
 
@@ -260,7 +261,7 @@ export default function Preview({ form, goBack }: Props) {
 
     const handleGenerateApp = async () => {
         if (!user) return;
-
+        saveFormToFirestore(user, form).catch(console.error);
         setIsSubmitted(true);
         console.log("form", form);
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
