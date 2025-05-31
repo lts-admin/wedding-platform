@@ -95,7 +95,7 @@ export default function HomePage() {
           <div className="space-y-6">
             <h2 className="text-3xl sm:text-4xl font-bold">Build, test, and deploy with ease.</h2>
             <p className="text-lg sm:text-xl text-white">Create a personalized wedding app effortlessly.</p>
-            <Button onClick={() => router.push('/log-in')} className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium">Generate App</Button>
+            <Button onClick={() => router.push('/log-in')} className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium">Build My Own App</Button>
           </div>
           <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
             <Image src="/assets/itinerary.png" alt="Wedding App Preview" fill className="object-cover rounded-[44px]" priority />
