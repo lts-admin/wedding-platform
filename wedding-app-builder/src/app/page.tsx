@@ -8,6 +8,7 @@ import "./globals.css";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebaseConfig";
 import { addDoc, collection } from "firebase/firestore";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const router = useRouter();
@@ -110,7 +111,7 @@ export default function HomePage() {
           <div className="space-y-6">
             <h2 className="text-3xl sm:text-4xl font-bold">Test on your phone</h2>
             <p className="text-lg sm:text-xl">Download the app and test it instantly.</p>
-            <button className="bg-pink-500 text-white text-lg px-6 py-3 rounded-md font-medium">Download Now</button>
+            <Button onClick={() => router.push('/log-in')} className="bg-pink-500 text-white text-lg px-6 py-3 rounded-md font-medium">Try Now</Button>
           </div>
         </div>
       </section>
