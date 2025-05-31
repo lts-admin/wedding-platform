@@ -6,8 +6,8 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000', // ✅ Allow requests from your Next.js dev server
-  methods: ['POST'],               // Optional: restrict to POST
+  origin: ['http://localhost:3000', 'https://wedding-platform-zeta.vercel.app'],
+  methods: ['POST'],
 }));
 
 app.use(express.json());
