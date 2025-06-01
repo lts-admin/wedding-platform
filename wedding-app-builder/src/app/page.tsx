@@ -50,9 +50,9 @@ export default function HomePage() {
           <Link href="/">WedDesigner</Link>
         </div>
 
-        <button className="lg:hidden text-pink-400" onClick={() => setMenuOpen(!menuOpen)}>
+        <Button className="lg:hidden text-pink-400" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+        </Button>
 
         <nav className="hidden lg:flex gap-8 text-sm font-bold">
           <Link href="/">Home</Link>
@@ -60,8 +60,8 @@ export default function HomePage() {
           <Link href="/contact-us">Contact</Link>
         </nav>
         <div className="hidden lg:flex gap-6 items-center font-bold">
-          <button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm" onClick={() => router.push('/log-in')}>Log in</button>
-          <Link href="/app-info" className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</Link>
+          <Button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm" onClick={() => router.push('/log-in')}>Log in</Button>
+          <Button onClick={() => router.push('/log-in')} className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</Button>
         </div>
 
         {menuOpen && (
@@ -73,7 +73,7 @@ export default function HomePage() {
             <hr className="border-gray-600" />
             <Link href="#" className="text-sm" onClick={() => setMenuOpen(false)}>Download app</Link>
             <Link href="/log-in" className="text-sm" onClick={() => setMenuOpen(false)}>Log in</Link>
-            <button onClick={() => setMenuOpen(false)} className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm mt-2">Try it free</button>
+            <Button onClick={() => setMenuOpen(false)} className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm mt-2">Try it free</Button>
           </div>
         )}
       </header>
@@ -86,7 +86,7 @@ export default function HomePage() {
           <Image src="/assets/Image2.png" alt="App Preview" fill className="object-cover rounded-[44px]" />
         </div>
         <div className="py-6">
-          <button className="py-6 bg-pink-500 text-white px-6 py-3 rounded-md text-lg font-medium" onClick={() => router.push("/log-in")}>Start Designing</button>
+          <Button className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium" onClick={() => router.push("/log-in")} style={{ fontSize: 16 }}>Start Designing</Button>
         </div>
       </section>
 
@@ -95,7 +95,7 @@ export default function HomePage() {
           <div className="space-y-6">
             <h2 className="text-3xl sm:text-4xl font-bold">Build, test, and deploy with ease.</h2>
             <p className="text-lg sm:text-xl text-white">Create a personalized wedding app effortlessly.</p>
-            <Button onClick={() => router.push('/log-in')} className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium">Build My Own App</Button>
+            <Button onClick={() => router.push('/log-in')} className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium" style={{ fontSize: 16 }}>Build My Own App</Button>
           </div>
           <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
             <Image src="/assets/itinerary.png" alt="Wedding App Preview" fill className="object-cover rounded-[44px]" priority />
@@ -111,7 +111,7 @@ export default function HomePage() {
           <div className="space-y-6">
             <h2 className="text-3xl sm:text-4xl font-bold">Test on your phone</h2>
             <p className="text-lg sm:text-xl">Download the app and test it instantly.</p>
-            <Button onClick={() => router.push('/log-in')} className="bg-pink-500 text-white text-lg px-6 py-3 rounded-md font-medium">Try Now</Button>
+            <Button onClick={() => router.push('/log-in')} className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium">Try Now</Button>
           </div>
         </div>
       </section>
@@ -128,7 +128,7 @@ export default function HomePage() {
               </div>
               <input type="email" placeholder="Email" className="w-full bg-lightpink text-white px-4 py-2 rounded-md" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
               <textarea placeholder="Message" className="w-full bg-lightpink text-white px-4 py-2 rounded-md h-24" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required />
-              <button type="submit" className="bg-pink-500 text-white px-4 py-2 rounded-md">Submit</button>
+              <Button type="submit" className="bg-pink-500 text-white px-4 py-2 rounded-md" style={{ fontSize: 16 }}  >Submit</Button>
               {submitted && <p className="text-green-400 pt-2">Thanks! We'll be in touch shortly.</p>}
             </form>
           </div>

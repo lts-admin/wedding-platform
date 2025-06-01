@@ -228,6 +228,7 @@ export default function Home() {
                         <div>
                             <Label className="text-black pb-2 font-bold">Couple Name</Label>
                             <Input
+                                required
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.coupleName}
                                 onChange={(e) => handleChange("coupleName", e.target.value)}
@@ -237,6 +238,7 @@ export default function Home() {
                         <div>
                             <Label className="text-black pb-2 font-bold">Wedding Date</Label>
                             <Input
+                                required
                                 type="date"
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.weddingDate}
@@ -247,6 +249,7 @@ export default function Home() {
                         <div>
                             <Label className="text-black pb-2 font-bold">Wedding Location</Label>
                             <Input
+                                required
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.weddingLocation}
                                 onChange={(e) => handleChange("weddingLocation", e.target.value)}
@@ -264,6 +267,7 @@ export default function Home() {
                                 </div>
                             </div>
                             <Input
+                                required
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.appName}
                                 onChange={(e) => handleChange("appName", e.target.value)}

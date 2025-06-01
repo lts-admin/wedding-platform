@@ -52,6 +52,8 @@ export default function Preview({ form, goBack }: Props) {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -259,29 +261,47 @@ export default function Preview({ form, goBack }: Props) {
         ...(form.enableSettings ? [{ id: "settings", label: "Settings", icon: <Settings size={18} /> }] : []),
     ];
 
+    const validateRequiredFields = () => {
+        const errors: string[] = [];
+
+        if (!form.coupleName.trim()) errors.push("Couple name");
+        if (!form.weddingDate.trim()) errors.push("Wedding date ");
+        if (!form.weddingLocation.trim()) errors.push("Wedding location");
+        if (!form.appName.trim()) errors.push("App name");
+
+        setErrorMessages(errors);
+        return errors;
+    };
     const handleGenerateApp = async () => {
-        if (!user) return;
-        saveFormToFirestore(user, form).catch(console.error);
-        setIsSubmitted(true);
-        console.log("form", form);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-        });
+        if (!user) return false;
 
-        if (!response.ok) return;
+        const errors = validateRequiredFields();
+        if (errors.length > 0) {
+            setShowErrorModal(true);
+            return;
+        }
 
-        const blob = await response.blob();
-        const zipPath = `zips/${user.uid}/wedding_app.zip`;
-        const storageRef = ref(storage, zipPath);
-        await uploadBytes(storageRef, blob);
-        const downloadURL = await getDownloadURL(storageRef);
 
-        const appDocRef = doc(db, "weddingApps", user.uid);
-        await setDoc(
-            appDocRef,
-            {
+        try {
+            saveFormToFirestore(user, form).catch(console.error);
+            setIsSubmitted(true);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            if (!response.ok) return false;
+
+            const blob = await response.blob();
+            const zipPath = `zips/${user.uid}/wedding_app.zip`;
+            const storageRef = ref(storage, zipPath);
+            await uploadBytes(storageRef, blob);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            const appDocRef = doc(db, "weddingApps", user.uid);
+            await setDoc(appDocRef, {
                 ...form,
                 isSubmitted: true,
                 zipGenerated: true,
@@ -289,41 +309,116 @@ export default function Preview({ form, goBack }: Props) {
                 feedbackReceived: false,
                 published: false,
                 generatedAt: serverTimestamp(),
-            },
-            { merge: true }
-        );
+            }, { merge: true });
 
-        const zipDocRef = doc(db, "weddingAppZips", user.uid);
-        await setDoc(zipDocRef, {
-            userId: user.uid,
-            downloadUrl: downloadURL,
-            zipPath,
-            generatedAt: serverTimestamp(),
-        });
+            const zipDocRef = doc(db, "weddingAppZips", user.uid);
+            await setDoc(zipDocRef, {
+                userId: user.uid,
+                downloadUrl: downloadURL,
+                zipPath,
+                generatedAt: serverTimestamp(),
+            });
 
-        const workRequestsCollection = collection(db, "workRequests");
-        const latestQuery = query(workRequestsCollection, orderBy("__name__", "desc"), limit(1));
-        const latestSnap = await getDocs(latestQuery);
-        let newId = 1;
-        if (!latestSnap.empty) {
-            const latestId = parseInt(latestSnap.docs[0].id);
-            if (!isNaN(latestId)) {
-                newId = latestId + 1;
+            const workRequestsCollection = collection(db, "workRequests");
+            const latestQuery = query(workRequestsCollection, orderBy("__name__", "desc"), limit(1));
+            const latestSnap = await getDocs(latestQuery);
+            let newId = 1;
+            if (!latestSnap.empty) {
+                const latestId = parseInt(latestSnap.docs[0].id);
+                if (!isNaN(latestId)) newId = latestId + 1;
             }
-        }
 
-        const workRequestRef = doc(db, "workRequests", newId.toString());
-        await setDoc(workRequestRef, {
-            assignee: "Satya Vinjamuri",
-            userId: user.uid,
-            coupleName: form.coupleName,
-            zipFileUrl: downloadURL,
-            authStatus: WorkStatus.Submitted,
-            feedback: "",
-            dateCreated: serverTimestamp(),
-            dateCompleted: null,
-        });
+            const workRequestRef = doc(db, "workRequests", newId.toString());
+            await setDoc(workRequestRef, {
+                assignee: "Satya Vinjamuri",
+                userId: user.uid,
+                coupleName: form.coupleName,
+                zipFileUrl: downloadURL,
+                authStatus: WorkStatus.Submitted,
+                feedback: "",
+                dateCreated: serverTimestamp(),
+                dateCompleted: null,
+            });
+
+            return true;
+        } catch (error) {
+            console.error("Error generating app:", error);
+            return false;
+        }
     };
+
+    // const handleGenerateApp = async () => {
+    //     if (!user) return;
+    //     const errors = validateRequiredFields();
+    //     if (errors.length > 0) {
+    //         errors.forEach((message: string) => {
+    //             window.alert(message);
+    //         });
+    //         return;
+    //     }
+    //     // saveFormToFirestore(user, form).catch(console.error);
+    //     // setIsSubmitted(true);
+    //     // console.log("form", form);
+    //     // const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
+    //     //     method: "POST",
+    //     //     headers: { "Content-Type": "application/json" },
+    //     //     body: JSON.stringify(form),
+    //     // });
+
+    //     // if (!response.ok) return;
+
+    //     // const blob = await response.blob();
+    //     // const zipPath = `zips/${user.uid}/wedding_app.zip`;
+    //     // const storageRef = ref(storage, zipPath);
+    //     // await uploadBytes(storageRef, blob);
+    //     // const downloadURL = await getDownloadURL(storageRef);
+
+    //     // const appDocRef = doc(db, "weddingApps", user.uid);
+    //     // await setDoc(
+    //     //     appDocRef,
+    //     //     {
+    //     //         ...form,
+    //     //         isSubmitted: true,
+    //     //         zipGenerated: true,
+    //     //         formCompleted: true,
+    //     //         feedbackReceived: false,
+    //     //         published: false,
+    //     //         generatedAt: serverTimestamp(),
+    //     //     },
+    //     //     { merge: true }
+    //     // );
+
+    //     // const zipDocRef = doc(db, "weddingAppZips", user.uid);
+    //     // await setDoc(zipDocRef, {
+    //     //     userId: user.uid,
+    //     //     downloadUrl: downloadURL,
+    //     //     zipPath,
+    //     //     generatedAt: serverTimestamp(),
+    //     // });
+
+    //     // const workRequestsCollection = collection(db, "workRequests");
+    //     // const latestQuery = query(workRequestsCollection, orderBy("__name__", "desc"), limit(1));
+    //     // const latestSnap = await getDocs(latestQuery);
+    //     // let newId = 1;
+    //     // if (!latestSnap.empty) {
+    //     //     const latestId = parseInt(latestSnap.docs[0].id);
+    //     //     if (!isNaN(latestId)) {
+    //     //         newId = latestId + 1;
+    //     //     }
+    //     // }
+
+    //     // const workRequestRef = doc(db, "workRequests", newId.toString());
+    //     // await setDoc(workRequestRef, {
+    //     //     assignee: "Satya Vinjamuri",
+    //     //     userId: user.uid,
+    //     //     coupleName: form.coupleName,
+    //     //     zipFileUrl: downloadURL,
+    //     //     authStatus: WorkStatus.Submitted,
+    //     //     feedback: "",
+    //     //     dateCreated: serverTimestamp(),
+    //     //     dateCompleted: null,
+    //     // });
+    // };
 
     return (
         <div>
@@ -378,8 +473,8 @@ export default function Preview({ form, goBack }: Props) {
                         <Button
                             onClick={async () => {
                                 setShowConfirmModal(false);
-                                await handleGenerateApp();
-                                setShowSuccessModal(true);
+                                const success = await handleGenerateApp();
+                                if (success) setShowSuccessModal(true);
                             }}
                             variant="outline"
                             className="text-black"
@@ -400,6 +495,25 @@ export default function Preview({ form, goBack }: Props) {
                     </DialogHeader>
                     <DialogFooter>
                         <Button onClick={() => setShowSuccessModal(false)}>OK</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
+                <DialogContent className="bg-[#f5f5dc] text-black">
+                    <DialogHeader>
+                        <DialogTitle className="text-red-500 font-bold">Submission Error</DialogTitle>
+                    </DialogHeader>
+                    <div className="text-sm text-black px-1 pb-2">
+                        These fields are required and must be filled before submission:
+                        <ul className="list-disc mt-2 ml-6">
+                            {errorMessages.map((msg, index) => (
+                                <li key={index}>{msg}</li>
+                            ))}
+                        </ul>
+                        <p className="text-red-500 font-bold font-italic">Please fill out the complete form to get the best experience! </p>
+                    </div>
+                    <DialogFooter>
+                        <Button onClick={() => setShowErrorModal(false)}>OK</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

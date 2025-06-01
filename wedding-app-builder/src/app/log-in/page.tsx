@@ -7,9 +7,10 @@ import { auth } from "../../lib/firebaseConfig";
 import Link from "next/link";
 import Image
     from "next/image";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
-    const [isSignup, setIsSignup] = useState(false);
+    const [isSignup, setIsSignup] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -137,7 +138,7 @@ export default function LoginPage() {
                     </button>
                 </p>
                 <div className="my-6 text-center">
-                    <button
+                    <Button
                         onClick={async () => {
                             try {
                                 await loginWithGoogle();
@@ -146,7 +147,7 @@ export default function LoginPage() {
                                 setError(err.message);
                             }
                         }}
-                        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-600 text-black hover:bg-gray-300 transition"
+                        className="w-full flex items-center justify-center gap-2 p-6 rounded-xl border border-gray-600 text-black hover:bg-gray-300 transition"
                     >
                         <Image
                             src="/google_icon.png"
@@ -154,8 +155,8 @@ export default function LoginPage() {
                             width={30}
                             height={30}
                         />
-                        <span className="font-medium">Continue with Google</span>
-                    </button>
+                        <span className="font-medium" style={{ fontSize: 16 }}>Continue with Google</span>
+                    </Button>
                 </div>
 
             </div>
