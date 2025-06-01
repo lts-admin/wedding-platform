@@ -27,10 +27,13 @@ const Themes: React.FC<Props> = ({ form, goNext, goBack }) => {
 
     return (
         <div>
-            <h2 className="text-2xl font-semibold text-pink-400">Build & Customize</h2>
-            <p className="mt-4 text-sm text-red-600 italic bg-petal px-4 py-2 rounded-md border max-w-xl">
+            <h2 className="text-2xl font-semibold text-pink-400">Customize my App!</h2>
+            <p className="mt-4 text-sm text-red-600 font-bold italic bg-petal px-4 py-2 rounded-md border max-w-xl">
                 Please remember this is just a preview and not what your app will actually look like!
             </p>
+
+            <h3 className="text-2xl font-semibold text-pink-500 pt-6" style={{ fontSize: 14 }}>Pick and choose your color scheme and aesthetics!</h3>
+
 
             <div className="flex flex-col lg:flex-row py-6 gap-4">
 
@@ -130,20 +133,6 @@ const Themes: React.FC<Props> = ({ form, goNext, goBack }) => {
                         </div>
                     </div> */}
 
-                    <div className="flex justify-start gap-4 pt-12">
-                        <Button
-                            onClick={goBack}
-                            className="border border-mauve text-cocoa font-bold px-4 py-2 rounded-md hover:text-black transition"
-                        >
-                            Back
-                        </Button>
-                        <Button
-                            onClick={goNext}
-                            className="bg-pink-400 text-white font-bold px-4 py-2 rounded-md hover:brightness-110 transition"
-                        >
-                            Next
-                        </Button>
-                    </div>
                 </div>
 
                 {/* Right Column – Preview */}
@@ -179,6 +168,22 @@ const Themes: React.FC<Props> = ({ form, goNext, goBack }) => {
                         </div>
                     </div>
                 </div>
+
+
+            </div>
+            <div className="flex justify-start gap-4 pt-6 pb-6">
+                <Button
+                    onClick={goBack}
+                    className="border border-mauve text-cocoa font-bold px-4 py-2 rounded-md hover:text-black transition"
+                >
+                    Back
+                </Button>
+                <Button
+                    onClick={goNext}
+                    className="bg-pink-400 text-white font-bold px-4 py-2 rounded-md hover:brightness-110 transition"
+                >
+                    Next
+                </Button>
             </div>
         </div>
     );

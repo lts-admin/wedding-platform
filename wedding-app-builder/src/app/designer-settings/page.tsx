@@ -201,7 +201,7 @@ export default function DesignerSettings() {
 
 
 
-                <div className="mt-6 flex justify-center gap-4">
+                <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                     <Button
                         variant="outline"
                         className="bg-[#1A1A1A] text-white border border-gray-500 hover:bg-gray-800 px-4 py-2 rounded-md text-sm"

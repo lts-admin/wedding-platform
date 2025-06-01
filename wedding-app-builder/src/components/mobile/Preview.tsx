@@ -450,7 +450,7 @@ export default function Preview({ form, goBack }: Props) {
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-4">
+                <div className="flex flex-col items-center gap-4 pb-12">
                     <Button className="w-[200px] bg-pink-400 text-black font-bold" onClick={() => setShowConfirmModal(true)} disabled={isSubmitted}>
                         {isSubmitted ? "Submitted" : "Build My App"}
                     </Button>

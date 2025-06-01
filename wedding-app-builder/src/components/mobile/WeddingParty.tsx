@@ -62,12 +62,18 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
 
     const renderPartySide = (side: Side, label: string) => (
         <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
                 <h3 className="text-lg font-bold">{label}</h3>
-                <Button size="sm" className="bg-pink-400 font-bold text-black" onClick={() => addMember(side)} disabled={isSubmitted}>
+                <Button
+                    size="sm"
+                    className="bg-pink-400 font-bold text-black w-fit"
+                    onClick={() => addMember(side)}
+                    disabled={isSubmitted}
+                >
                     + Add
                 </Button>
             </div>
+
             {form.weddingParty[side].map((member, index) => (
                 <div key={index} className="border p-4 rounded-md space-y-2 relative">
                     <div className="flex justify-between items-center">

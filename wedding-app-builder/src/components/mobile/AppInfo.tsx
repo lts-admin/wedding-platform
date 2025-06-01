@@ -162,26 +162,36 @@ export default function Home() {
 
     return (
         <main className="min-h-screen bg-[#FFF5F7] text-[#4B2E2E] flex flex-col lg:flex-row">
-            <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 fixed top-3 left-3 z-50 bg-pink-500 rounded-md text-black shadow-md"
+            <div className="pb-10">
+                <Button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="lg:hidden p-2 fixed top-3 left-3 z-50 bg-pink-500 rounded-md text-black shadow-md"
+                >
+                    {sidebarOpen ? <X size={16} /> : <Menu size={20} />}
+                </Button>
+            </div>
+
+            <aside
+                className={`fixed z-40 lg:static top-0 left-0 w-64 h-screen min-h-screen transform transition-transform duration-300 ease-in-out
+    ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+    bg-[#fdf6f1] border-r border-gray-300 text-black shadow-lg lg:shadow-none`}
             >
-                {sidebarOpen ? <X size={16} /> : <Menu size={20} />}
-            </button>
-
-
-            <aside className={`fixed z-40 lg:static top-0 left-0 bg-beige text-[#F5EAF3] w-64 h-screen transform transition-transform duration-300 ease-in-out border-r border-gray-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-
-
-                <div className="p-4 space-y-4 flex flex-col h-full">
+                <div className="p-4 space-y-4 flex flex-col h-full pt-12 lg:pt-4">
                     <h1 className="text-xl font-bold text-pink-500">My WedDesigner</h1>
+
                     <div className="space-y-2">
                         {sidebarItems.map((item, idx) => (
                             <Button
                                 key={item.key}
                                 variant={step === idx ? "default" : "ghost"}
-                                onClick={() => setStep(idx)}
-                                className={`w-full justify-start text-black ${step === idx ? "bg-purple-500 text-white font-semibold" : "font-semibold hover:text-pink-400"}`}
+                                onClick={() => {
+                                    setStep(idx);
+                                    setSidebarOpen(false); // Close after selecting on mobile
+                                }}
+                                className={`w-full justify-start text-black text-sm ${step === idx
+                                    ? "bg-purple-500 text-white font-semibold"
+                                    : "font-semibold hover:text-pink-400"
+                                    }`}
                             >
                                 {item.label}
                             </Button>
@@ -206,7 +216,7 @@ export default function Home() {
                         >
                             Log Out
                         </Button>
-                        <div className="py-6"></div>
+                        <div className="py-6" />
                         <Button
                             variant="outline"
                             className="text-black border border-gray-500 hover:bg-gray-100 text-sm hover:font-bold"
@@ -221,10 +231,10 @@ export default function Home() {
                 </div>
             </aside>
 
-            <section className="flex-1 px-4 sm:px-6 md:px-8 pt-20 lg:pt-10 space-y-6">
+            <section className="flex-1 px-4 sm:px-6 md:px-8 pt-10 lg:pt-10 ">
                 {sidebarItems[step]?.key === "appInfo" && (
-                    <div className="max-w-2xl space-y-6">
-                        <h2 className="text-2xl font-semibold text-pink-400">Wedding Details</h2>
+                    <div className="max-w-2xl">
+                        <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
                         <div>
                             <Label className="text-black pb-2 font-bold">Couple Name</Label>
                             <Input
@@ -290,8 +300,10 @@ export default function Home() {
                                 </Button>
                             ))}
                         </div>
+                        <div className="pt-20">
+                            <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
+                        </div>
 
-                        <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
                     </div>
                 )}
 

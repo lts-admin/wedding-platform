@@ -32,6 +32,8 @@ export default function HomePage() {
     try {
       await addDoc(collection(db, 'contactRequests'), {
         ...form,
+        responded: '',
+        respondedDate: '',
         timestamp: new Date().toISOString(),
       });
       setSubmitted(true);
@@ -68,12 +70,12 @@ export default function HomePage() {
           <div className="absolute top-full left-0 w-full bg-[#0D0208] border-t border-pink-500 py-6 px-6 flex flex-col gap-4 lg:hidden z-50">
             <Link href="/" onClick={() => setMenuOpen(false)}>Home</Link>
             <Link href="/features" onClick={() => setMenuOpen(false)}>Features</Link>
-            <Link href="/pricing" onClick={() => setMenuOpen(false)}>Pricing</Link>
-            <Link href="#" onClick={() => setMenuOpen(false)}>Contact</Link>
+            {/* <Link href="/pricing" onClick={() => setMenuOpen(false)}>Pricing</Link> */}
+            <Link href="/contact-us" onClick={() => setMenuOpen(false)}>Contact</Link>
             <hr className="border-gray-600" />
-            <Link href="#" className="text-sm" onClick={() => setMenuOpen(false)}>Download app</Link>
+            {/* <Link href="#" className="text-sm" onClick={() => setMenuOpen(false)}>Download app</Link> */}
             <Link href="/log-in" className="text-sm" onClick={() => setMenuOpen(false)}>Log in</Link>
-            <Button onClick={() => setMenuOpen(false)} className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm mt-2">Try it free</Button>
+            {/* <Button onClick={() => setMenuOpen(false)} className="bg-pink-500 text-black px-4 py-2 rounded-md text-sm mt-2">Try it free</Button> */}
           </div>
         )}
       </header>
