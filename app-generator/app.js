@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://wedding-platform-zeta.vercel.app'],
+  origin: ['http://localhost:3000', 'https://wedding-platform-zeta.vercel.app', 'https://master.d23l4mo9odzywu.amplifyapp.com/'],
   methods: ['POST'],
 }));
 

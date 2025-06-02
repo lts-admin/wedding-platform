@@ -222,7 +222,7 @@ export default function Home() {
                             className="text-black border border-gray-500 hover:bg-gray-100 text-sm hover:font-bold"
                             onClick={() => {
                                 setSidebarOpen(false);
-                                router.push("/contact-us");
+                                router.push("/help-request");
                             }}
                         >
                             Need help?
