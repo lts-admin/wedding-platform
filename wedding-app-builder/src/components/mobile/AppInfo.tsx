@@ -22,21 +22,11 @@ import { signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebaseConfig";
 import { useAuth } from "@/context/AuthContext";
 import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Registry from "./Registry";
-
-const CustomSwitch = ({ checked, onToggle, disabled = false }: { checked: boolean; onToggle: () => void; disabled?: boolean }) => (
-    <button
-        type="button"
-        onClick={onToggle}
-        disabled={disabled}
-        className={`relative inline-flex h-[20px] w-[40px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-400 ${checked ? "bg-pink-400" : "bg-gray-200"} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-    >
-        <span
-            className={`inline-block h-[16px] w-[16px] transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${checked ? "translate-x-5" : "translate-x-0"}`}
-        />
-    </button>
-);
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Home() {
     const [step, setStep] = useState(0);
@@ -44,6 +34,9 @@ export default function Home() {
     const { user } = useAuth();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [showTutorial, setShowTutorial] = useState(false);
+    const [tutorialIndex, setTutorialIndex] = useState(0);
+    const tutorialImages = ["/tutorial/step1.png", "/tutorial/step2.png", "/tutorial/step3.png", "/tutorial/step4.png"];
 
     const [form, setForm] = useState<FormState>({
         coupleName: "",
@@ -96,20 +89,60 @@ export default function Home() {
     useEffect(() => {
         const fetchSavedForm = async () => {
             if (!user) return;
+
             try {
-                const docRef = doc(db, "weddingApps", user.uid);
-                const snapshot = await getDoc(docRef);
-                if (snapshot.exists()) {
-                    const data = snapshot.data();
+                // 1. Fetch form data from weddingApps
+                const appRef = doc(db, "weddingApps", user.uid);
+                const appSnap = await getDoc(appRef);
+                if (appSnap.exists()) {
+                    const data = appSnap.data();
                     setForm(prev => ({ ...prev, ...data }));
                     if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
                 }
+
+                // 2. Fetch user metadata from users collection
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const createdAt = userData.createdAt?.toDate?.() || new Date(userData.createdAt);
+                    const today = new Date();
+
+                    if (
+                        createdAt.getFullYear() === today.getFullYear() &&
+                        createdAt.getMonth() === today.getMonth() &&
+                        createdAt.getDate() === today.getDate() &&
+                        !userData.watchedTutorial
+                    ) {
+                        setShowTutorial(true);
+                    }
+                }
             } catch (err) {
-                console.error("Failed to load form:", err);
+                console.error("Failed to load form or user data:", err);
             }
         };
+
         fetchSavedForm();
     }, [user]);
+
+
+    // useEffect(() => {
+    //     const fetchSavedForm = async () => {
+    //         if (!user) return;
+    //         try {
+    //             const docRef = doc(db, "weddingApps", user.uid);
+    //             const snapshot = await getDoc(docRef);
+    //             if (snapshot.exists()) {
+    //                 const data = snapshot.data();
+    //                 setForm(prev => ({ ...prev, ...data }));
+    //                 if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
+    //             }
+    //         } catch (err) {
+    //             console.error("Failed to load form:", err);
+    //         }
+    //     };
+    //     fetchSavedForm();
+    // }, [user]);
 
     const screenToggles: { label: string; field: keyof FormState }[] = [
         { label: "Save The Date", field: "enableSaveDate" },
@@ -164,6 +197,23 @@ export default function Home() {
     const handleToggle = (field: keyof FormState) => {
         if (isSubmitted) return;
         setForm(prev => ({ ...prev, [field]: !prev[field] }));
+    };
+
+    const handleNextTutorial = () => setTutorialIndex((prev) => Math.min(prev + 1, tutorialImages.length - 1));
+    const handlePrevTutorial = () => setTutorialIndex((prev) => Math.max(prev - 1, 0));
+
+    const tutorialWatched = async () => {
+        setShowTutorial(false);
+        if (!user) return;
+        console.log(user);
+        try {
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, {
+                watchedTutorial: true,
+            });
+        } catch (error) {
+            console.error("Failed to update tutorial status:", error);
+        }
     };
 
     return (
@@ -233,11 +283,82 @@ export default function Home() {
                         >
                             Need help?
                         </Button>
+                        {/* <Button
+                            variant="outline"
+                            className="text-black border border-gray-500 hover:bg-gray-100 text-sm hover:font-bold"
+                            onClick={() => {
+                                setSidebarOpen(false);
+                                router.push("/tutorials");
+                            }}
+                        >
+                            Watch Example
+                        </Button> */}
                     </div>
                 </div>
             </aside>
 
             <section className="flex-1 px-4 sm:px-6 md:px-8 pt-10 lg:pt-10 ">
+                {/* {showTutorial && (
+                    <div className="fixed z-50 inset-0 bg-gray-800 bg-opacity-70 flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="bg-white w-full max-w-2xl p-10 rounded-2xl shadow-2xl text-black relative"
+                        >
+
+                            <Button
+                                onClick={tutorialWatched}
+                                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+                            >
+                                ✕
+                            </Button>
+
+                            <h2 className="text-xl font-bold mb-4 text-center">Tutorial</h2>
+
+                            <div className="mb-4">
+                                {tutorialIndex === 0 ? (
+                                    <video
+                                        controls
+                                        width="100%"
+                                        className="rounded-lg"
+                                        src="/tutorials/Tutorial1.mp4"
+                                    />
+                                ) : (
+                                    <Image
+                                        src={tutorialImages[tutorialIndex]}
+                                        alt={`Step ${tutorialIndex + 1}`}
+                                        width={300}
+                                        height={600}
+                                        className="rounded-xl mx-auto"
+                                    />
+                                )}
+                            </div>
+
+                            <div className="flex justify-center items-center gap-3">
+                                <Button
+                                    size="icon"
+                                    onClick={handlePrevTutorial}
+                                    disabled={tutorialIndex === 0}
+                                >
+                                    <ChevronLeft />
+                                </Button>
+                                <Button
+                                    size="icon"
+                                    onClick={handleNextTutorial}
+                                    disabled={tutorialIndex === tutorialImages.length - 1}
+                                >
+                                    <ChevronRight />
+                                </Button>
+                                <Button variant="destructive" onClick={tutorialWatched}>
+                                    Close
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )} */}
+
+
                 {sidebarItems[step]?.key === "appInfo" && (
                     <div className="max-w-2xl">
                         <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
@@ -306,7 +427,7 @@ export default function Home() {
                                 </Button>
                             ))}
                         </div>
-                        <div className="pt-20">
+                        <div className="pt-20 pb-20">
                             <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
                         </div>
 
