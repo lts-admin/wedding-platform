@@ -38,6 +38,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import Countdown from "@/components/utilities/Countdown";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
 
 const db = getFirestore();
@@ -54,6 +55,11 @@ export default function Preview({ form, goBack }: Props) {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [faqsOpen, setFaqsOpen] = useState(true);
+    const [contactOpen, setContactOpen] = useState(true);
+    const [venueOpen, setVenueOpen] = useState(true);
+    const [hotelOpen, setHotelOpen] = useState(true);
+
     const { user } = useAuth();
 
     useEffect(() => {
@@ -161,46 +167,50 @@ export default function Preview({ form, goBack }: Props) {
                         )}
                     </div>
                 );
-            case "family":
-                return (
-                    <div className="text-sm space-y-2">
-                        <h4 className="font-bold">Bride&apos;s Side</h4>
-                        {form.familyDetails.bride.map((m, i) => (
-                            <p key={i}>
-                                {m.name} - {m.relation}
-                            </p>
-                        ))}
-                        <h4 className="font-bold mt-2">Groom&apos;s Side</h4>
-                        {form.familyDetails.groom.map((m, i) => (
-                            <p key={i}>
-                                {m.name} - {m.relation}
-                            </p>
-                        ))}
-                        {form.familyDetails.pets.length > 0 && (
-                            <>
-                                <h4 className="font-bold mt-2">Pets</h4>
-                                {form.familyDetails.pets.map((p, i) => (
-                                    <p key={i}>{p.name}</p>
-                                ))}
-                            </>
-                        )}
-                    </div>
-                );
             case "party":
                 return (
-                    <div className="text-sm space-y-2">
-                        <h4 className="font-bold">Bride&apos;s Side</h4>
-                        {form.weddingParty.bride.map((m, i) => (
-                            <p key={i}>
-                                {m.name} - {m.role} ({m.relation})
-                            </p>
-                        ))}
-                        <h4 className="font-bold mt-2">Groom&apos;s Side</h4>
-                        {form.weddingParty.groom.map((m, i) => (
-                            <p key={i}>
-                                {m.name} - {m.role} ({m.relation})
-                            </p>
-                        ))}
+                    <div className="text-sm space-y-6">
+                        {/* Family Section */}
+                        <div>
+                            <h3 className="font-bold text-lg">Family</h3>
+                            <h4 className="font-semibold mt-2">Bride&apos;s Side</h4>
+                            {form.familyDetails.bride.map((m, i) => (
+                                <p key={`family-bride-${i}`}>
+                                    {m.name} - {m.relation}
+                                </p>
+                            ))}
+                            <h4 className="font-semibold mt-2">Groom&apos;s Side</h4>
+                            {form.familyDetails.groom.map((m, i) => (
+                                <p key={`family-groom-${i}`}>
+                                    {m.name} - {m.relation}
+                                </p>
+                            ))}
+                            {form.familyDetails.pets.length > 0 && (
+                                <>
+                                    <h4 className="font-semibold mt-2">Pets</h4>
+                                    {form.familyDetails.pets.map((p, i) => (
+                                        <p key={`family-pet-${i}`}>{p.name}</p>
+                                    ))}
+                                </>
+                            )}
+                        </div>
+
+                        {/* Wedding Party Section */}
+                        <div>
+                            <h3 className="font-bold text-lg">Wedding Party</h3>
+                            <h4 className="font-semibold mt-2">Bride&apos;s Side</h4>
+                            {form.weddingParty.bride.map((m, i) => (
+                                <p key={`party-bride-${i}`}>
+                                    {m.name} - {m.role} ({m.relation})
+                                </p>
+                            ))}
+                            <h4 className="font-semibold mt-2">Groom&apos;s Side</h4>
+                            {form.weddingParty.groom.map((m, i) => (
+                                <p key={`party-groom-${i}`}>
+                                    {m.name} - {m.role} ({m.relation})
+                                </p>
+                            ))}
+                        </div>
                     </div>
                 );
             case "itinerary":
@@ -219,33 +229,95 @@ export default function Preview({ form, goBack }: Props) {
             case "settings":
                 return (
                     <div className="text-sm space-y-6">
+                        {/* FAQs */}
                         <div>
-                            <h3 className="text-black font-semibold mb-2">FAQs:</h3>
-                            <ul className="space-y-3">
-                                {Array.isArray(form.faqs) &&
-                                    form.faqs.map((faq, index) => (
-                                        <li key={index}>
-                                            <p className="font-bold">{faq.question}</p>
-                                            <p className="text-gray-300">{faq.answer}</p>
-                                        </li>
-                                    ))}
-                            </ul>
+                            <button
+                                onClick={() => setFaqsOpen(!faqsOpen)}
+                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                            >
+                                <span>FAQs</span>
+                                {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                            </button>
+                            {faqsOpen && (
+                                <ul className="space-y-3">
+                                    {Array.isArray(form.faqs) &&
+                                        form.faqs.map((faq, index) => (
+                                            <li key={index}>
+                                                <p className="font-bold">{faq.question}</p>
+                                                <p className="text-gray-300">{faq.answer}</p>
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
                         </div>
+
+                        {/* Contact Info */}
                         <div>
-                            <h3 className="text-black font-semibold mb-2">Contact Info:</h3>
-                            <ul className="space-y-3">
-                                {Array.isArray(form.contactInfo) &&
-                                    form.contactInfo.map((contact, index) => (
-                                        <li key={index}>
-                                            <p>{contact.name}</p>
-                                            <p>{contact.phone}</p>
-                                            <p>{contact.email}</p>
-                                        </li>
-                                    ))}
-                            </ul>
+                            <button
+                                onClick={() => setContactOpen(!contactOpen)}
+                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                            >
+                                <span>Contact Info</span>
+                                {contactOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                            </button>
+                            {contactOpen && (
+                                <ul className="space-y-3">
+                                    {Array.isArray(form.contactInfo) &&
+                                        form.contactInfo.map((contact, index) => (
+                                            <li key={index}>
+                                                <p>{contact.name}</p>
+                                                <p>{contact.phone}</p>
+                                                <p>{contact.email}</p>
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
+                        </div>
+
+                        {/* Venue Details */}
+                        <div>
+                            <button
+                                onClick={() => setVenueOpen(!venueOpen)}
+                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                            >
+                                <span>Venue Details</span>
+                                {venueOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                            </button>
+                            {venueOpen && (
+                                <ul className="space-y-3">
+                                    {Array.isArray(form.venueDetails) &&
+                                        form.venueDetails.map((venue, index) => (
+                                            <li key={index} className="text-black">
+                                                {venue}
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
+                        </div>
+
+                        {/* Hotel Info */}
+                        <div>
+                            <button
+                                onClick={() => setHotelOpen(!hotelOpen)}
+                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                            >
+                                <span>Hotel Info</span>
+                                {hotelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                            </button>
+                            {hotelOpen && (
+                                <ul className="space-y-3">
+                                    {Array.isArray(form.hotelDetails) &&
+                                        form.hotelDetails.map((hotel, index) => (
+                                            <li key={index} className="text-black">
+                                                {hotel}
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
                         </div>
                     </div>
                 );
+
             default:
                 return null;
         }
@@ -254,9 +326,9 @@ export default function Preview({ form, goBack }: Props) {
     const tabs = [
         { id: "home", label: "Home", icon: <Home size={18} /> },
         ...(form.enableStory ? [{ id: "story", label: "Our Story", icon: <BookOpen size={18} /> }] : []),
-        ...(form.enableGallery ? [{ id: "gallery", label: "Gallery", icon: <Image size={18} /> }] : []),
-        ...(form.enableFamily ? [{ id: "family", label: "Family", icon: <Users size={18} /> }] : []),
+        // ...(form.enableFamily ? [{ id: "family", label: "Family", icon: <Users size={18} /> }] : []),
         ...(form.enableWeddingParty ? [{ id: "party", label: "Wedding Party", icon: <Users2 size={18} /> }] : []),
+        ...(form.enableGallery ? [{ id: "gallery", label: "Gallery", icon: <Image size={18} /> }] : []),
         ...(form.enableItinerary ? [{ id: "itinerary", label: "Itinerary", icon: <CalendarDays size={18} /> }] : []),
         ...(form.enableSettings ? [{ id: "settings", label: "Settings", icon: <Settings size={18} /> }] : []),
     ];
@@ -446,10 +518,10 @@ export default function Preview({ form, goBack }: Props) {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex flex-col items-center ${activeTab === tab.id ? "text-blue-600 font-semibold" : "text-gray-600"}`}
+                                    className={`flex flex-col items-center w-[60px] text-center ${activeTab === tab.id ? "text-blue-600 font-semibold" : "text-gray-600"}`}
                                 >
                                     {tab.icon}
-                                    <span>{tab.label}</span>
+                                    <span className="text-[11px] leading-tight truncate">{tab.label}</span>
                                 </button>
                             ))}
                         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
@@ -15,8 +15,16 @@ interface TravelProps {
 
 const Travel: React.FC<TravelProps> = ({ form, setForm, goNext, goBack }) => {
     const isSubmitted = form.isSubmitted;
-    const [hotels, setHotels] = useState<string[]>([""]);
-    const [venues, setVenues] = useState<string[]>([""]);
+    const [hotels, setHotels] = useState<string[]>(form.hotelDetails || [""]);
+    const [venues, setVenues] = useState<string[]>(form.venueDetails || [""]);
+
+    useEffect(() => {
+        setForm((prev) => ({
+            ...prev,
+            hotelDetails: hotels,
+            venueDetails: venues,
+        }));
+    }, [hotels, venues, setForm]);
 
     const handleAddHotel = () => setHotels([...hotels, ""]);
     const handleAddVenue = () => setVenues([...venues, ""]);

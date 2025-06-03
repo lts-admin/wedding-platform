@@ -40,6 +40,8 @@ export type FormState = {
     enableSaveDate: boolean,
     enableStory: boolean;
     enableTravel: boolean;
+    hotelDetails: string[];
+    venueDetails: string[];
     familyDetails: {
         bride: FamilyMember[];
         groom: FamilyMember[];
@@ -80,4 +82,5 @@ export type FormState = {
     enableEventNotification: boolean;
     enablePlannerUpdates: boolean;
     rsvpDeadline?: string;
+    registries: { label: string; url: string }[];
 };
