@@ -6,7 +6,15 @@
 
 # Ignore generated ZIPs and template contents
 /app-generator/generated_apps/
-/app-generator/templates/
+# Ignore everything in flutter_template
+templates/flutter_template/**
+
+# Allow pubspec.yaml explicitly
+!templates/flutter_template/pubspec.yaml
+
+# Allow the lib folder and its contents
+!templates/flutter_template/lib/
+!templates/flutter_template/lib/**
 
 # Optional: Ignore logs or lock files
 *.log

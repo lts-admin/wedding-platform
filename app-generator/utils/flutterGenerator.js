@@ -187,6 +187,36 @@ async function generateFlutterApp(formData) {
 
   await fs.writeFile(layoutPath, layoutContent);
 
+  // Add this block inside generateFlutterApp
+  // === REGISTRY.DART ===
+  const registryDartPath = path.join(appPath, 'lib', 'registry.dart');
+  let registryDartContent = await fs.readFile(registryDartPath, 'utf8');
+
+  const formatRegistryCard = (label, url) => `
+  Padding(
+    padding: const EdgeInsets.symmetric(vertical: 12),
+    child: _buildRegistryCard(
+      '${label?.replace(/'/g, "\\'") ?? ''}',
+      '${url?.replace(/'/g, "\\'") ?? ''}',
+    ),
+  ),`;
+
+  const injectRegistries = (dartContent, marker, registries = []) => {
+    const content = registries.map(r => formatRegistryCard(r.label, r.url)).join('\n');
+    return dartContent.replace(
+      new RegExp(`// ${marker}_START[\\s\\S]*?// ${marker}_END`),
+      `// ${marker}_START\n${content}\n// ${marker}_END`
+    );
+  };
+
+  registryDartContent = injectRegistries(
+    registryDartContent,
+    'REGISTRY_LIST',
+    formData.registries || []
+  );
+
+  await fs.writeFile(registryDartPath, registryDartContent);
+
 
   // === SHEET ID INJECTION ===
   const sheetIdMatch = (formData.rsvpSheetUrl || '').match(/\/d\/([a-zA-Z0-9-_]+)/);

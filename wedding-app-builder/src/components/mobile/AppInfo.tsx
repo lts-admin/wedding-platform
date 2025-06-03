@@ -23,6 +23,7 @@ import { auth, db } from "@/lib/firebaseConfig";
 import { useAuth } from "@/context/AuthContext";
 import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
 import { doc, getDoc } from "firebase/firestore";
+import Registry from "./Registry";
 
 const CustomSwitch = ({ checked, onToggle, disabled = false }: { checked: boolean; onToggle: () => void; disabled?: boolean }) => (
     <button
@@ -87,6 +88,9 @@ export default function Home() {
         enableEventNotification: false,
         enablePlannerUpdates: false,
         backgroundImage: "",
+        registries: [],
+        hotelDetails: [],
+        venueDetails: []
     });
 
     useEffect(() => {
@@ -115,6 +119,7 @@ export default function Home() {
         { label: "Our Family", field: "enableFamily" },
         { label: "Wedding Party", field: "enableWeddingParty" },
         { label: "Wedding Itinerary", field: "enableItinerary" },
+        { label: "Wedding Registry", field: "enableRegistry" },
         { label: "Travel", field: "enableTravel" },
         { label: "Settings (FAQs)", field: "enableSettings" }
     ];
@@ -127,6 +132,7 @@ export default function Home() {
         { label: "Our Family", key: "ourFamily", condition: form.enableFamily },
         { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty },
         { label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
+        { label: "Registry", key: "registry", condition: form.enableRegistry },
         { label: "Travel", key: "travel", condition: form.enableTravel },
         { label: "Settings", key: "settings", condition: form.enableSettings },
         { label: "Notifications", key: "notification" },
@@ -329,6 +335,10 @@ export default function Home() {
 
                 {sidebarItems[step]?.key === "itinerary" && (
                     <Itinerary form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
+                )}
+
+                {sidebarItems[step]?.key === "registry" && (
+                    <Registry form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
                 )}
 
                 {sidebarItems[step]?.key === "travel" && (
