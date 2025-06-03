@@ -433,10 +433,24 @@ export default function AdminDashboard() {
             {view === "contact" && (
                 <div>
                     <h1 className="text-3xl font-bold">Contact Requests</h1>
+
+                    <div className="mt-4 mb-4">
+                        <label className="mr-2 font-semibold">Filter:</label>
+                        <select
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                            className="bg-gray-900 text-white border border-gray-600 rounded px-2 py-1"
+                        >
+                            <option value="All">All</option>
+                            <option value="Responded">Responded</option>
+                            <option value="Not Responded">Not Responded</option>
+                        </select>
+                    </div>
+
                     {contactRequests.length === 0 ? (
                         <p className="text-gray-400 mt-4">No contact submissions yet.</p>
                     ) : (
-                        <table className="w-full text-sm border border-gray-600 mt-4">
+                        <table className="w-full text-sm border border-gray-600">
                             <thead className="bg-gray-800 text-left">
                                 <tr>
                                     <th className="p-2 border-b">Name</th>
@@ -448,32 +462,43 @@ export default function AdminDashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {contactRequests.map((c) => (
-                                    <tr key={c.id} className="border-t border-gray-700">
-                                        <td className="p-2">{c.firstName} {c.lastName}</td>
-                                        <td className="p-2">{c.email}</td>
-                                        <td className="p-2">{c.message}</td>
-                                        <td className="p-2">
-                                            {c.timestamp?.toDate?.().toLocaleString?.() ||
-                                                new Date(c.timestamp).toLocaleString()}
-                                        </td>
-                                        <td className="p-2">
-                                            {c.responded === "Yes" ? (
-                                                <span className="text-green-400 font-bold">Yes</span>
-                                            ) : (
-                                                <Button
-                                                    onClick={() => handleRespond(c.id)}
-                                                    className="bg-blue-500 px-3 py-1 text-white rounded"
-                                                >
-                                                    Not yet
-                                                </Button>
-                                            )}
-                                        </td>
-                                        <td className="p-2">
-                                            {c.respondedAt?.toDate?.().toLocaleString?.() || (c.respondedAt && new Date(c.respondedAt).toLocaleString()) || "-"}
-                                        </td>
-                                    </tr>
-                                ))}
+                                {contactRequests
+                                    .filter((c) => {
+                                        if (filter === "Responded") return c.responded === "Yes";
+                                        if (filter === "Not Responded") return c.responded !== "Yes";
+                                        return true;
+                                    })
+                                    .sort((a, b) => {
+                                        const dateA = new Date(a.timestamp?.toDate?.() || a.timestamp);
+                                        const dateB = new Date(b.timestamp?.toDate?.() || b.timestamp);
+                                        return dateB.getTime() - dateA.getTime(); // Newest first
+                                    })
+                                    .map((c) => (
+                                        <tr key={c.id} className="border-t border-gray-700">
+                                            <td className="p-2">{c.firstName} {c.lastName}</td>
+                                            <td className="p-2">{c.email}</td>
+                                            <td className="p-2">{c.message}</td>
+                                            <td className="p-2">
+                                                {c.timestamp?.toDate?.().toLocaleString?.() ||
+                                                    new Date(c.timestamp).toLocaleString()}
+                                            </td>
+                                            <td className="p-2">
+                                                {c.responded === "Yes" ? (
+                                                    <span className="text-green-400 font-bold">Yes</span>
+                                                ) : (
+                                                    <Button
+                                                        onClick={() => handleRespond(c.id)}
+                                                        className="bg-blue-500 px-3 py-1 text-white rounded"
+                                                    >
+                                                        Not yet
+                                                    </Button>
+                                                )}
+                                            </td>
+                                            <td className="p-2">
+                                                {c.respondedAt?.toDate?.().toLocaleString?.() || (c.respondedAt && new Date(c.respondedAt).toLocaleString()) || "-"}
+                                            </td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
                     )}
