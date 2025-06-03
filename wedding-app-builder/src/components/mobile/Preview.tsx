@@ -340,6 +340,12 @@ export default function Preview({ form, goBack }: Props) {
                 dateCompleted: null,
             });
 
+            await fetch('/api/send-alert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'App Submission Request' }), // or "Help Request", etc.
+            });
+
             return true;
         } catch (error) {
             console.error("Error generating app:", error);
