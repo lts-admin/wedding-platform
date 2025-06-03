@@ -12,7 +12,7 @@ export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: a
             {form.enableRSVP && (
                 <div>
                     <div className="flex items-center gap-2">
-                        <Label className="text-black font-bold">RSVP Google Sheet Link</Label>
+                        <Label className="text-black font-bold text-lg pb-6 pt-6">RSVP Google Sheet Link</Label>
                         <div className="relative group cursor-pointer">
                             <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                             <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
@@ -32,7 +32,7 @@ export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: a
             {form.enableGallery && (
                 <div>
                     <div className="flex items-center gap-2">
-                        <Label className="text-black font-bold">Gallery Google Drive Folder Link</Label>
+                        <Label className="text-black font-bold pb-6 pt-6 text-lg">Gallery Google Drive Folder Link</Label>
                         <div className="relative group cursor-pointer">
                             <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                             <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">

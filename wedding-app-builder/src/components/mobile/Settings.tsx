@@ -68,7 +68,7 @@ const Settings: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
             <h2 className="text-2xl font-bold text-pink-400">Settings</h2>
 
             <div>
-                <Label className="text-mauve pb-2 font-semibold">FAQs</Label>
+                <Label className="text-mauve pb-2 text-lg font-semibold">FAQs</Label>
                 {(form.faqs || []).map((faq, index) => (
                     <div key={index} className="relative p-4 rounded-md border border-mauve bg-petal mb-4 space-y-2">
                         <Input
@@ -105,7 +105,7 @@ const Settings: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
             </div>
 
             <div>
-                <Label className="text-mauve pb-2 font-semibold">Contact Information</Label>
+                <Label className="text-mauve pb-2 font-semibold text-lg">Contact Information</Label>
                 {(form.contactInfo || []).map((contact, index) => (
                     <div key={index} className="relative p-4 rounded-md border border-mauve bg-petal mb-4 space-y-2">
                         <Input
@@ -145,7 +145,7 @@ const Settings: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
             <div className="flex flex-wrap gap-8">
                 <div className="flex-1 min-w-[300px]">
                     <div className="flex items-center gap-2">
-                        <Label className="text-black font-bold">App Password Protection</Label>
+                        <Label className="text-black font-bold text-lg">App Password Protection</Label>
                         <div className="relative group cursor-pointer">
                             <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                             <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
@@ -184,10 +184,10 @@ const Settings: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
 
                 <div className="flex-1 min-w-[300px]">
                     <div className="flex items-center gap-2">
-                        <Label className="text-black font-bold">Admin App Password Protection</Label>
+                        <Label className="text-black font-bold text-lg">Admin App Password Protection</Label>
                         <div className="relative group cursor-pointer">
                             <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
-                            <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
+                            <div className="absolute z-10 hidden group-hover:block w-70 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
                                 Enable this to require a password before accessing the admin area of your app.
                             </div>
                         </div>
