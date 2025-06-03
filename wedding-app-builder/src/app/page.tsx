@@ -62,8 +62,8 @@ export default function HomePage() {
           <Link href="/contact-us">Contact</Link>
         </nav>
         <div className="hidden lg:flex gap-6 items-center font-bold">
-          <Button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm" onClick={() => router.push('/log-in')}>Log in</Button>
-          <Button onClick={() => router.push('/log-in')} className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</Button>
+          <Button className="bg-pink-500 text-white px-4 py-2 rounded-md text-sm font-bold" onClick={() => router.push('/log-in')}>Log in</Button>
+          <Button onClick={() => router.push('/log-in')} className="font-bold bg-pink-500 text-white px-4 py-2 rounded-md text-sm">Try it free</Button>
         </div>
 
         {menuOpen && (
@@ -130,7 +130,7 @@ export default function HomePage() {
               </div>
               <input type="email" placeholder="Email" className="w-full bg-lightpink text-white px-4 py-2 rounded-md" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
               <textarea placeholder="Message" className="w-full bg-lightpink text-white px-4 py-2 rounded-md h-24" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} required />
-              <Button type="submit" className="bg-pink-500 text-white px-4 py-2 rounded-md" style={{ fontSize: 16 }}  >Submit</Button>
+              <Button type="submit" className="bg-pink-500 font-bold text-white px-4 py-2 rounded-md" style={{ fontSize: 16 }}  >Submit</Button>
               {submitted && <p className="text-green-400 pt-2">Thanks! We'll be in touch shortly.</p>}
             </form>
           </div>

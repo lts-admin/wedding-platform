@@ -80,8 +80,8 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
             <h2 className="text-2xl font-semibold text-pink-400">Save The Date</h2>
 
             <div>
-                <Label className="text-black pb-2 font-bold">
-                    Upload Save The Date Image
+                <Label className="text-black pb-6 pt-6 font-bold text-lg">
+                    Upload an Image
                 </Label>
                 <Input
                     type="file"

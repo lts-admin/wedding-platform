@@ -236,7 +236,7 @@ export default function Home() {
                     <div className="max-w-2xl">
                         <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
                         <div>
-                            <Label className="text-black pb-2 font-bold">Couple Name</Label>
+                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Couple Name</Label>
                             <Input
                                 required
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
@@ -246,7 +246,7 @@ export default function Home() {
                             />
                         </div>
                         <div>
-                            <Label className="text-black pb-2 font-bold">Wedding Date</Label>
+                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Wedding Date</Label>
                             <Input
                                 required
                                 type="date"
@@ -257,7 +257,7 @@ export default function Home() {
                             />
                         </div>
                         <div>
-                            <Label className="text-black pb-2 font-bold">Wedding Location</Label>
+                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Wedding Location</Label>
                             <Input
                                 required
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
@@ -268,7 +268,7 @@ export default function Home() {
                         </div>
                         <div>
                             <div className="flex items-center gap-2 mb-1">
-                                <Label className="text-black font-bold">Name of App</Label>
+                                <Label className="text-black font-bold pb-6 pt-6 text-lg">Name of App</Label>
                                 <div className="relative group cursor-pointer">
                                     <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                                     <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
@@ -286,7 +286,7 @@ export default function Home() {
                         </div>
 
 
-                        <div className="font-bold text-lg">All screens are enabled by default. Please review and select the ones you would like to include in your custom mobile wedding app.</div>
+                        <div className="font-bold text-lg pb-6 pt-6">All screens are enabled by default. Please review and select the ones you would like to include in your custom mobile wedding app.</div>
                         <div className="flex flex-wrap gap-3 justify-center">
                             {screenToggles.map(({ label, field }) => (
                                 <Button

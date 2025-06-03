@@ -62,9 +62,9 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
             <h2 className="text-2xl font-semibold text-pink-400">Our Family Section</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["bride", "groom"].map((side) => (
-                    <div key={side} className="space-y-4">
+                    <div key={side} className="space-y-4 pt-8">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-black pb-2 font-bold">
+                            <h2 className="text-black text-lg pb-2 font-bold">
                                 {side === "bride" ? "Bride's Side" : "Groom's Side"}
                             </h2>
                             <Button
