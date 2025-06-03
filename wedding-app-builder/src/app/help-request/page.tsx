@@ -69,7 +69,11 @@ export default function HelpRequest() {
             });
 
             // Optional: upload attachment to Firebase Storage with the docRef.id
-
+            await fetch('/api/send-alert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'Help Request' }), // or "Help Request", etc.
+            });
             setSubmitted(true);
             setForm({ firstName: '', lastName: '', email: '', message: '' });
             setAttachment(null);
