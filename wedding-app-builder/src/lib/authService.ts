@@ -18,6 +18,7 @@ export async function signup(email: string, password: string, name: string, upda
         email,
         updatesOptIn,
         createdAt: new Date().toISOString(),
+        watchedTutorial: false,
     });
 
     await sendEmailVerification(user);
