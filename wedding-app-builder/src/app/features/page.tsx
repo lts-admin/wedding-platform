@@ -256,27 +256,38 @@ export default function FeaturesSection() {
             <section className="w-full px-6 py-20 bg-[#0D0208] text-[#E4D7DE]">
                 <div className="max-w-6xl mx-auto text-center">
                     <h2 className="text-4xl md:text-6xl font-serif font-bold mb-16" style={{ fontFamily: "'Great Vibes', cursive" }}>Features You’ll Love</h2>
-
                     {isMobile ? (
-                        <Swiper spaceBetween={20} slidesPerView={1}>
-                            {features.map((feature, idx) => (
-                                <SwiperSlide key={idx}>
-                                    <div className="flex flex-col items-center">
-                                        <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden mb-6">
-                                            <Image
-                                                src={feature.image}
-                                                alt={feature.title}
-                                                fill
-                                                className="object-contain"
-                                                priority
-                                            />
+                        <div className="relative">
+                            {/* Left Arrow */}
+                            <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10">
+                                <span className="text-white text-3xl opacity-60">&larr;</span>
+                            </div>
+
+                            {/* Right Arrow */}
+                            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10">
+                                <span className="text-white text-3xl opacity-60">&rarr;</span>
+                            </div>
+
+                            <Swiper spaceBetween={20} slidesPerView={1}>
+                                {features.map((feature, idx) => (
+                                    <SwiperSlide key={idx}>
+                                        <div className="flex flex-col items-center">
+                                            <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden mb-6">
+                                                <Image
+                                                    src={feature.image}
+                                                    alt={feature.title}
+                                                    fill
+                                                    className="object-contain"
+                                                    priority
+                                                />
+                                            </div>
+                                            <h3 className="text-2xl font-semibold text-pink-400 mb-2 pt-6">{feature.title}</h3>
+                                            <p className="text-sm text-[#E4D7DE] max-w-xs text-center">{feature.description}</p>
                                         </div>
-                                        <h3 className="text-2xl font-semibold text-pink-400 mb-2 pt-6">{feature.title}</h3>
-                                        <p className="text-sm text-[#E4D7DE] max-w-xs text-center">{feature.description}</p>
-                                    </div>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
                     ) : (
                         <div className="grid gap-16 md:grid-cols-2">
                             {features.map((feature, idx) => (
