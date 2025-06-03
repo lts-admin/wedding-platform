@@ -36,6 +36,13 @@ export default function HomePage() {
         respondedDate: '',
         timestamp: new Date().toISOString(),
       });
+
+      await fetch('/api/send-alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'Contact Request' }), // or "Help Request", etc.
+      });
+
       setSubmitted(true);
       setForm({ firstName: '', lastName: '', email: '', message: '' });
     } catch (error) {
