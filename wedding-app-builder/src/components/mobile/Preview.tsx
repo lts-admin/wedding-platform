@@ -220,7 +220,7 @@ export default function Preview({ form, goBack }: Props) {
                             <div key={i}>
                                 <p className="font-semibold">{e.name}</p>
                                 <p>
-                                    {e.date} • {e.time} • {e.location} • {e.dressCode}
+                                    {e.date} • {e.startTime} • {e.location} • {e.dressCode}
                                 </p>
                             </div>
                         ))}
