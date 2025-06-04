@@ -27,7 +27,7 @@ import Registry from "./Registry";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import CalendarPage from "@/app/calendar/page";
+import CalendarPage from "@/components/utilities/Calendar";
 export default function Home() {
     const [step, setStep] = useState(0);
     const router = useRouter();
