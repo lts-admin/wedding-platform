@@ -27,7 +27,6 @@
     "nodemailer": "^7.0.3",
     "react": "^19.0.0",
     "react-big-calendar": "^1.19.2",
-    "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
     "react-responsive": "^10.0.1",
     "swiper": "^11.2.8",
