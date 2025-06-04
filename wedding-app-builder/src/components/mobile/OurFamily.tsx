@@ -11,11 +11,10 @@ type FamilySide = "bride" | "groom";
 type Props = {
     form: FormState;
     setForm: React.Dispatch<React.SetStateAction<FormState>>;
-    goNext: () => void;
-    goBack: () => void;
+
 };
 
-export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
+export default function OurFamily({ form, setForm }: Props) {
     const isSubmitted = form.isSubmitted;
 
     const addMember = (side: FamilySide) => {
@@ -59,7 +58,7 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
 
     return (
         <div>
-            <h2 className="text-2xl font-semibold text-pink-400">Our Family Section</h2>
+            <h2 className="text-2xl font-semibold text-black">Our Family</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["bride", "groom"].map((side) => (
                     <div key={side} className="space-y-4 pt-8">
@@ -225,15 +224,6 @@ export default function OurFamily({ form, setForm, goNext, goBack }: Props) {
                     disabled={isSubmitted}
                 >
                     + Add Pet
-                </Button>
-            </div>
-
-            <div className="flex justify-start gap-4 pt-12">
-                <Button variant="outline" className="text-black font-bold" onClick={goBack}>
-                    Back
-                </Button>
-                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
-                    Next
                 </Button>
             </div>
         </div>

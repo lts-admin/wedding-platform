@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
 import { X } from "lucide-react";
+import Notifications from "./Notifications";
 
 interface FAQItem {
     question: string;
@@ -220,6 +221,7 @@ const Settings: React.FC<Props> = ({ form, handleChange, goNext, goBack }) => {
                         </div>
                     )}
                 </div>
+                <Notifications form={form} handleChange={handleChange as (field: string, value: any) => void} />
             </div>
 
             <div className="flex justify-start gap-4 pt-4">

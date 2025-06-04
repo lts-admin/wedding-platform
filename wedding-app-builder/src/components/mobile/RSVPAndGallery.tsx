@@ -8,27 +8,7 @@ export default function RSVPAndGallery({ form, handleChange, goNext, goBack }: a
     const isSubmitted = form.isSubmitted;
     return (
         <div className="max-w-xxl space-y-4">
-            <h2 className="text-2xl font-semibold text-pink-400">RSVP & Gallery</h2>
-            {form.enableRSVP && (
-                <div>
-                    <div className="flex items-center gap-2">
-                        <Label className="text-black font-bold text-lg pb-6 pt-6">RSVP Google Sheet Link</Label>
-                        <div className="relative group cursor-pointer">
-                            <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
-                            <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
-                                Paste a link to your RSVP Google Sheet. Make sure it's set to “Anyone with the link can view” so your app can access it.
-                            </div>
-                        </div>
-                    </div>
-
-                    <Input
-                        value={form.rsvpSheetUrl}
-                        onChange={(e) => handleChange("rsvpSheetUrl", e.target.value)}
-                        className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                        disabled={isSubmitted}
-                    />
-                </div>
-            )}
+            <h2 className="text-2xl font-semibold text-pink-400">Gallery</h2>
             {form.enableGallery && (
                 <div>
                     <div className="flex items-center gap-2">

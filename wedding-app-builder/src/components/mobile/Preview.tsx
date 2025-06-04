@@ -328,7 +328,7 @@ export default function Preview({ form, goBack }: Props) {
         ...(form.enableStory ? [{ id: "story", label: "Our Story", icon: <BookOpen size={18} /> }] : []),
         // ...(form.enableFamily ? [{ id: "family", label: "Family", icon: <Users size={18} /> }] : []),
         ...(form.enableWeddingParty ? [{ id: "party", label: "Wedding Party", icon: <Users2 size={18} /> }] : []),
-        ...(form.enableGallery ? [{ id: "gallery", label: "Gallery", icon: <Image size={18} /> }] : []),
+        //...(form.enableGallery ? [{ id: "gallery", label: "Gallery", icon: <Image size={18} /> }] : []),
         ...(form.enableItinerary ? [{ id: "itinerary", label: "Itinerary", icon: <CalendarDays size={18} /> }] : []),
         ...(form.enableSettings ? [{ id: "settings", label: "Settings", icon: <Settings size={18} /> }] : []),
     ];

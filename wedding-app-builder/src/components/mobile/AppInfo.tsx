@@ -27,7 +27,7 @@ import Registry from "./Registry";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-
+import CalendarPage from "@/app/calendar/page";
 export default function Home() {
     const [step, setStep] = useState(0);
     const router = useRouter();
@@ -45,10 +45,10 @@ export default function Home() {
         appName: "",
         enableRSVP: true,
         rsvpSheetUrl: "",
-        enableGallery: true,
+        enableGallery: false,
         galleryDriveUrl: "",
-        enableFamily: true,
-        enableStory: true,
+        enableFamily: false,
+        enableStory: false,
         familyDetails: { bride: [], groom: [], pets: [] },
         enableItinerary: true,
         enableSaveDate: true,
@@ -56,10 +56,10 @@ export default function Home() {
         itineraryBride: "",
         itineraryGroom: "",
         enableSettings: true,
-        enableTravel: true,
+        enableTravel: false,
         faqs: [],
         contactInfo: [],
-        enableWeddingParty: true,
+        enableWeddingParty: false,
         weddingParty: { bride: [], groom: [] },
         weddingEvents: [],
         brideEvents: [],
@@ -71,7 +71,7 @@ export default function Home() {
         enableCountdown: true,
         isHomeScreen: true,
         showRSVPButton: true,
-        enableRegistry: true,
+        enableRegistry: false,
         isSubmitted: false,
         enableAdminPassword: false,
         selectedFont: "Serif",
@@ -126,52 +126,54 @@ export default function Home() {
     }, [user]);
 
 
-    // useEffect(() => {
-    //     const fetchSavedForm = async () => {
-    //         if (!user) return;
-    //         try {
-    //             const docRef = doc(db, "weddingApps", user.uid);
-    //             const snapshot = await getDoc(docRef);
-    //             if (snapshot.exists()) {
-    //                 const data = snapshot.data();
-    //                 setForm(prev => ({ ...prev, ...data }));
-    //                 if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
-    //             }
-    //         } catch (err) {
-    //             console.error("Failed to load form:", err);
-    //         }
-    //     };
-    //     fetchSavedForm();
-    // }, [user]);
+    useEffect(() => {
+        const fetchSavedForm = async () => {
+            if (!user) return;
+            try {
+                const docRef = doc(db, "weddingApps", user.uid);
+                const snapshot = await getDoc(docRef);
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    setForm(prev => ({ ...prev, ...data }));
+                    if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
+                }
+            } catch (err) {
+                console.error("Failed to load form:", err);
+            }
+        };
+        fetchSavedForm();
+    }, [user]);
 
-    const screenToggles: { label: string; field: keyof FormState }[] = [
-        { label: "Save The Date", field: "enableSaveDate" },
-        { label: "Our Story", field: "enableStory" },
+
+    const requiredScreens: { label: string; field: keyof FormState }[] = [
         { label: "RSVP", field: "enableRSVP" },
+        { label: "Save The Date", field: "enableSaveDate" },
+        { label: "Wedding Itinerary", field: "enableItinerary" },
+        { label: "Settings (FAQs)", field: "enableSettings" }
+
+    ];
+    const screenToggles: { label: string; field: keyof FormState }[] = [
+        { label: "Our Story", field: "enableStory" },
         { label: "Gallery", field: "enableGallery" },
         { label: "Our Family", field: "enableFamily" },
         { label: "Wedding Party", field: "enableWeddingParty" },
-        { label: "Wedding Itinerary", field: "enableItinerary" },
         { label: "Wedding Registry", field: "enableRegistry" },
         { label: "Travel", field: "enableTravel" },
-        { label: "Settings (FAQs)", field: "enableSettings" }
     ];
 
     const sidebarItems = useMemo(() => [
-        { label: "Couple Details", key: "appInfo" },
-        { label: "Save the Date", key: "saveDate", condition: form.enableSaveDate },
-        { label: "Our Story", key: "ourStory", condition: form.enableStory },
-        { label: "RSVP & Gallery", key: "rsvpGallery", condition: form.enableRSVP || form.enableGallery },
-        { label: "Our Family", key: "ourFamily", condition: form.enableFamily },
-        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty },
-        { label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
+        { label: "Getting Started", key: "appInfo" },
+        { label: "App Home Page", key: "saveDate", condition: form.enableSaveDate },
+        { label: "Gallery", key: "rsvpGallery", condition: form.enableGallery },
+        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty || form.enableFamily },
+        //{ label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
         { label: "Registry", key: "registry", condition: form.enableRegistry },
         { label: "Travel", key: "travel", condition: form.enableTravel },
         { label: "Settings", key: "settings", condition: form.enableSettings },
-        { label: "Notifications", key: "notification" },
         { label: "App Themes", key: "themes" },
         { label: "Preview", key: "preview" },
     ].filter(item => item.condition !== false), [form]);
+
 
     useEffect(() => {
         if (!user) return;
@@ -283,7 +285,7 @@ export default function Home() {
                         >
                             Need help?
                         </Button>
-                        {/* <Button
+                        <Button
                             variant="outline"
                             className="text-black border border-gray-500 hover:bg-gray-100 text-sm hover:font-bold"
                             onClick={() => {
@@ -292,7 +294,7 @@ export default function Home() {
                             }}
                         >
                             Watch Example
-                        </Button> */}
+                        </Button>
                     </div>
                 </div>
             </aside>
@@ -358,43 +360,29 @@ export default function Home() {
                     </div>
                 )} */}
 
-
                 {sidebarItems[step]?.key === "appInfo" && (
-                    <div className="max-w-2xl">
-                        <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
-                        <div>
-                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Couple Name</Label>
-                            <Input
-                                required
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                value={form.coupleName}
-                                onChange={(e) => handleChange("coupleName", e.target.value)}
-                                disabled={isSubmitted}
-                            />
+                    <div className="flex flex-col lg:flex-row gap-10 items-start w-full">
+                        {/* Left Column: Couple Name + Calendar */}
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
+
+                            <div className="pb-6">
+                                <Label className="text-black pt-6 pb-6 font-bold text-lg">Couple Name</Label>
+                                <Input
+                                    required
+                                    className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
+                                    value={form.coupleName}
+                                    onChange={(e) => handleChange("coupleName", e.target.value)}
+                                    disabled={isSubmitted}
+                                />
+                            </div>
+
+                            <CalendarPage form={form} setForm={setForm} />
                         </div>
-                        <div>
-                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Wedding Date</Label>
-                            <Input
-                                required
-                                type="date"
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                value={form.weddingDate}
-                                onChange={(e) => handleChange("weddingDate", e.target.value)}
-                                disabled={isSubmitted}
-                            />
-                        </div>
-                        <div>
-                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Wedding Location</Label>
-                            <Input
-                                required
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                value={form.weddingLocation}
-                                onChange={(e) => handleChange("weddingLocation", e.target.value)}
-                                disabled={isSubmitted}
-                            />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
+
+                        {/* Right Column: App Name + Toggles */}
+                        <div className="flex-1 min-w-0 my-14">
+                            <div className="flex items-center gap-2 ">
                                 <Label className="text-black font-bold pb-6 pt-6 text-lg">Name of App</Label>
                                 <div className="relative group cursor-pointer">
                                     <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
@@ -403,6 +391,7 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
+
                             <Input
                                 required
                                 className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
@@ -410,52 +399,68 @@ export default function Home() {
                                 onChange={(e) => handleChange("appName", e.target.value)}
                                 disabled={isSubmitted}
                             />
-                        </div>
 
+                            <div className="font-bold text-lg pb-6 pt-6">
+                                These screens are essential to ensure your app is easy to use and looks great.
+                            </div>
+                            <div className="flex flex-wrap gap-3 justify-center">
+                                {requiredScreens.map(({ label, field }) => (
+                                    <Button
+                                        key={field}
+                                        className={`px-4 py-2 rounded-full border text-sm font-bold transition 
+        ${form[field]
+                                                ? "bg-pink-400 text-white border-white"
+                                                : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
 
-                        <div className="font-bold text-lg pb-6 pt-6">All screens are enabled by default. Please review and select the ones you would like to include in your custom mobile wedding app.</div>
-                        <div className="flex flex-wrap gap-3 justify-center">
-                            {screenToggles.map(({ label, field }) => (
-                                <Button
-                                    key={field}
-                                    className={`px-4 py-2 rounded-full border text-sm font-bold transition 
-        ${form[field] ? "bg-pink-400 text-white border-white" : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
-                                    onClick={() => handleToggle(field)}
-                                    disabled={isSubmitted}
-                                >
-                                    {label}
-                                </Button>
-                            ))}
-                        </div>
-                        <div className="pt-20 pb-20">
-                            <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
-                        </div>
+                                    >
+                                        {label}
+                                    </Button>
+                                ))}
+                            </div>
+                            <div className="font-bold text-lg pb-6 pt-6">
+                                Select from the available screens below to personalize and enhance your app experience.
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pt-12 gap-4">
+                                {screenToggles.map(({ label, field }) => (
+                                    <label
+                                        key={field}
+                                        className="flex items-center gap-3 p-3 bg-white rounded-lg border border-pink-300 text-black font-medium cursor-pointer"
+                                    >
+                                        <Input
+                                            type="checkbox"
+                                            checked={!!form[field]}
+                                            onChange={() => handleToggle(field)}
+                                            disabled={isSubmitted}
+                                            className="form-checkbox h-5 w-5 text-pink-500"
+                                        />
+                                        {label}
+                                    </label>
+                                ))}
 
+                            </div>
+
+                            <div className="mt-80">
+                                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
+
                 {sidebarItems[step]?.key === "saveDate" && (
-                    <SaveTheDate setForm={setForm} goNext={goNext} goBack={goBack} form={form} />
+                    <SaveTheDate setForm={setForm} handleChange={handleChange} goNext={goNext} goBack={goBack} form={form} />
                 )}
 
-                {sidebarItems[step]?.key === "ourStory" && (
+                {/* {sidebarItems[step]?.key === "ourStory" && (
                     <OurStory form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
-                )}
+                )} */}
 
                 {sidebarItems[step]?.key === "rsvpGallery" && (
                     <RSVPAndGallery form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
                 )}
 
-                {sidebarItems[step]?.key === "ourFamily" && (
-                    <OurFamily form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
-                )}
-
                 {sidebarItems[step]?.key === "weddingParty" && (
                     <WeddingParty form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
-                )}
-
-                {sidebarItems[step]?.key === "itinerary" && (
-                    <Itinerary form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
                 )}
 
                 {sidebarItems[step]?.key === "registry" && (
@@ -469,9 +474,9 @@ export default function Home() {
                 {sidebarItems[step]?.key === "settings" && (
                     <Settings form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
                 )}
-                {sidebarItems[step]?.key === "notification" && (
-                    <Notifications form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
-                )}
+                {/* {sidebarItems[step]?.key === "notification" && (
+                    <Notifications form={form} handleChange={handleChange} />
+                )} */}
                 {sidebarItems[step]?.key === "themes" && (
                     <Themes form={form} goNext={goNext} goBack={goBack} />
                 )}
@@ -479,49 +484,7 @@ export default function Home() {
                     <Preview form={form} goBack={goBack} />
                 )}
             </section>
-        </main>
-        //     <div className="grid grid-cols-2 gap-4">
-        //     <div>
-        //         <Label className="text-black pb-2">Save The Date</Label>
-        //         <CustomSwitch checked={form.enableSaveDate} onToggle={() => handleToggle("enableSaveDate")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Our Story</Label>
-        //         <CustomSwitch checked={form.enableStory} onToggle={() => handleToggle("enableStory")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Enable RSVP</Label>
-        //         <CustomSwitch checked={form.enableRSVP} onToggle={() => handleToggle("enableRSVP")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Enable Gallery</Label>
-        //         <CustomSwitch checked={form.enableGallery} onToggle={() => handleToggle("enableGallery")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Our Family Section</Label>
-        //         <CustomSwitch checked={form.enableFamily} onToggle={() => handleToggle("enableFamily")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Wedding Party</Label>
-        //         <CustomSwitch checked={form.enableWeddingParty} onToggle={() => handleToggle("enableWeddingParty")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Wedding Itinerary</Label>
-        //         <CustomSwitch checked={form.enableItinerary} onToggle={() => handleToggle("enableItinerary")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Travel</Label>
-        //         <CustomSwitch checked={form.enableTravel} onToggle={() => handleToggle("enableTravel")} disabled={isSubmitted} />
-        //     </div>
-        //     {/* <div>
-        //                             <Label className="text-black pb-2">Registry</Label>
-        //                             <CustomSwitch checked={form.enableRegistry} onToggle={() => handleToggle("enableRegistry")} />
-        //                         </div> */}
-        //     <div>
-        //         <Label className="text-black pb-2">Settings (FAQs)</Label>
-        //         <CustomSwitch checked={form.enableSettings} onToggle={() => handleToggle("enableSettings")} disabled={isSubmitted} />
-        //     </div>
-        // </div>
+        </main >
     );
 }
 

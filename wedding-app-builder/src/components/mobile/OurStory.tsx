@@ -11,11 +11,10 @@ import { X } from "lucide-react";
 interface OurStoryProps {
     form: FormState;
     setForm: React.Dispatch<React.SetStateAction<FormState>>;
-    goNext: () => void;
-    goBack: () => void;
+
 }
 
-const OurStory: React.FC<OurStoryProps> = ({ form, setForm, goNext, goBack }) => {
+const OurStory: React.FC<OurStoryProps> = ({ form, setForm }) => {
     const isSubmitted = form.isSubmitted;
 
     const handleAddParagraph = () => {
@@ -123,15 +122,6 @@ const OurStory: React.FC<OurStoryProps> = ({ form, setForm, goNext, goBack }) =>
                 ))}
                 <Button onClick={handleAddImage} className="bg-pink-400 text-black font-bold" disabled={isSubmitted}>
                     + Add Image
-                </Button>
-            </div>
-
-            <div className="flex justify-start gap-4 pt-12">
-                <Button variant="outline" onClick={goBack} className="text-black font-bold">
-                    Back
-                </Button>
-                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
-                    Next
                 </Button>
             </div>
         </div>
