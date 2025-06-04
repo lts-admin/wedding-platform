@@ -82,7 +82,7 @@ export default function LoginPage() {
                         placeholder="Email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
                         required
                     />
 
@@ -91,7 +91,7 @@ export default function LoginPage() {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 rounded-xl bg-[#FFF5F7]text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
                         required
                     />
 
@@ -102,7 +102,7 @@ export default function LoginPage() {
                                 placeholder="Re-enter Password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                                className="w-full p-3 rounded-xl bg-[#FFF5F7] text-black border border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
                                 required
                             />
 
@@ -147,7 +147,7 @@ export default function LoginPage() {
                                 setError(err.message);
                             }
                         }}
-                        className="w-full flex items-center justify-center gap-2 p-6 rounded-xl border border-gray-600 text-black hover:bg-gray-300 transition"
+                        className="w-full flex items-center justify-center gap-2 p-6 rounded-xl border border-pink-500 text-black hover:bg-gray-300 transition"
                     >
                         <Image
                             src="/google_icon.png"
