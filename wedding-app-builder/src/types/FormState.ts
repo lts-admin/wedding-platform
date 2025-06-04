@@ -5,9 +5,11 @@ export type FamilyMember = {
 };
 
 export interface EventDetails {
+    id: string; // <-- Add this line
     name: string;
     date: string;
-    time: string;
+    startTime: string;
+    endTime: string;
     location: string;
     dressCode: string;
 }
