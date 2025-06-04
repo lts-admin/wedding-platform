@@ -59,7 +59,7 @@ export default function Preview({ form, goBack }: Props) {
     const [contactOpen, setContactOpen] = useState(true);
     const [venueOpen, setVenueOpen] = useState(true);
     const [hotelOpen, setHotelOpen] = useState(true);
-
+    const [showInvitationModal, setShowInvitationModal] = useState(false);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -75,15 +75,41 @@ export default function Preview({ form, goBack }: Props) {
         fetchSubmissionStatus();
     }, [user]);
 
+
+    const fontMap: Record<string, string> = {
+        Script: "'Dancing Script', cursive",
+        Serif: "Georgia, serif",
+        Sans: "Helvetica, Arial, sans-serif",
+    };
+
+    const colorNameMap: Record<string, string> = {
+        "#A17956": "Cocoa",
+        "#EECAC4": "Blush",
+        "#B0848B": "DustyRose",
+        "#826056": "MutedMocha",
+        "#3C314D": "Plum",
+    };
+
+    const fontColorNameMap: Record<string, string> = {
+        "#D72638": "Crimson Red",
+        "#F46036": "Coral Orange",
+        "#FFD23F": "Mustard Yellow",
+        "#1B998B": "Teal Green",
+        "#2E294E": "Indigo",
+        "#5F0F40": "Plum",
+        "#A4036F": "Magenta",
+        "#048BA8": "Aqua Blue",
+    };
+
     const renderContent = () => {
         switch (activeTab) {
             case "home":
                 return (
-                    <div className="space-y-2 text-center" style={{ fontFamily: form.selectedFont }}>
+                    <div className="space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         <p className="text-xl font-bold py-6">SAVE THE DATE</p>
-                        <p className="text-xl font-bold py-6">Join us for the wedding of<br />{form.coupleName}</p>
-                        <p className="text-lg text-black">
-                            {new Date(`${form.weddingDate}T00:00:00`).toLocaleDateString('en-US', {
+                        <p className="text-xl font-bold py-6">Join us for the wedding of<br />{form.brideName} <br />&<br />{form.groomName}</p>
+                        <p className="text-lg">
+                            {new Date(form.weddingDate).toLocaleDateString('en-US', {
                                 weekday: 'long',
                                 year: 'numeric',
                                 month: 'long',
@@ -91,7 +117,8 @@ export default function Preview({ form, goBack }: Props) {
                             })}
                         </p>
 
-                        <p className="text-xl text-black">{form.weddingLocation}</p>
+
+                        <p className="text-xl ">{form.weddingLocation}</p>
                         <div className="flex justify-center">
                             {form.saveTheDateImage && (
                                 <img
@@ -103,7 +130,7 @@ export default function Preview({ form, goBack }: Props) {
                         </div>
                         <div className="flex justify-center">
                             {form.enableRSVP && (
-                                <Button className="bg-black text-white">RSVP</Button>
+                                <Button className="bg-black text-white" onClick={() => setActiveTab("rsvp")}>RSVP</Button>
                             )}
                         </div>
                         {form.enableCountdown && (
@@ -114,44 +141,79 @@ export default function Preview({ form, goBack }: Props) {
 
             case "rsvp":
                 return (
-                    <div className="space-y-2 text-center" style={{ fontFamily: form.selectedFont }}>
-                        <p className="text-xl font-bold py-6">SAVE THE DATE</p>
-                        <p className="text-xl font-bold" >{form.coupleName}</p>
-                        <p className="text-xl text-black">{form.weddingDate}</p>
-                        <p className="text-sm text-gray-700">{form.weddingLocation}</p>
-                        <div className="flex justify-center">
-                            {form.saveTheDateImage && (
-                                <img
-                                    src={URL.createObjectURL(form.saveTheDateImage)}
-                                    alt="Save the Date Preview"
-                                    className="w-32 h-32 object-cover rounded"
+                    <div className="h-full text-center px-6 pt-4 space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
+                        {/* Top bar with back arrow and title */}
+                        <div className="flex items-center justify-start text-black mb-2">
+                            <button onClick={() => setActiveTab("home")} className="text-2xl font-light pr-3">
+                                &#8592;
+                            </button>
+                            <h2 className="text-lg font-bold tracking-wide">RSVP</h2>
+                        </div>
+
+                        {/* Inputs */}
+                        <div className="space-y-4">
+                            <div className="text-left">
+                                <label className="block font-medium text-gray-700 text-sm mb-1">Full Name</label>
+                                <input
+                                    type="text"
+                                    placeholder="Enter your name"
+                                    className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
                                 />
-                            )}
+                            </div>
+                            <div className="text-left">
+                                <label className="block font-medium text-gray-700 text-sm mb-1">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    placeholder="Enter your phone number"
+                                    className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
+                                />
+                            </div>
                         </div>
-                        <div className="flex justify-center">
-                            {form.enableRSVP && (
-                                <Button className="bg-black text-white">RSVP</Button>
-                            )}
+
+                        {/* Submit button */}
+                        <div className="pt-4">
+                            <Button
+                                onClick={() => setShowInvitationModal(true)}
+                                className="bg-[#F8E1E7] text-[#8C4A4A] font-semibold px-6 py-2 rounded-full shadow-sm hover:shadow-md"
+                            >
+                                Look Up Invitation
+                            </Button>
                         </div>
+                        <Dialog open={showInvitationModal} onOpenChange={setShowInvitationModal}>
+                            <DialogContent className="bg-[#f8f5f4] text-black">
+                                <DialogHeader>
+                                    <DialogTitle>Look up RSVP</DialogTitle>
+                                    <p className="text-sm text-gray-600">
+                                        This functionality will be visible when your app is generated and downloadable.
+                                    </p>
+                                </DialogHeader>
+                                <DialogFooter className="flex justify-end gap-2 pt-4">
+                                    <Button variant="outline" onClick={() => setShowInvitationModal(false)}>
+                                        Close
+                                    </Button>
+
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 );
             case "story":
                 return (
-                    <div className="text-sm space-y-2 text-center">
+                    <div className="text-sm space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         {form.storyParagraphs.length > 0 ? (
                             form.storyParagraphs.map((p, i) => (
-                                <p key={i} className="text-sm text-gray-700">
+                                <p key={i} className="text-sm">
                                     {p}
                                 </p>
                             ))
                         ) : (
-                            <p className="text-sm text-black">No story added.</p>
+                            <p className="text-sm ">No story added.</p>
                         )}
                     </div>
                 );
             case "gallery":
                 return (
-                    <div className="space-y-2 text-center">
+                    <div className="space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         <p className="text-sm font-medium">Gallery Preview</p>
                         {form.galleryDriveUrl ? (
                             <a
@@ -169,7 +231,7 @@ export default function Preview({ form, goBack }: Props) {
                 );
             case "party":
                 return (
-                    <div className="text-sm space-y-6">
+                    <div className="text-sm space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         {/* Family Section */}
                         <div>
                             <h3 className="font-bold text-lg">Family</h3>
@@ -215,7 +277,7 @@ export default function Preview({ form, goBack }: Props) {
                 );
             case "itinerary":
                 return (
-                    <div className="text-sm space-y-2">
+                    <div className="text-sm space-y-2" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         {form.weddingEvents.map((e, i) => (
                             <div key={i}>
                                 <p className="font-semibold">{e.name}</p>
@@ -228,12 +290,12 @@ export default function Preview({ form, goBack }: Props) {
                 );
             case "settings":
                 return (
-                    <div className="text-sm space-y-6">
+                    <div className="text-sm space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         {/* FAQs */}
                         <div>
                             <button
                                 onClick={() => setFaqsOpen(!faqsOpen)}
-                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                                className="flex justify-between items-center w-full text-leftfont-semibold mb-2"
                             >
                                 <span>FAQs</span>
                                 {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -255,7 +317,7 @@ export default function Preview({ form, goBack }: Props) {
                         <div>
                             <button
                                 onClick={() => setContactOpen(!contactOpen)}
-                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                                className="flex justify-between items-center w-full text-left  font-semibold mb-2"
                             >
                                 <span>Contact Info</span>
                                 {contactOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -275,10 +337,10 @@ export default function Preview({ form, goBack }: Props) {
                         </div>
 
                         {/* Venue Details */}
-                        <div>
+                        <div style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                             <button
                                 onClick={() => setVenueOpen(!venueOpen)}
-                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                                className="flex justify-between items-center w-full text-left font-semibold mb-2"
                             >
                                 <span>Venue Details</span>
                                 {venueOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -299,7 +361,7 @@ export default function Preview({ form, goBack }: Props) {
                         <div>
                             <button
                                 onClick={() => setHotelOpen(!hotelOpen)}
-                                className="flex justify-between items-center w-full text-left text-black font-semibold mb-2"
+                                className="flex justify-between items-center w-full text-left font-semibold mb-2"
                             >
                                 <span>Hotel Info</span>
                                 {hotelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -336,7 +398,8 @@ export default function Preview({ form, goBack }: Props) {
     const validateRequiredFields = () => {
         const errors: string[] = [];
 
-        if (!form.coupleName.trim()) errors.push("Couple name");
+        if (!form.brideName.trim()) errors.push("Bride name");
+        if (!form.groomName.trim()) errors.push("Groom name");
         if (!form.weddingDate.trim()) errors.push("Wedding date ");
         if (!form.weddingLocation.trim()) errors.push("Wedding location");
         if (!form.appName.trim()) errors.push("App name");
@@ -404,7 +467,7 @@ export default function Preview({ form, goBack }: Props) {
             await setDoc(workRequestRef, {
                 assignee: "Satya Vinjamuri",
                 userId: user.uid,
-                coupleName: form.coupleName,
+                coupleName: form.brideName + "&" + form.groomName,
                 zipFileUrl: downloadURL,
                 authStatus: WorkStatus.Submitted,
                 feedback: "",
@@ -499,13 +562,14 @@ export default function Preview({ form, goBack }: Props) {
     // };
 
     return (
-        <div>
+        <div >
             <div className="pb-6">
                 <h2 className="text-2xl font-semibold text-pink-400">Preview of your Custom App</h2>
                 <p className="mt-4 text-sm text-red-500 font-bold italic bg-petal px-4 py-2 rounded-md border max-w-2xl">
                     Please remember this is just a preview and not what your app will actually look like!
                 </p>
             </div>
+
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-12">
                 <div className="flex flex-col items-center lg:items-start">
                     <div className="relative shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200 text-black">
@@ -529,6 +593,9 @@ export default function Preview({ form, goBack }: Props) {
                 </div>
 
                 <div className="flex flex-col items-center gap-4 pb-12">
+                    <div>
+                        <h2 className="text-2xl font-semibold text-black">{form.appName}</h2>
+                    </div>
                     <Button className="w-[200px] bg-pink-400 text-black font-bold" onClick={() => setShowConfirmModal(true)} disabled={isSubmitted}>
                         {isSubmitted ? "Submitted" : "Build My App"}
                     </Button>

@@ -107,7 +107,7 @@ export default function HomePage() {
             <Button onClick={() => router.push('/log-in')} className="bg-white text-[#281B21] text-lg px-6 py-3 rounded-md font-medium" style={{ fontSize: 16 }}>Build My Own App</Button>
           </div>
           <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
-            <Image src="/assets/itinerary.png" alt="Wedding App Preview" fill className="object-cover rounded-[44px]" priority />
+            <Image src="/assets/itinerary_light.png" alt="Wedding App Preview" fill className="object-cover rounded-[44px]" priority />
           </div>
         </div>
       </section>
@@ -115,7 +115,7 @@ export default function HomePage() {
       <section className="px-6 sm:px-8 py-24 bg-[#0D0208]">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="relative mx-auto w-[300px] h-[600px] border border-pink-200 rounded-[44px] overflow-hidden">
-            <Image src="/assets/rsvp.png" alt="Test on your phone" fill priority className="object-cover rounded-[44px]" />
+            <Image src="/assets/rsvp_light.png" alt="Test on your phone" fill priority className="object-cover rounded-[44px]" />
           </div>
           <div className="space-y-6">
             <h2 className="text-3xl sm:text-4xl font-bold">Test on your phone</h2>

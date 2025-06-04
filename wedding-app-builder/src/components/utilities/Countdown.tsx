@@ -4,7 +4,7 @@ export default function Countdown({ weddingDate }: { weddingDate: string }) {
     const [timeLeft, setTimeLeft] = useState('');
 
     useEffect(() => {
-        const targetDate = new Date(`${weddingDate}T00:00:00`);
+        const targetDate = new Date(weddingDate);
         console.log('Target:', targetDate.toString());
 
         const updateCountdown = () => {
