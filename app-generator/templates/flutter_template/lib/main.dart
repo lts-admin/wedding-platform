@@ -237,7 +237,23 @@ class _WeddingHomePageState extends State<WeddingHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '{{COUPLE_NAME}}',
+                '{{BRIDE_NAME}}',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              Text(
+                '&',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                ),
+              ),              
+              Text(
+                '{{GROOM_NAME}}',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,

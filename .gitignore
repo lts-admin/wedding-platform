@@ -1,20 +1,45 @@
-# Ignore node_modules and build output
+# Node.js & Next.js
 **/node_modules/
 **/.next/
-**/.DS_Store
+**/.env
 **/.env.local
+**/.DS_Store
+**/.turbo/
 
-# Ignore generated ZIPs and template contents
-/app-generator/generated_apps/
-# Ignore everything in flutter_template
-templates/flutter_template/**
+# Firebase/Firestore
+firebase-debug.log
 
-# Allow pubspec.yaml explicitly
-!templates/flutter_template/pubspec.yaml
-
-# Allow the lib folder and its contents
-!templates/flutter_template/lib/
-!templates/flutter_template/lib/**
-
-# Optional: Ignore logs or lock files
+# Build artifacts
 *.log
+*.lock
+*.zip
+
+# Flutter-specific ignores
+**/build/
+**/.dart_tool/
+**/.packages
+**/flutter_*.png
+
+# Ignore generated Flutter apps (important!)
+app-generator/generated_apps/
+
+# Optional: Ignore Flutter platform-specific templates
+app-generator/templates/flutter_template/ios/
+app-generator/templates/flutter_template/macos/
+app-generator/templates/flutter_template/android/
+app-generator/templates/flutter_template/linux/
+app-generator/templates/flutter_template/windows/
+
+# Keep Flutter template logic
+!app-generator/templates/flutter_template/pubspec.yaml
+!app-generator/templates/flutter_template/lib/
+!app-generator/templates/flutter_template/lib/**
+
+# Cache & IDE configs
+**/.vscode/
+**/.idea/
+**/xcuserdata/
+**/*.iml
+
+# Misc
+.DS_Store

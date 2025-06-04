@@ -20,7 +20,8 @@ async function generateFlutterApp(formData) {
   let mainDartContent = await fs.readFile(mainDartPath, 'utf8');
 
   mainDartContent = mainDartContent
-    .replace(/{{COUPLE_NAME}}/g, formData.coupleName)
+    .replace(/{{BRIDE_NAME}}/g, formData.brideName)
+    .replace(/{{GROOM_NAME}}/g, formData.groomName)
     .replace(/{{WEDDING_DATE}}/g, formData.weddingDate)
     .replace(/{{WEDDING_LOCATION}}/g, formData.weddingLocation || '')
     .replace(/{{APP_PASSWORD}}/g, formData.appPassword || '')

@@ -91,7 +91,7 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                 </div>
                 <div className="flex flex-wrap gap-4 py-6">
                     {screenToggles.map(({ label, field, tooltip }) => (
-                        <div className="relative group">
+                        <div key={field} className="relative group">
                             <Button
                                 className={`px-4 py-2 rounded-full border text-sm font-bold transition 
       ${form[field]

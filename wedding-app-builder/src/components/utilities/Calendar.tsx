@@ -119,7 +119,6 @@ export default function CalendarPage({ form, setForm }: CalendarPageProps) {
         };
     };
 
-
     const handleAddOrUpdateEvent = () => {
         if (!eventTitle || !slotInfo || !eventTime || !endTime) return;
 
@@ -168,7 +167,20 @@ export default function CalendarPage({ form, setForm }: CalendarPageProps) {
             ? formList.map((e) => (e.id === editingId ? newFormEvent : e))
             : [...formList, newFormEvent];
 
-        setForm({ ...form, [eventType]: updatedFormArray });
+        // Clone current form
+        const updatedForm = { ...form, [eventType]: updatedFormArray };
+
+        // Set weddingDate and weddingLocation if event is "wedding ceremony"
+        if (eventTitle.trim().toLowerCase() === "wedding ceremony") {
+            console.log(slotInfo.start);
+            console.log(slotInfo.start.toString());
+            updatedForm.weddingDate = format(slotInfo.start, "yyyy-MM-dd");
+            updatedForm.weddingLocation = eventLocation;
+        }
+
+        setForm(updatedForm);
+
+        console.log(form)
 
         setEditingId(null);
         setModalOpen(false);
@@ -178,6 +190,66 @@ export default function CalendarPage({ form, setForm }: CalendarPageProps) {
         setEndTime("");
         setEventDressCode("");
     };
+
+
+    // const handleAddOrUpdateEvent = () => {
+    //     if (!eventTitle || !slotInfo || !eventTime || !endTime) return;
+
+    //     const startDate = parseTime(slotInfo.start, eventTime);
+    //     const endDate = parseTime(slotInfo.start, endTime);
+
+    //     const id = editingId ?? uuidv4();
+
+    //     const newFormEvent: EventDetails = {
+    //         id,
+    //         name: eventTitle,
+    //         date: format(slotInfo.start, "yyyy-MM-dd"),
+    //         startTime: eventTime,
+    //         endTime,
+    //         location: eventLocation,
+    //         dressCode: eventDressCode,
+    //     };
+
+    //     const newCalendarEvent: CalendarEvent = {
+    //         ...newFormEvent,
+    //         id,
+    //         title: eventTitle,
+    //         start: startDate,
+    //         end: endDate,
+    //         time: eventTime,
+    //         type: eventType,
+    //     };
+
+    //     const formList = form[eventType];
+
+    //     const hasConflict = events.some((ev) => {
+    //         if (ev.type !== eventType || ev.id === id) return false;
+    //         return (
+    //             (startDate >= ev.start && startDate < ev.end) ||
+    //             (endDate > ev.start && endDate <= ev.end) ||
+    //             (startDate <= ev.start && endDate >= ev.end)
+    //         );
+    //     });
+
+    //     if (hasConflict) {
+    //         alert("Time conflict detected with another event of the same type.");
+    //         return;
+    //     }
+
+    //     const updatedFormArray = editingId
+    //         ? formList.map((e) => (e.id === editingId ? newFormEvent : e))
+    //         : [...formList, newFormEvent];
+
+    //     setForm({ ...form, [eventType]: updatedFormArray });
+
+    //     setEditingId(null);
+    //     setModalOpen(false);
+    //     setEventTitle("");
+    //     setEventLocation("");
+    //     setEventTime("");
+    //     setEndTime("");
+    //     setEventDressCode("");
+    // };
 
     return (
         <div className="py-6 bg-[#FFF5F7]">
@@ -219,35 +291,36 @@ export default function CalendarPage({ form, setForm }: CalendarPageProps) {
                     ))}
                 </select>
             </div>
+            <div className="w-full overflow-x-auto">
+                <BigCalendar
+                    localizer={localizer}
+                    events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    selectable
+                    view={currentView}
+                    views={["month", "week", "day"]}
+                    onView={setCurrentView}
+                    date={currentDate}
+                    onNavigate={setCurrentDate}
+                    style={{ height: 400, width: "100%" }} // ✅ Full width
+                    popup
+                    onSelectSlot={handleSelectSlot}
+                    onSelectEvent={(event: CalendarEvent) => {
+                        setSlotInfo({ start: event.start, end: event.end });
+                        setEventTitle(event.title);
+                        setEventType(event.type);
+                        setEventLocation(event.location);
+                        setEventTime(event.time);
+                        setEndTime(event.endTime);
+                        setEventDressCode(event.dressCode);
+                        setEditingId(event.id);
+                        setModalOpen(true);
+                    }}
+                    eventPropGetter={eventStyleGetter}
+                />
+            </div>
 
-            <BigCalendar
-                localizer={localizer}
-                events={events}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: 400 }}
-                selectable
-                onSelectSlot={handleSelectSlot}
-                views={["month", "week", "day"]}
-                view={currentView}
-                onView={setCurrentView}
-                date={currentDate}
-                onNavigate={setCurrentDate}
-                popup
-                onSelectEvent={(event: CalendarEvent) => {
-                    setSlotInfo({ start: event.start, end: event.end });
-                    setEventTitle(event.title);
-                    setEventType(event.type);
-                    setEventLocation(event.location);
-                    setEventTime(event.time);
-                    setEndTime(event.endTime);
-                    setEventDressCode(event.dressCode);
-                    setEditingId(event.id);
-                    setModalOpen(true);
-                }}
-                eventPropGetter={eventStyleGetter} // ✅ Add this
-
-            />
 
             <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                 <DialogContent className="space-y-4 max-w-xl bg-[#FFF5F7] text-black !bg-opacity-100 !backdrop-blur-none shadow-xl border border-gray-300 rounded-xl">

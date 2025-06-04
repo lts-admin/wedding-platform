@@ -30,7 +30,8 @@ export interface PartyMember {
 
 
 export type FormState = {
-    coupleName: string;
+    brideName: string;
+    groomName: string;
     weddingDate: string;
     weddingLocation: string;
     appName: string;
@@ -69,6 +70,7 @@ export type FormState = {
     enablePassword: boolean;
     appPassword?: string;
     saveTheDateImage: File | null;
+    saveTheDateImageUrl?: string; // ✅ Make this optional
     enableCountdown: boolean;
     isHomeScreen: boolean;
     showRSVPButton: boolean;
@@ -78,7 +80,7 @@ export type FormState = {
     adminAppPassword?: string,
     selectedFont: "Serif" | "Sans" | "Script";
     selectedColor: string;
-    selectedLayout: string;
+    selectedFontColor: string;
     backgroundImage: string | File | null;
     enableRSVPNotification: boolean;
     enableEventNotification: boolean;

@@ -28,6 +28,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import CalendarPage from "@/components/utilities/Calendar";
+
 export default function Home() {
     const [step, setStep] = useState(0);
     const router = useRouter();
@@ -39,7 +40,8 @@ export default function Home() {
     const tutorialImages = ["/tutorial/step1.png", "/tutorial/step2.png", "/tutorial/step3.png", "/tutorial/step4.png"];
 
     const [form, setForm] = useState<FormState>({
-        coupleName: "",
+        brideName: "",
+        groomName: "",
         weddingDate: "",
         weddingLocation: "",
         appName: "",
@@ -76,7 +78,7 @@ export default function Home() {
         enableAdminPassword: false,
         selectedFont: "Serif",
         selectedColor: "",
-        selectedLayout: "",
+        selectedFontColor: "",
         enableRSVPNotification: false,
         enableEventNotification: false,
         enablePlannerUpdates: false,
@@ -177,9 +179,23 @@ export default function Home() {
 
     useEffect(() => {
         if (!user) return;
+
+        const shouldSave = () => {
+            // Check that at least some essential fields are filled
+            return (
+                form.brideName.trim() !== "" ||
+                form.groomName.trim() !== "" ||
+                form.weddingDate.trim() !== "" ||
+                form.appName.trim() !== ""
+            );
+        };
+
         const interval = setInterval(() => {
-            saveFormToFirestore(user, form).catch(console.error);
+            if (shouldSave() && !form.isSubmitted) {
+                saveFormToFirestore(user, form).catch(console.error);
+            }
         }, 5 * 60 * 1000);
+
         return () => clearInterval(interval);
     }, [user, form]);
 
@@ -365,25 +381,38 @@ export default function Home() {
                         {/* Left Column: Couple Name + Calendar */}
                         <div className="flex-1 min-w-0">
                             <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
+                            <div className="flex flex-col md:flex-row gap-6">
+                                {/* Bride */}
+                                <div className="flex-1">
+                                    <Label className="text-black font-bold text-lg block mb-2">Bride's Name</Label>
+                                    <Input
+                                        required
+                                        className="w-full max-w-md bg-beige text-black border border-pink-300 px-4 py-2" value={form.brideName}
+                                        onChange={(e) => handleChange("brideName", e.target.value)}
+                                        disabled={isSubmitted}
+                                    />
+                                </div>
 
-                            <div className="pb-6">
-                                <Label className="text-black pt-6 pb-6 font-bold text-lg">Couple Name</Label>
-                                <Input
-                                    required
-                                    className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                    value={form.coupleName}
-                                    onChange={(e) => handleChange("coupleName", e.target.value)}
-                                    disabled={isSubmitted}
-                                />
+                                {/* Groom */}
+                                <div className="flex-1">
+                                    <Label className="text-black font-bold text-lg block mb-2">Groom's Name</Label>
+                                    <Input
+                                        required
+                                        className="w-full max-w-md bg-beige text-black border border-pink-300 px-4 py-2" value={form.groomName}
+                                        onChange={(e) => handleChange("groomName", e.target.value)}
+                                        disabled={isSubmitted}
+                                    />
+                                </div>
                             </div>
+
 
                             <CalendarPage form={form} setForm={setForm} />
                         </div>
 
                         {/* Right Column: App Name + Toggles */}
                         <div className="flex-1 min-w-0 my-14">
-                            <div className="flex items-center gap-2 ">
-                                <Label className="text-black font-bold pb-6 pt-6 text-lg">Name of App</Label>
+                            <div className="flex items-center gap-2 mb-2">
+                                <Label className="text-black font-bold text-lg">Name of App</Label>
                                 <div className="relative group cursor-pointer">
                                     <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                                     <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
@@ -394,7 +423,7 @@ export default function Home() {
 
                             <Input
                                 required
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
+                                className="w-full max-w-md bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.appName}
                                 onChange={(e) => handleChange("appName", e.target.value)}
                                 disabled={isSubmitted}
@@ -439,7 +468,7 @@ export default function Home() {
 
                             </div>
 
-                            <div className="mt-80">
+                            <div className="mt-10">
                                 <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
                             </div>
                         </div>
@@ -478,7 +507,7 @@ export default function Home() {
                     <Notifications form={form} handleChange={handleChange} />
                 )} */}
                 {sidebarItems[step]?.key === "themes" && (
-                    <Themes form={form} goNext={goNext} goBack={goBack} />
+                    <Themes form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
                 )}
                 {sidebarItems[step]?.key === "preview" && (
                     <Preview form={form} goBack={goBack} />
