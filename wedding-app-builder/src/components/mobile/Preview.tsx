@@ -146,7 +146,7 @@ export default function Preview({ form, goBack }: Props) {
             </div>
 
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-12">
-                <div className="relative shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200 text-black">
+                <div className="relative shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200 text-black" style={{ backgroundColor: form.selectedColor }}>
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-gray-300 rounded-b-xl z-10" />
                     <div className="p-6 pt-8 overflow-y-auto pb-20 h-full">
                         <AppPreviewRenderer form={form} activeTab={activeTab} setActiveTab={setActiveTab} />

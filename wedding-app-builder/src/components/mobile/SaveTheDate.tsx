@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
 import OurStory from "./OurStory";
+import Gallery from "@/components/mobile/Gallery";
 
 interface SaveTheDateProps {
     goNext: () => void;
@@ -131,6 +132,10 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                             disabled={isSubmitted}
                         />
                     </div>
+                )}
+
+                {form.enableGallery && (
+                    <Gallery form={form} setForm={setForm} />
                 )}
             </div>
 

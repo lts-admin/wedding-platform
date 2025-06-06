@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { FormState } from "@/types/FormState";
 import Countdown from "@/components/utilities/Countdown";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, ChevronDown, ChevronUp } from "lucide-react";
-
+import {
+    Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
 type Props = {
     form: FormState;
     activeTab: string;
@@ -30,6 +32,12 @@ const formatFullDateTime = (date: string, startTime: string, endTime: string) =>
 };
 
 export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Props) {
+    const [showInvitationModal, setShowInvitationModal] = useState(false);
+    const [faqsOpen, setFaqsOpen] = useState(true);
+    const [contactOpen, setContactOpen] = useState(true);
+    const [venueOpen, setVenueOpen] = useState(true);
+    const [hotelOpen, setHotelOpen] = useState(true);
+
     const sectionStyle = {
         color: form.selectedFontColor,
         backgroundColor: form.selectedColor || "#ffffff",
@@ -69,7 +77,64 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
                     {form.enableCountdown && <Countdown weddingDate={form.weddingDate} />}
                 </div>
             );
+        case "rsvp":
+            return (
+                <div className="h-full text-center px-6 pt-4 space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
+                    {/* Top bar with back arrow and title */}
+                    <div className="flex items-center justify-start text-black mb-2">
+                        <button onClick={() => setActiveTab("home")} className="text-2xl font-light pr-3">
+                            &#8592;
+                        </button>
+                        <h2 className="text-lg font-bold tracking-wide">RSVP</h2>
+                    </div>
 
+                    {/* Inputs */}
+                    <div className="space-y-4">
+                        <div className="text-left">
+                            <label className="block font-medium text-gray-700 text-sm mb-1">Full Name</label>
+                            <input
+                                type="text"
+                                placeholder="Enter your name"
+                                className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
+                            />
+                        </div>
+                        <div className="text-left">
+                            <label className="block font-medium text-gray-700 text-sm mb-1">Phone Number</label>
+                            <input
+                                type="tel"
+                                placeholder="Enter your phone number"
+                                className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Submit button */}
+                    <div className="pt-4">
+                        <Button
+                            onClick={() => setShowInvitationModal(true)}
+                            className="bg-[#F8E1E7] text-[#8C4A4A] font-semibold px-6 py-2 rounded-full shadow-sm hover:shadow-md"
+                        >
+                            Look Up Invitation
+                        </Button>
+                    </div>
+                    <Dialog open={showInvitationModal} onOpenChange={setShowInvitationModal}>
+                        <DialogContent className="bg-[#f8f5f4] text-black">
+                            <DialogHeader>
+                                <DialogTitle>Look up RSVP</DialogTitle>
+                                <p className="text-sm text-gray-600">
+                                    This functionality will be visible when your app is generated and downloadable.
+                                </p>
+                            </DialogHeader>
+                            <DialogFooter className="flex justify-end gap-2 pt-4">
+                                <Button variant="outline" onClick={() => setShowInvitationModal(false)}>
+                                    Close
+                                </Button>
+
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            );
         case "story":
             return (
                 <div className="text-sm space-y-2 text-left" style={sectionStyle}>
@@ -160,9 +225,93 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
 
         case "settings":
             return (
-                <div className="text-sm space-y-6" style={sectionStyle}>
-                    {/* Implement toggle sections for FAQs, Contact Info, etc. if needed */}
-                    <p>Settings Preview</p>
+                <div className="text-sm space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
+                    {/* FAQs */}
+                    <div>
+                        <button
+                            onClick={() => setFaqsOpen(!faqsOpen)}
+                            className="flex justify-between items-center w-full text-leftfont-semibold mb-2"
+                        >
+                            <span>FAQs</span>
+                            {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                        {faqsOpen && (
+                            <ul className="space-y-3">
+                                {Array.isArray(form.faqs) &&
+                                    form.faqs.map((faq, index) => (
+                                        <li key={index}>
+                                            <p className="font-bold">{faq.question}</p>
+                                            <p className="text-gray-300">{faq.answer}</p>
+                                        </li>
+                                    ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    {/* Contact Info */}
+                    <div>
+                        <button
+                            onClick={() => setContactOpen(!contactOpen)}
+                            className="flex justify-between items-center w-full text-left  font-semibold mb-2"
+                        >
+                            <span>Contact Info</span>
+                            {contactOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                        {contactOpen && (
+                            <ul className="space-y-3">
+                                {Array.isArray(form.contactInfo) &&
+                                    form.contactInfo.map((contact, index) => (
+                                        <li key={index}>
+                                            <p>{contact.name}</p>
+                                            <p>{contact.phone}</p>
+                                            <p>{contact.email}</p>
+                                        </li>
+                                    ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    {/* Venue Details */}
+                    <div style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
+                        <button
+                            onClick={() => setVenueOpen(!venueOpen)}
+                            className="flex justify-between items-center w-full text-left font-semibold mb-2"
+                        >
+                            <span>Venue Details</span>
+                            {venueOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                        {venueOpen && (
+                            <ul className="space-y-3">
+                                {Array.isArray(form.venueDetails) &&
+                                    form.venueDetails.map((venue, index) => (
+                                        <li key={index} className="text-black">
+                                            {venue}
+                                        </li>
+                                    ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    {/* Hotel Info */}
+                    <div>
+                        <button
+                            onClick={() => setHotelOpen(!hotelOpen)}
+                            className="flex justify-between items-center w-full text-left font-semibold mb-2"
+                        >
+                            <span>Hotel Info</span>
+                            {hotelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                        {hotelOpen && (
+                            <ul className="space-y-3">
+                                {Array.isArray(form.hotelDetails) &&
+                                    form.hotelDetails.map((hotel, index) => (
+                                        <li key={index} className="text-black">
+                                            {hotel}
+                                        </li>
+                                    ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
             );
 
