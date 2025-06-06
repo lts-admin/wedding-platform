@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { FormState } from "@/types/FormState";
 import Countdown from "@/components/utilities/Countdown";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { CalendarIcon, ChevronDown, ChevronUp, ChevronLeft } from "lucide-react";
 import {
     Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
@@ -81,29 +81,40 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
             return (
                 <div className="h-full text-center px-6 pt-4 space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                     {/* Top bar with back arrow and title */}
-                    <div className="flex items-center justify-start text-black mb-2">
-                        <button onClick={() => setActiveTab("home")} className="text-2xl font-light pr-3">
-                            &#8592;
-                        </button>
-                        <h2 className="text-lg font-bold tracking-wide">RSVP</h2>
+                    {/* Chevron Left Button */}
+                    <Button
+                        onClick={() => setActiveTab("home")}
+                        className="absolute left-0 text-2xl font-light text-black"
+                        variant="ghost"
+                    >
+                        <ChevronLeft size={30} />
+                    </Button>
+                    <div className="mb-2 text-black h-10 flex items-center">
+
+                        <h2 className=" text-lg font-bold">
+                            Find your Invite!
+                        </h2>
                     </div>
+
+
+
 
                     {/* Inputs */}
                     <div className="space-y-4">
                         <div className="text-left">
-                            <label className="block font-medium text-gray-700 text-sm mb-1">Full Name</label>
+                            <label className="block font-medium text-black text-sm mb-1">Full Name</label>
                             <input
                                 type="text"
                                 placeholder="Enter your name"
-                                className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
+                                className="w-full border-b border-gray-400 placeholder:text-white bg-transparent p-2 text-sm outline-none"
                             />
                         </div>
                         <div className="text-left">
-                            <label className="block font-medium text-gray-700 text-sm mb-1">Phone Number</label>
+                            <label className="block font-medium text-black text-sm mb-1">Phone Number</label>
                             <input
                                 type="tel"
                                 placeholder="Enter your phone number"
-                                className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
+                                className="w-full border-b border-gray-400 placeholder:text-white bg-transparent p-2 text-sm outline-none"
                             />
                         </div>
                     </div>
@@ -112,7 +123,7 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
                     <div className="pt-4">
                         <Button
                             onClick={() => setShowInvitationModal(true)}
-                            className="bg-[#F8E1E7] text-[#8C4A4A] font-semibold px-6 py-2 rounded-full shadow-sm hover:shadow-md"
+                            className="bg-[#F8E1E7] text-black font-semibold px-6 py-2 rounded-full shadow-sm hover:shadow-md"
                         >
                             Look Up Invitation
                         </Button>
@@ -133,7 +144,7 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
-                </div>
+                </div >
             );
         case "story":
             return (
@@ -230,7 +241,7 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
                     <div>
                         <button
                             onClick={() => setFaqsOpen(!faqsOpen)}
-                            className="flex justify-between items-center w-full text-leftfont-semibold mb-2"
+                            className="flex justify-between items-center w-full text-left font-semibold mb-2"
                         >
                             <span>FAQs</span>
                             {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
