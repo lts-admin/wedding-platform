@@ -301,7 +301,7 @@ export default function Home() {
                         >
                             Need help?
                         </Button>
-                        <Button
+                        {/* <Button
                             variant="outline"
                             className="text-black border border-gray-500 hover:bg-gray-100 text-sm hover:font-bold"
                             onClick={() => {
@@ -310,7 +310,7 @@ export default function Home() {
                             }}
                         >
                             Watch Example
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
             </aside>

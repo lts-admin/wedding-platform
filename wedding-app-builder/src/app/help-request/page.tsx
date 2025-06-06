@@ -9,6 +9,7 @@ import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from '@/components/ui/input';
 import { useAuth } from "@/context/AuthContext";
+import { Label } from "@/components/ui/label";
 
 export default function HelpRequest() {
     const router = useRouter();
@@ -77,15 +78,16 @@ export default function HelpRequest() {
             setSubmitted(true);
             setForm({ firstName: '', lastName: '', email: '', message: '' });
             setAttachment(null);
+            router.push("/app-info");
         } catch (error) {
             console.error('Failed to submit help request:', error);
         }
     };
 
     return (
-        <main className="bg-[#0D0208] text-[#E4D7DE] font-sans min-h-screen overflow-x-hidden">
+        <main className=" bg-[#FFF5F7] text-black font-sans min-h-screen overflow-x-hidden">
 
-            <header className="sticky top-0 z-50 bg-[#0D0208] w-full flex justify-between font-bold items-center px-12 py-6 border-b border-pink-500">
+            <header className="sticky top-0 z-50  bg-[#FFF5F7] w-full flex justify-between font-bold items-center px-12 py-6 border-b border-pink-500">
                 <div className="flex items-center gap-2 text-pink-500 font-bold text-2xl">
                     <div className="w-6 h-6 border-[2.5px] border-pink-500 rounded-full" />
                     <Link href="/">WedDesigner</Link>
@@ -114,11 +116,11 @@ export default function HelpRequest() {
                     </div>
                 )}
             </header>
-            <section className="w-full flex justify-center px-6 py-20 bg-[#0D0208] text-[#E4D7DE]">
+            <section className="w-full flex justify-center px-6 py-20  bg-[#FFF5F7] text-black">
 
-                <div className="w-full max-w-2xl bg-[#1C0E0E] p-8 rounded-lg shadow-lg">
+                <div className="w-full max-w-2xl  bg-[#FFF5F7] p-8 rounded-lg shadow-lg">
                     <h3 className="text-3xl font-serif font-bold mb-2 text-pink-400">Report your issue!</h3>
-                    <p className="text-md text-gray-200 mb-6">Contact us for assistance.</p>
+                    <p className="text-md text-black mb-6">Contact us for assistance.</p>
 
                     {submitted ? (
                         <div className="bg-green-800 text-green-100 px-4 py-3 rounded-md mb-4">
@@ -132,18 +134,18 @@ export default function HelpRequest() {
                                     name="firstName"
                                     placeholder="First name"
                                     value={form.firstName}
-                                    disabled={true}
+                                    readOnly
                                     required
-                                    className="flex-1 bg-[#3A1A1A] placeholder-gray-400 text-white px-4 py-2 rounded-md"
+                                    className="flex-1 bg-[#FFF5F7] border border-pink-500 placeholder:text-black font-bold px-4 py-2 rounded-md"
                                 />
                                 <Input
                                     type="text"
                                     name="lastName"
                                     placeholder="Last name"
                                     value={form.lastName}
-                                    disabled={true}
+                                    readOnly
                                     required
-                                    className="flex-1 bg-[#3A1A1A] placeholder-gray-400 text-white px-4 py-2 rounded-md"
+                                    className="flex-1 bg-[#FFF5F7] border border-pink-500 placeholder:text-black font-bold px-4 py-2 rounded-md"
                                 />
                             </div>
                             <Input
@@ -151,9 +153,9 @@ export default function HelpRequest() {
                                 name="email"
                                 placeholder="Email"
                                 value={form.email}
-                                disabled={true}
+                                readOnly
                                 required
-                                className="w-full bg-[#3A1A1A] placeholder-gray-400 text-white px-4 py-2 rounded-md"
+                                className="w-full bg-[#FFF5F7] border border-pink-500 placeholder:text-black font-bold px-4 py-2 rounded-md"
                             />
                             <textarea
                                 name="message"
@@ -161,21 +163,26 @@ export default function HelpRequest() {
                                 value={form.message}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-[#3A1A1A] placeholder-gray-400 text-white px-4 py-2 rounded-md h-32"
+                                className="w-full bg-[#FFF5F7] border border-pink-500 placeholder-gray-400 text-black px-4 py-2 rounded-md h-32"
                             />
-                            <Input
-                                type="file"
-                                name="attachment"
-                                accept="image/*,application/pdf"
-                                onChange={handleFileChange}
-                                className="w-full bg-[#3A1A1A] text-white px-4 py-2 rounded-md"
-                            />
-                            <Button
-                                type="submit"
-                                className="bg-pink-500 hover:bg-pink-400 transition text-black font-bold px-6 py-2 rounded-md"
-                            >
-                                Submit
-                            </Button>
+                            <div className="flex gap-4">
+                                <Label className="bg-pink-500 hover:bg-pink-400 transition text-white font-bold px-6 py-2 rounded-md">
+                                    Attach File
+                                    <Input
+                                        type="file"
+                                        name="attachment"
+                                        accept="image/*,application/pdf"
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                    />
+                                </Label>
+                                <Button
+                                    type="submit"
+                                    className="bg-pink-500 hover:bg-pink-400 transition text-white font-bold px-6 py-2 rounded-md"
+                                >
+                                    Submit
+                                </Button>
+                            </div>
                         </form>
                     )}
                 </div>

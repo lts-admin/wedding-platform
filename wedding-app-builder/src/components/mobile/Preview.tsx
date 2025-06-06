@@ -12,6 +12,7 @@ import {
     Users,
     Users2,
     BookOpen,
+    CalendarIcon,
 } from "lucide-react";
 import {
     collection,
@@ -101,13 +102,27 @@ export default function Preview({ form, goBack }: Props) {
         "#048BA8": "Aqua Blue",
     };
 
+    const formatFullDateTime = (date: string, startTime: string, endTime: string) => {
+        const fullDate = new Date(date);
+        const weekdayDate = fullDate.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
+
+        return `${weekdayDate} ${startTime} - ${endTime}`;
+    };
+
+    console.log(form);
+
     const renderContent = () => {
         switch (activeTab) {
             case "home":
                 return (
                     <div className="space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
                         <p className="text-xl font-bold py-6">SAVE THE DATE</p>
-                        <p className="text-xl font-bold py-6">Join us for the wedding of<br />{form.brideName} <br />&<br />{form.groomName}</p>
+                        <p className="text-lg font-bold">Join us for the wedding of<br /></p> <p className="text-xl font-bold">{form.brideName} & {form.groomName}</p>
                         <p className="text-lg">
                             {new Date(form.weddingDate).toLocaleDateString('en-US', {
                                 weekday: 'long',
@@ -199,7 +214,8 @@ export default function Preview({ form, goBack }: Props) {
                 );
             case "story":
                 return (
-                    <div className="text-sm space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
+                    <div className="text-sm space-y-2 text-left" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
+                        <h2 className="text-xl font-bold">Our Story</h2>
                         {form.storyParagraphs.length > 0 ? (
                             form.storyParagraphs.map((p, i) => (
                                 <p key={i} className="text-sm">
@@ -231,61 +247,126 @@ export default function Preview({ form, goBack }: Props) {
                 );
             case "party":
                 return (
-                    <div className="text-sm space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        {/* Family Section */}
-                        <div>
-                            <h3 className="font-bold text-lg">Family</h3>
-                            <h4 className="font-semibold mt-2">Bride&apos;s Side</h4>
-                            {form.familyDetails.bride.map((m, i) => (
-                                <p key={`family-bride-${i}`}>
-                                    {m.name} - {m.relation}
-                                </p>
-                            ))}
-                            <h4 className="font-semibold mt-2">Groom&apos;s Side</h4>
-                            {form.familyDetails.groom.map((m, i) => (
-                                <p key={`family-groom-${i}`}>
-                                    {m.name} - {m.relation}
-                                </p>
-                            ))}
-                            {form.familyDetails.pets.length > 0 && (
-                                <>
-                                    <h4 className="font-semibold mt-2">Pets</h4>
-                                    {form.familyDetails.pets.map((p, i) => (
-                                        <p key={`family-pet-${i}`}>{p.name}</p>
+                    <div
+                        className="text-sm px-4 py-6 space-y-8"
+                        style={{
+                            color: form.selectedFontColor,
+                            backgroundColor: form.selectedColor || "#ffffff",
+                            fontFamily: fontMap[form.selectedFont] || "sans-serif",
+                        }}
+                    >
+                        {/* Our Family Section */}
+                        {(form.familyDetails.bride.length > 0 || form.familyDetails.groom.length > 0 || form.familyDetails.pets.length > 0) && (
+                            <div>
+                                <h3 className="text-center font-bold text-xl mb-6">Wedding Party</h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+                                    {form.familyDetails.bride.map((member, i) => (
+                                        <div key={`family-bride-${i}`}>
+                                            <p className="font-bold">{member.name}</p>
+                                            <p style={{ fontSize: 12 }}>{member.relation}</p>
+                                        </div>
                                     ))}
-                                </>
-                            )}
-                        </div>
+                                    {form.familyDetails.groom.map((member, i) => (
+                                        <div key={`family-groom-${i}`}>
+                                            <p className="font-bold">{member.name}</p>
+                                            <p style={{ fontSize: 12 }}>{member.relation}</p>
+                                        </div>
+                                    ))}
+                                    {form.familyDetails.pets.map((pet, i) => (
+                                        <div key={`family-pet-${i}`}>
+                                            <p className="font-bold">{pet.name}</p>
+                                            <p>Beloved Pet</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
-                        {/* Wedding Party Section */}
-                        <div>
-                            <h3 className="font-bold text-lg">Wedding Party</h3>
-                            <h4 className="font-semibold mt-2">Bride&apos;s Side</h4>
-                            {form.weddingParty.bride.map((m, i) => (
-                                <p key={`party-bride-${i}`}>
-                                    {m.name} - {m.role} ({m.relation})
-                                </p>
-                            ))}
-                            <h4 className="font-semibold mt-2">Groom&apos;s Side</h4>
-                            {form.weddingParty.groom.map((m, i) => (
-                                <p key={`party-groom-${i}`}>
-                                    {m.name} - {m.role} ({m.relation})
-                                </p>
-                            ))}
-                        </div>
+                        {/* Optional: Wedding Party Section */}
+                        {(form.weddingParty.bride.length > 0 || form.weddingParty.groom.length > 0) && (
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+                                {form.weddingParty.bride.map((m, i) => (
+                                    <div key={`party-bride-${i}`}>
+                                        <p className="font-bold">{m.name}</p>
+                                        <p style={{ fontSize: 12 }}>{m.role} ({m.relation})</p>
+                                    </div>
+                                ))}
+                                {form.weddingParty.groom.map((m, i) => (
+                                    <div key={`party-groom-${i}`}>
+                                        <p className="font-bold">{m.name}</p>
+                                        <p style={{ fontSize: 12 }}>{m.role} ({m.relation})</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                        )}
                     </div>
                 );
+
             case "itinerary":
                 return (
-                    <div className="text-sm space-y-2" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        {form.weddingEvents.map((e, i) => (
-                            <div key={i}>
-                                <p className="font-semibold">{e.name}</p>
-                                <p>
-                                    {e.date} • {e.startTime} • {e.location} • {e.dressCode}
-                                </p>
+                    <div
+                        className="text-sm px-4 py-6 space-y-6"
+                        style={{
+                            color: form.selectedFontColor,
+                            backgroundColor: form.selectedColor || "#ffffff",
+                            fontFamily: fontMap[form.selectedFont] || "serif",
+                        }}
+                    >
+                        {form.brideEvents.length > 0 && (
+                            <div>
+                                <h2 className="text-lg font-bold mb-1">Bride Events</h2>
+                                {form.brideEvents.map((e, i) => (
+                                    <div key={i} className="flex items-start gap-2 mb-4">
+                                        <CalendarIcon className="mt-1" size={20} />
+                                        <div>
+                                            <p className="font-semibold">{e.name}</p>
+                                            <p className="text-sm">Venue: {e.location}</p>
+                                            <p className="font-semibold">
+                                                {formatFullDateTime(e.date, e.startTime, e.endTime)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        )}
+
+                        {form.groomEvents.length > 0 && (
+                            <div>
+                                <h2 className="text-lg font-bold mb-1">Groom Events</h2>
+                                {form.groomEvents.map((e, i) => (
+                                    <div key={i} className="flex items-start gap-2 mb-4">
+                                        <CalendarIcon className="mt-1" size={20} />
+                                        <div>
+                                            <p className="font-semibold">{e.name}</p>
+                                            <p className="text-sm">Venue: {e.location}</p>
+                                            <p className="font-semibold">
+                                                {formatFullDateTime(e.date, e.startTime, e.endTime)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {form.weddingEvents.length > 0 && (
+                            <div>
+                                <h2 className="text-lg font-bold mb-1">Wedding Events</h2>
+                                {form.weddingEvents.map((e, i) => (
+                                    <div key={i} className="flex items-start gap-2 mb-4">
+                                        <CalendarIcon className="mt-1" size={20} />
+                                        <div>
+                                            <p className="font-semibold">{e.name}</p>
+                                            <p className="text-sm">Venue: {e.location}</p>
+                                            <p className="font-semibold">
+                                                {formatFullDateTime(e.date, e.startTime, e.endTime)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 );
             case "settings":
