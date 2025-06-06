@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FormState } from "@/types/FormState";
 import Image from "next/image";
+import OurFamily from "./OurFamily";
 
 type WeddingProps = {
     form: FormState;
@@ -171,6 +172,9 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-pink-400">Wedding Party</h2>
+            <OurFamily form={form} setForm={setForm} />
+            <h2 className="text-2xl font-semibold text-black">Bridal Party</h2>
+
             <div className="grid grid-cols-2 gap-6">
                 {renderPartySide("bride", "Bride's Side")}
                 {renderPartySide("groom", "Groom's Side")}

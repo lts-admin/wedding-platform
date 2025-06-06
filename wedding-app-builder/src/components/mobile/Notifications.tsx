@@ -11,15 +11,11 @@ type NotificationsProps = {
         rsvpDeadline?: string; // NEW
     };
     handleChange: (field: string, value: any) => void;
-    goNext: () => void;
-    goBack: () => void;
 };
 
 export default function Notifications({
     form,
     handleChange,
-    goNext,
-    goBack,
 }: NotificationsProps) {
     return (
         <div>
@@ -91,15 +87,6 @@ export default function Notifications({
                             Updates from Wedding Planner/Couple
                         </span>
                     </label>
-                </div>
-
-                <div className="flex justify-start gap-4 pt-12">
-                    <Button variant="outline" className="font-bold" onClick={goBack}>
-                        Back
-                    </Button>
-                    <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
-                        Next
-                    </Button>
                 </div>
             </div>
         </div>

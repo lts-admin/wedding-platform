@@ -7,9 +7,16 @@ import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db, auth } from '@/lib/firebaseConfig';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { signOut, sendPasswordResetEmail } from "firebase/auth";
+import { signOut, sendPasswordResetEmail, getAuth, deleteUser } from "firebase/auth";
 import { WorkStatus, WorkStatusType } from '@/types/WorkStatus';
 import Link from 'next/link';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
 
 export default function DesignerSettings() {
     const { user, loading } = useAuth();
@@ -17,6 +24,7 @@ export default function DesignerSettings() {
     const [authStatus, setAuthStatus] = useState<WorkStatusType | null>(null);
     const [firestoreName, setFirestoreName] = useState<string | null>(null);
     const [editableEmail, setEditableEmail] = useState<string>("");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -102,6 +110,25 @@ export default function DesignerSettings() {
         }
     };
 
+    const deleteAccount = async () => {
+        try {
+            const auth = getAuth();
+            const user = auth.currentUser;
+
+            if (user) {
+                await deleteUser(user);
+                setShowDeleteModal(false);
+                alert("Your account has been deleted.");
+            }
+        } catch (error: any) {
+            console.error("Error deleting account:", error);
+            if (error.code === "auth/requires-recent-login") {
+                alert("Please log in again before deleting your account.");
+            }
+        }
+    };
+
+
     const handlePasswordReset = async () => {
         if (user?.email) {
             try {
@@ -162,14 +189,50 @@ export default function DesignerSettings() {
                                 className="bg-[#1A1A1A] border border-gray-500 text-white"
                             />
                         </div>
-                        <Button
-                            variant="outline"
-                            onClick={handlePasswordReset}
-                            className="text-sm border border-gray-500 hover:bg-gray-800"
-                        >
-                            Change Password
-                        </Button>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Button
+                                variant="outline"
+                                onClick={handlePasswordReset}
+                                className="text-sm border border-gray-500 hover:bg-gray-800"
+                            >
+                                Change Password
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                onClick={handleLogout}
+                                className="bg-[#1A1A1A] text-white border border-gray-500 hover:bg-gray-800 px-4 py-2 rounded-md text-sm"
+                            >
+                                Log Out
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                onClick={() => setShowDeleteModal(true)}
+                                className="bg-[#1A1A1A] text-red-500 border border-red-500 hover:bg-red-900 px-4 py-2 rounded-md"
+                            >
+                                Delete Account
+                            </Button>
+                        </div>
+                        <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+                            <DialogContent className="bg-[#f8f5f4] text-black">
+                                <DialogHeader>
+                                    <DialogTitle>Delete Account</DialogTitle>
+                                    <p className="text-sm text-gray-600">
+                                        Are you sure you want to delete your account? This action cannot be undone.
+                                    </p>
+                                </DialogHeader>
+                                <DialogFooter className="flex justify-end gap-2 pt-4">
+                                    <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="outline" className="text-black" onClick={deleteAccount}>
+                                        Yes, Delete
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+
                     </div>
+
                 )}
 
                 <h2 className="text-lg font-semibold mb-4 text-white">App Progress</h2>
@@ -208,13 +271,6 @@ export default function DesignerSettings() {
                         onClick={() => router.push("/app-info")}
                     >
                         View My Wedding Details
-                    </Button>
-                    <Button
-                        variant="destructive"
-                        onClick={handleLogout}
-                        className="bg-[#1A1A1A] text-white border border-gray-500 hover:bg-gray-800 px-4 py-2 rounded-md text-sm"
-                    >
-                        Log Out
                     </Button>
 
                     {authStatus && cancellableStatuses.has(authStatus) && (

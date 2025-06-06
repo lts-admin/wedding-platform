@@ -75,8 +75,8 @@ const Itinerary: React.FC<ItineraryProps> = ({ form, setForm, goNext, goBack }) 
                     />
                     <Input
                         placeholder="Time"
-                        value={event.time}
-                        onChange={(e) => handleEventChange(section, index, "time", e.target.value)}
+                        value={event.startTime}
+                        onChange={(e) => handleEventChange(section, index, "startTime", e.target.value)}
                         className="mb-2 font-bold"
                         disabled={isSubmitted}
                     />

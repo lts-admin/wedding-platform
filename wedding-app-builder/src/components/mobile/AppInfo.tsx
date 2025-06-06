@@ -1,3 +1,233 @@
+// "use client";
+
+// import React, { useState, useEffect, useMemo } from "react";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+// import { Button } from "@/components/ui/button";
+// import SaveTheDate from "@/components/mobile/SaveTheDate";
+// import RSVPAndGallery from "@/components/mobile/RSVPAndGallery";
+// import OurFamily from "@/components/mobile/OurFamily";
+// import WeddingParty from "@/components/mobile/WeddingParty";
+// import Itinerary from "@/components/mobile/Itinerary";
+// import Travel from "@/components/mobile/Travel";
+// import Settings from "@/components/mobile/Settings";
+// import Preview from "@/components/mobile/Preview";
+// import Themes from "@/components/mobile/Themes";
+// import { FormState } from "@/types/FormState";
+// import { useRouter } from "next/navigation";
+// import { Menu, X, User } from "lucide-react";
+// import { signOut } from "firebase/auth";
+// import { auth, db } from "@/lib/firebaseConfig";
+// import { useAuth } from "@/context/AuthContext";
+// import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
+// import { doc, getDoc, updateDoc } from "firebase/firestore";
+// import Registry from "./Registry";
+// import CalendarPage from "@/components/utilities/Calendar";
+
+// export default function Home() {
+//     const [step, setStep] = useState(0);
+//     const router = useRouter();
+//     const { user } = useAuth();
+//     const [isSubmitted, setIsSubmitted] = useState(false);
+//     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+//     const [form, setForm] = useState<FormState>({
+//         brideName: "",
+//         groomName: "",
+//         weddingDate: "",
+//         weddingLocation: "",
+//         appName: "",
+//         enableRSVP: true,
+//         rsvpSheetUrl: "",
+//         enableGallery: false,
+//         galleryDriveUrl: "",
+//         enableFamily: false,
+//         enableStory: false,
+//         familyDetails: { bride: [], groom: [], pets: [] },
+//         enableItinerary: true,
+//         enableSaveDate: true,
+//         itineraryWedding: "",
+//         itineraryBride: "",
+//         itineraryGroom: "",
+//         enableSettings: true,
+//         enableTravel: false,
+//         faqs: [],
+//         contactInfo: [],
+//         enableWeddingParty: false,
+//         weddingParty: { bride: [], groom: [] },
+//         weddingEvents: [],
+//         brideEvents: [],
+//         groomEvents: [],
+//         enablePassword: false,
+//         storyImages: [],
+//         storyParagraphs: [],
+//         saveTheDateImage: null,
+//         enableCountdown: true,
+//         isHomeScreen: true,
+//         showRSVPButton: true,
+//         enableRegistry: false,
+//         isSubmitted: false,
+//         enableAdminPassword: false,
+//         selectedFont: "Serif",
+//         selectedColor: "",
+//         selectedFontColor: "",
+//         enableRSVPNotification: false,
+//         enableEventNotification: false,
+//         enablePlannerUpdates: false,
+//         backgroundImage: "",
+//         registries: [],
+//         hotelDetails: [],
+//         venueDetails: []
+//     });
+
+//     useEffect(() => {
+//         const fetchSavedForm = async () => {
+//             if (!user) return;
+//             try {
+//                 const appRef = doc(db, "weddingApps", user.uid);
+//                 const appSnap = await getDoc(appRef);
+//                 if (appSnap.exists()) {
+//                     const data = appSnap.data();
+//                     setForm(prev => ({ ...prev, ...data }));
+//                     if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
+//                 }
+
+//                 const userRef = doc(db, "users", user.uid);
+//                 const userSnap = await getDoc(userRef);
+//                 if (userSnap.exists()) {
+//                     const userData = userSnap.data();
+//                     const createdAt = userData.createdAt?.toDate?.() || new Date(userData.createdAt);
+//                     const today = new Date();
+//                     if (
+//                         createdAt.getFullYear() === today.getFullYear() &&
+//                         createdAt.getMonth() === today.getMonth() &&
+//                         createdAt.getDate() === today.getDate() &&
+//                         !userData.watchedTutorial
+//                     ) {
+//                         // Show tutorial logic can go here
+//                     }
+//                 }
+//             } catch (err) {
+//                 console.error("Failed to load form or user data:", err);
+//             }
+//         };
+
+//         fetchSavedForm();
+//     }, [user]);
+
+//     useEffect(() => {
+//         if (!user) return;
+//         const shouldSave = () => form.brideName || form.groomName || form.weddingDate || form.appName;
+//         const interval = setInterval(() => {
+//             if (shouldSave() && !form.isSubmitted) {
+//                 saveFormToFirestore(user, form).catch(console.error);
+//             }
+//         }, 5 * 60 * 1000);
+//         return () => clearInterval(interval);
+//     }, [user, form]);
+
+//     const handleChange = (field: keyof FormState, value: any) => {
+//         if (!isSubmitted) setForm(prev => ({ ...prev, [field]: value }));
+//     };
+
+//     const handleLogout = async () => {
+//         if (user) await saveFormToFirestore(user, form);
+//         router.push("/");
+//         await signOut(auth);
+//     };
+
+//     const goNext = () => setStep(prev => Math.min(prev + 1, sidebarItems.length - 1));
+//     const goBack = () => setStep(prev => Math.max(prev - 1, 0));
+
+//     const handleToggle = (field: keyof FormState) => {
+//         if (isSubmitted) return;
+//         setForm(prev => ({ ...prev, [field]: !prev[field] }));
+//     };
+
+//     const sidebarItems = useMemo(() => [
+//         { label: "Getting Started", key: "appInfo" },
+//         { label: "App Home Page", key: "saveDate", condition: form.enableSaveDate },
+//         { label: "Gallery", key: "rsvpGallery", condition: form.enableGallery },
+//         { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty || form.enableFamily },
+//         { label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
+//         { label: "Registry", key: "registry", condition: form.enableRegistry },
+//         { label: "Travel", key: "travel", condition: form.enableTravel },
+//         { label: "Settings", key: "settings", condition: form.enableSettings },
+//         { label: "App Themes", key: "themes" },
+//         { label: "Preview", key: "preview" }
+//     ].filter(item => item.condition !== false), [form]);
+
+//     return (
+//         <main className="min-h-screen bg-[#FFF5F7] text-[#4B2E2E] flex">
+//             <aside className={`w-64 h-screen bg-[#fdf6f1] border-r border-gray-300 p-4 hidden lg:block`}>
+//                 <h1 className="text-xl font-bold text-pink-500 mb-6">My WedDesigner</h1>
+//                 <div className="space-y-2">
+//                     {sidebarItems.map((item, idx) => (
+//                         <Button
+//                             key={item.key}
+//                             variant={step === idx ? "default" : "ghost"}
+//                             onClick={() => setStep(idx)}
+//                             className={`w-full justify-start text-sm ${step === idx ? "bg-purple-500 text-white" : "hover:text-pink-400"}`}
+//                         >
+//                             {item.label}
+//                         </Button>
+//                     ))}
+//                 </div>
+//             </aside>
+
+//             <section className="flex-1 px-4 sm:px-6 md:px-8 pt-10">
+//                 {sidebarItems[step]?.key === "appInfo" && (
+//                     <div>
+//                         <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
+//                         <Label>Bride's Name</Label>
+//                         <Input value={form.brideName} onChange={(e) => handleChange("brideName", e.target.value)} />
+//                         <Label>Groom's Name</Label>
+//                         <Input value={form.groomName} onChange={(e) => handleChange("groomName", e.target.value)} />
+//                         <Label>App Name</Label>
+//                         <Input value={form.appName} onChange={(e) => handleChange("appName", e.target.value)} />
+//                         <CalendarPage form={form} setForm={setForm} />
+//                     </div>
+//                 )}
+
+//                 {sidebarItems[step]?.key === "saveDate" && (
+//                     <SaveTheDate setForm={setForm} handleChange={handleChange} goNext={goNext} goBack={goBack} form={form} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "rsvpGallery" && (
+//                     <RSVPAndGallery form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "weddingParty" && (
+//                     <WeddingParty form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "itinerary" && (
+//                     <Itinerary form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "registry" && (
+//                     <Registry form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "travel" && (
+//                     <Travel form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "settings" && (
+//                     <Settings form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "themes" && (
+//                     <Themes form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
+//                 )}
+
+//                 {sidebarItems[step]?.key === "preview" && (
+//                     <Preview form={form} goBack={goBack} />
+//                 )}
+//             </section>
+//         </main>
+//     );
+// }
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
@@ -5,16 +235,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import SaveTheDate from "@/components/mobile/SaveTheDate";
-import OurStory from "@/components/mobile/OurStory";
-import RSVPAndGallery from "@/components/mobile/RSVPAndGallery";
-import OurFamily from "@/components/mobile/OurFamily";
 import WeddingParty from "@/components/mobile/WeddingParty";
-import Itinerary from "@/components/mobile/Itinerary";
 import Travel from "@/components/mobile/Travel";
 import Settings from "@/components/mobile/Settings";
 import Preview from "@/components/mobile/Preview";
 import Themes from "@/components/mobile/Themes";
-import Notifications from "@/components/mobile/Notifications";
 import { FormState } from "@/types/FormState";
 import { useRouter } from "next/navigation";
 import { Menu, X, User } from "lucide-react";
@@ -27,6 +252,7 @@ import Registry from "./Registry";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import CalendarPage from "@/components/utilities/Calendar";
 
 export default function Home() {
     const [step, setStep] = useState(0);
@@ -39,16 +265,17 @@ export default function Home() {
     const tutorialImages = ["/tutorial/step1.png", "/tutorial/step2.png", "/tutorial/step3.png", "/tutorial/step4.png"];
 
     const [form, setForm] = useState<FormState>({
-        coupleName: "",
+        brideName: "",
+        groomName: "",
         weddingDate: "",
         weddingLocation: "",
         appName: "",
         enableRSVP: true,
         rsvpSheetUrl: "",
-        enableGallery: true,
+        enableGallery: false,
         galleryDriveUrl: "",
-        enableFamily: true,
-        enableStory: true,
+        enableFamily: false,
+        enableStory: false,
         familyDetails: { bride: [], groom: [], pets: [] },
         enableItinerary: true,
         enableSaveDate: true,
@@ -56,10 +283,10 @@ export default function Home() {
         itineraryBride: "",
         itineraryGroom: "",
         enableSettings: true,
-        enableTravel: true,
+        enableTravel: false,
         faqs: [],
         contactInfo: [],
-        enableWeddingParty: true,
+        enableWeddingParty: false,
         weddingParty: { bride: [], groom: [] },
         weddingEvents: [],
         brideEvents: [],
@@ -71,12 +298,12 @@ export default function Home() {
         enableCountdown: true,
         isHomeScreen: true,
         showRSVPButton: true,
-        enableRegistry: true,
+        enableRegistry: false,
         isSubmitted: false,
         enableAdminPassword: false,
         selectedFont: "Serif",
         selectedColor: "",
-        selectedLayout: "",
+        selectedFontColor: "",
         enableRSVPNotification: false,
         enableEventNotification: false,
         enablePlannerUpdates: false,
@@ -126,58 +353,74 @@ export default function Home() {
     }, [user]);
 
 
-    // useEffect(() => {
-    //     const fetchSavedForm = async () => {
-    //         if (!user) return;
-    //         try {
-    //             const docRef = doc(db, "weddingApps", user.uid);
-    //             const snapshot = await getDoc(docRef);
-    //             if (snapshot.exists()) {
-    //                 const data = snapshot.data();
-    //                 setForm(prev => ({ ...prev, ...data }));
-    //                 if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
-    //             }
-    //         } catch (err) {
-    //             console.error("Failed to load form:", err);
-    //         }
-    //     };
-    //     fetchSavedForm();
-    // }, [user]);
+    useEffect(() => {
+        const fetchSavedForm = async () => {
+            if (!user) return;
+            try {
+                const docRef = doc(db, "weddingApps", user.uid);
+                const snapshot = await getDoc(docRef);
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    setForm(prev => ({ ...prev, ...data }));
+                    if (data?.zipGenerated || data.isSubmitted) setIsSubmitted(true);
+                }
+            } catch (err) {
+                console.error("Failed to load form:", err);
+            }
+        };
+        fetchSavedForm();
+    }, [user]);
 
-    const screenToggles: { label: string; field: keyof FormState }[] = [
-        { label: "Save The Date", field: "enableSaveDate" },
-        { label: "Our Story", field: "enableStory" },
+
+    const requiredScreens: { label: string; field: keyof FormState }[] = [
         { label: "RSVP", field: "enableRSVP" },
+        { label: "Save The Date", field: "enableSaveDate" },
+        { label: "Wedding Itinerary", field: "enableItinerary" },
+        { label: "Settings (FAQs)", field: "enableSettings" }
+
+    ];
+    const screenToggles: { label: string; field: keyof FormState }[] = [
+        { label: "Our Story", field: "enableStory" },
         { label: "Gallery", field: "enableGallery" },
         { label: "Our Family", field: "enableFamily" },
         { label: "Wedding Party", field: "enableWeddingParty" },
-        { label: "Wedding Itinerary", field: "enableItinerary" },
         { label: "Wedding Registry", field: "enableRegistry" },
         { label: "Travel", field: "enableTravel" },
-        { label: "Settings (FAQs)", field: "enableSettings" }
     ];
 
     const sidebarItems = useMemo(() => [
-        { label: "Couple Details", key: "appInfo" },
-        { label: "Save the Date", key: "saveDate", condition: form.enableSaveDate },
-        { label: "Our Story", key: "ourStory", condition: form.enableStory },
-        { label: "RSVP & Gallery", key: "rsvpGallery", condition: form.enableRSVP || form.enableGallery },
-        { label: "Our Family", key: "ourFamily", condition: form.enableFamily },
-        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty },
-        { label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
+        { label: "Getting Started", key: "appInfo" },
+        { label: "App Home Page", key: "saveDate", condition: form.enableSaveDate },
+        // { label: "Gallery", key: "rsvpGallery", condition: form.enableGallery },
+        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty || form.enableFamily },
+        //{ label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
         { label: "Registry", key: "registry", condition: form.enableRegistry },
         { label: "Travel", key: "travel", condition: form.enableTravel },
         { label: "Settings", key: "settings", condition: form.enableSettings },
-        { label: "Notifications", key: "notification" },
         { label: "App Themes", key: "themes" },
         { label: "Preview", key: "preview" },
     ].filter(item => item.condition !== false), [form]);
 
+
     useEffect(() => {
         if (!user) return;
+
+        const shouldSave = () => {
+            // Check that at least some essential fields are filled
+            return (
+                form.brideName.trim() !== "" ||
+                form.groomName.trim() !== "" ||
+                form.weddingDate.trim() !== "" ||
+                form.appName.trim() !== ""
+            );
+        };
+
         const interval = setInterval(() => {
-            saveFormToFirestore(user, form).catch(console.error);
+            if (shouldSave() && !form.isSubmitted) {
+                saveFormToFirestore(user, form).catch(console.error);
+            }
         }, 5 * 60 * 1000);
+
         return () => clearInterval(interval);
     }, [user, form]);
 
@@ -298,6 +541,7 @@ export default function Home() {
             </aside>
 
             <section className="flex-1 px-4 sm:px-6 md:px-8 pt-10 lg:pt-10 ">
+
                 {/* {showTutorial && (
                     <div className="fixed z-50 inset-0 bg-gray-800 bg-opacity-70 flex items-center justify-center p-4">
                         <motion.div
@@ -358,44 +602,43 @@ export default function Home() {
                     </div>
                 )} */}
 
-
                 {sidebarItems[step]?.key === "appInfo" && (
-                    <div className="max-w-2xl">
-                        <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
-                        <div>
-                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Couple Name</Label>
-                            <Input
-                                required
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                value={form.coupleName}
-                                onChange={(e) => handleChange("coupleName", e.target.value)}
-                                disabled={isSubmitted}
-                            />
+                    <div className="flex flex-col lg:flex-row gap-10 items-start w-full">
+                        {/* Left Column: Couple Name + Calendar */}
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-2xl font-semibold text-pink-400 pb-6">Wedding Details</h2>
+                            <div className="flex flex-col md:flex-row gap-6">
+                                {/* Bride */}
+                                <div className="flex-1">
+                                    <Label className="text-black font-bold text-lg block mb-2">Bride's Name</Label>
+                                    <Input
+                                        required
+                                        className="w-full max-w-md bg-beige text-black border border-pink-300 px-4 py-2" value={form.brideName}
+                                        onChange={(e) => handleChange("brideName", e.target.value)}
+                                        disabled={isSubmitted}
+                                    />
+                                </div>
+
+                                {/* Groom */}
+                                <div className="flex-1">
+                                    <Label className="text-black font-bold text-lg block mb-2">Groom's Name</Label>
+                                    <Input
+                                        required
+                                        className="w-full max-w-md bg-beige text-black border border-pink-300 px-4 py-2" value={form.groomName}
+                                        onChange={(e) => handleChange("groomName", e.target.value)}
+                                        disabled={isSubmitted}
+                                    />
+                                </div>
+                            </div>
+
+
+                            <CalendarPage form={form} setForm={setForm} />
                         </div>
-                        <div>
-                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Wedding Date</Label>
-                            <Input
-                                required
-                                type="date"
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                value={form.weddingDate}
-                                onChange={(e) => handleChange("weddingDate", e.target.value)}
-                                disabled={isSubmitted}
-                            />
-                        </div>
-                        <div>
-                            <Label className="text-black pt-6 pb-6 font-bold text-lg">Wedding Location</Label>
-                            <Input
-                                required
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                                value={form.weddingLocation}
-                                onChange={(e) => handleChange("weddingLocation", e.target.value)}
-                                disabled={isSubmitted}
-                            />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <Label className="text-black font-bold pb-6 pt-6 text-lg">Name of App</Label>
+
+                        {/* Right Column: App Name + Toggles */}
+                        <div className="flex-1 min-w-0 my-14">
+                            <div className="flex items-center gap-2 mb-2">
+                                <Label className="text-black font-bold text-lg">Name of App</Label>
                                 <div className="relative group cursor-pointer">
                                     <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
                                     <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
@@ -403,59 +646,72 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
+
                             <Input
                                 required
-                                className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
+                                className="w-full max-w-md bg-beige text-black border border-pink-300 px-4 py-2"
                                 value={form.appName}
                                 onChange={(e) => handleChange("appName", e.target.value)}
                                 disabled={isSubmitted}
                             />
-                        </div>
 
+                            <div className="font-bold text-lg pb-6 pt-6">
+                                These screens are essential to ensure your app is easy to use and looks great.
+                            </div>
+                            <div className="flex flex-wrap gap-3 justify-center">
+                                {requiredScreens.map(({ label, field }) => (
+                                    <Button
+                                        key={field}
+                                        className={`px-4 py-2 rounded-full border text-sm font-bold transition 
+        ${form[field]
+                                                ? "bg-pink-400 text-white border-white"
+                                                : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
 
-                        <div className="font-bold text-lg pb-6 pt-6">All screens are enabled by default. Please review and select the ones you would like to include in your custom mobile wedding app.</div>
-                        <div className="flex flex-wrap gap-3 justify-center">
-                            {screenToggles.map(({ label, field }) => (
-                                <Button
-                                    key={field}
-                                    className={`px-4 py-2 rounded-full border text-sm font-bold transition 
-        ${form[field] ? "bg-pink-400 text-white border-white" : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
-                                    onClick={() => handleToggle(field)}
-                                    disabled={isSubmitted}
-                                >
-                                    {label}
-                                </Button>
-                            ))}
-                        </div>
-                        <div className="pt-20 pb-20">
-                            <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
-                        </div>
+                                    >
+                                        {label}
+                                    </Button>
+                                ))}
+                            </div>
+                            <div className="font-bold text-lg pb-6 pt-6">
+                                Select from the available screens below to personalize and enhance your app experience.
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pt-12 gap-4">
+                                {screenToggles.map(({ label, field }) => (
+                                    <label
+                                        key={field}
+                                        className="flex items-center gap-3 p-3 bg-white rounded-lg border border-pink-300 text-black font-medium cursor-pointer"
+                                    >
+                                        <Input
+                                            type="checkbox"
+                                            checked={!!form[field]}
+                                            onChange={() => handleToggle(field)}
+                                            disabled={isSubmitted}
+                                            className="form-checkbox h-5 w-5 text-pink-500"
+                                        />
+                                        {label}
+                                    </label>
+                                ))}
 
+                            </div>
+
+                            <div className="mt-10">
+                                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
+
                 {sidebarItems[step]?.key === "saveDate" && (
-                    <SaveTheDate setForm={setForm} goNext={goNext} goBack={goBack} form={form} />
+                    <SaveTheDate setForm={setForm} handleChange={handleChange} goNext={goNext} goBack={goBack} form={form} />
                 )}
 
-                {sidebarItems[step]?.key === "ourStory" && (
+                {/* {sidebarItems[step]?.key === "ourStory" && (
                     <OurStory form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
-                )}
-
-                {sidebarItems[step]?.key === "rsvpGallery" && (
-                    <RSVPAndGallery form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
-                )}
-
-                {sidebarItems[step]?.key === "ourFamily" && (
-                    <OurFamily form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
-                )}
+                )} */}
 
                 {sidebarItems[step]?.key === "weddingParty" && (
                     <WeddingParty form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
-                )}
-
-                {sidebarItems[step]?.key === "itinerary" && (
-                    <Itinerary form={form} setForm={setForm} goNext={goNext} goBack={goBack} />
                 )}
 
                 {sidebarItems[step]?.key === "registry" && (
@@ -469,61 +725,18 @@ export default function Home() {
                 {sidebarItems[step]?.key === "settings" && (
                     <Settings form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
                 )}
-                {sidebarItems[step]?.key === "notification" && (
-                    <Notifications form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
-                )}
+                {/* {sidebarItems[step]?.key === "notification" && (
+                    <Notifications form={form} handleChange={handleChange} />
+                )} */}
                 {sidebarItems[step]?.key === "themes" && (
-                    <Themes form={form} goNext={goNext} goBack={goBack} />
+                    <Themes form={form} handleChange={handleChange} goNext={goNext} goBack={goBack} />
                 )}
                 {sidebarItems[step]?.key === "preview" && (
                     <Preview form={form} goBack={goBack} />
                 )}
             </section>
-        </main>
-        //     <div className="grid grid-cols-2 gap-4">
-        //     <div>
-        //         <Label className="text-black pb-2">Save The Date</Label>
-        //         <CustomSwitch checked={form.enableSaveDate} onToggle={() => handleToggle("enableSaveDate")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Our Story</Label>
-        //         <CustomSwitch checked={form.enableStory} onToggle={() => handleToggle("enableStory")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Enable RSVP</Label>
-        //         <CustomSwitch checked={form.enableRSVP} onToggle={() => handleToggle("enableRSVP")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Enable Gallery</Label>
-        //         <CustomSwitch checked={form.enableGallery} onToggle={() => handleToggle("enableGallery")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Our Family Section</Label>
-        //         <CustomSwitch checked={form.enableFamily} onToggle={() => handleToggle("enableFamily")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Wedding Party</Label>
-        //         <CustomSwitch checked={form.enableWeddingParty} onToggle={() => handleToggle("enableWeddingParty")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Wedding Itinerary</Label>
-        //         <CustomSwitch checked={form.enableItinerary} onToggle={() => handleToggle("enableItinerary")} disabled={isSubmitted} />
-        //     </div>
-        //     <div>
-        //         <Label className="text-black pb-2">Travel</Label>
-        //         <CustomSwitch checked={form.enableTravel} onToggle={() => handleToggle("enableTravel")} disabled={isSubmitted} />
-        //     </div>
-        //     {/* <div>
-        //                             <Label className="text-black pb-2">Registry</Label>
-        //                             <CustomSwitch checked={form.enableRegistry} onToggle={() => handleToggle("enableRegistry")} />
-        //                         </div> */}
-        //     <div>
-        //         <Label className="text-black pb-2">Settings (FAQs)</Label>
-        //         <CustomSwitch checked={form.enableSettings} onToggle={() => handleToggle("enableSettings")} disabled={isSubmitted} />
-        //     </div>
-        // </div>
+        </main >
     );
 }
-
 
 
