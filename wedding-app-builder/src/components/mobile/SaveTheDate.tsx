@@ -145,7 +145,7 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
                 )}
             </div>
 
-            <div className="flex justify-start gap-4 pt-12">
+            <div className="flex justify-start gap-4 pt-12 pb-4">
                 <Button variant="outline" onClick={goBack} className="text-black font-bold">
                     Back
                 </Button>

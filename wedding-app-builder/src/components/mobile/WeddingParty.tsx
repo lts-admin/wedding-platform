@@ -179,7 +179,7 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
                 {renderPartySide("bride", "Bride's Side")}
                 {renderPartySide("groom", "Groom's Side")}
             </div>
-            <div className="flex justify-start gap-4 pt-4">
+            <div className="flex justify-start gap-4 pt-4 pb-4">
                 <Button variant="outline" className="font-bold" onClick={goBack}>Back</Button>
                 <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
             </div>
