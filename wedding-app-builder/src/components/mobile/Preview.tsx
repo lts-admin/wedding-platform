@@ -1,3 +1,4 @@
+// Preview.tsx (Cleaned Up)
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -5,42 +6,20 @@ import { FormState } from "@/types/FormState";
 import { WorkStatus } from "@/types/WorkStatus";
 import { Button } from "@/components/ui/button";
 import {
-    CalendarDays,
-    Home,
-    Image,
-    Settings,
-    Users,
-    Users2,
-    BookOpen,
-    CalendarIcon,
+    Home, BookOpen, Users2, CalendarDays, Settings, CalendarIcon, ChevronDown, ChevronUp
 } from "lucide-react";
 import {
-    collection,
-    query,
-    orderBy,
-    limit,
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc,
-    getDocs,
-    serverTimestamp,
+    collection, query, orderBy, limit, getFirestore, doc, setDoc, getDoc, getDocs, serverTimestamp,
 } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebaseConfig";
 import {
-    Dialog,
-    DialogTrigger,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
+    Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
 import Countdown from "@/components/utilities/Countdown";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
+import AppPreviewRenderer from "@/components/utilities/AppPreviewRenderer";
 
 const db = getFirestore();
 
@@ -50,456 +29,45 @@ type Props = {
 };
 
 export default function Preview({ form, goBack }: Props) {
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState("home");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const [faqsOpen, setFaqsOpen] = useState(true);
-    const [contactOpen, setContactOpen] = useState(true);
-    const [venueOpen, setVenueOpen] = useState(true);
-    const [hotelOpen, setHotelOpen] = useState(true);
-    const [showInvitationModal, setShowInvitationModal] = useState(false);
-    const { user } = useAuth();
 
     useEffect(() => {
-        const fetchSubmissionStatus = async () => {
+        const checkSubmissionStatus = async () => {
             if (!user) return;
             const docRef = doc(db, "weddingApps", user.uid);
-            const snapshot = await getDoc(docRef);
-            if (snapshot.exists() && snapshot.data().zipGenerated) {
-                setIsSubmitted(true);
-            }
+            const snap = await getDoc(docRef);
+            if (snap.exists() && snap.data().zipGenerated) setIsSubmitted(true);
         };
-
-        fetchSubmissionStatus();
+        checkSubmissionStatus();
     }, [user]);
-
-
-    const fontMap: Record<string, string> = {
-        Script: "'Dancing Script', cursive",
-        Serif: "Georgia, serif",
-        Sans: "Helvetica, Arial, sans-serif",
-    };
-
-    const colorNameMap: Record<string, string> = {
-        "#A17956": "Cocoa",
-        "#EECAC4": "Blush",
-        "#B0848B": "DustyRose",
-        "#826056": "MutedMocha",
-        "#3C314D": "Plum",
-    };
-
-    const fontColorNameMap: Record<string, string> = {
-        "#D72638": "Crimson Red",
-        "#F46036": "Coral Orange",
-        "#FFD23F": "Mustard Yellow",
-        "#1B998B": "Teal Green",
-        "#2E294E": "Indigo",
-        "#5F0F40": "Plum",
-        "#A4036F": "Magenta",
-        "#048BA8": "Aqua Blue",
-    };
-
-    const formatFullDateTime = (date: string, startTime: string, endTime: string) => {
-        const fullDate = new Date(date);
-        const weekdayDate = fullDate.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-
-        return `${weekdayDate} ${startTime} - ${endTime}`;
-    };
-
-    console.log(form);
-
-    const renderContent = () => {
-        switch (activeTab) {
-            case "home":
-                return (
-                    <div className="space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        <p className="text-xl font-bold py-6">SAVE THE DATE</p>
-                        <p className="text-lg font-bold">Join us for the wedding of<br /></p> <p className="text-xl font-bold">{form.brideName} & {form.groomName}</p>
-                        <p className="text-lg">
-                            {new Date(form.weddingDate).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                            })}
-                        </p>
-
-
-                        <p className="text-xl ">{form.weddingLocation}</p>
-                        <div className="flex justify-center">
-                            {form.saveTheDateImage && (
-                                <img
-                                    src={URL.createObjectURL(form.saveTheDateImage)}
-                                    alt="Save the Date Preview"
-                                    className="w-32 h-32 object-cover rounded"
-                                />
-                            )}
-                        </div>
-                        <div className="flex justify-center">
-                            {form.enableRSVP && (
-                                <Button className="bg-black text-white" onClick={() => setActiveTab("rsvp")}>RSVP</Button>
-                            )}
-                        </div>
-                        {form.enableCountdown && (
-                            <Countdown weddingDate={form.weddingDate} />
-                        )}
-                    </div>
-                );
-
-            case "rsvp":
-                return (
-                    <div className="h-full text-center px-6 pt-4 space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        {/* Top bar with back arrow and title */}
-                        <div className="flex items-center justify-start text-black mb-2">
-                            <button onClick={() => setActiveTab("home")} className="text-2xl font-light pr-3">
-                                &#8592;
-                            </button>
-                            <h2 className="text-lg font-bold tracking-wide">RSVP</h2>
-                        </div>
-
-                        {/* Inputs */}
-                        <div className="space-y-4">
-                            <div className="text-left">
-                                <label className="block font-medium text-gray-700 text-sm mb-1">Full Name</label>
-                                <input
-                                    type="text"
-                                    placeholder="Enter your name"
-                                    className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
-                                />
-                            </div>
-                            <div className="text-left">
-                                <label className="block font-medium text-gray-700 text-sm mb-1">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    placeholder="Enter your phone number"
-                                    className="w-full border-b border-gray-400 bg-transparent p-2 text-sm outline-none"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Submit button */}
-                        <div className="pt-4">
-                            <Button
-                                onClick={() => setShowInvitationModal(true)}
-                                className="bg-[#F8E1E7] text-[#8C4A4A] font-semibold px-6 py-2 rounded-full shadow-sm hover:shadow-md"
-                            >
-                                Look Up Invitation
-                            </Button>
-                        </div>
-                        <Dialog open={showInvitationModal} onOpenChange={setShowInvitationModal}>
-                            <DialogContent className="bg-[#f8f5f4] text-black">
-                                <DialogHeader>
-                                    <DialogTitle>Look up RSVP</DialogTitle>
-                                    <p className="text-sm text-gray-600">
-                                        This functionality will be visible when your app is generated and downloadable.
-                                    </p>
-                                </DialogHeader>
-                                <DialogFooter className="flex justify-end gap-2 pt-4">
-                                    <Button variant="outline" onClick={() => setShowInvitationModal(false)}>
-                                        Close
-                                    </Button>
-
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </div>
-                );
-            case "story":
-                return (
-                    <div className="text-sm space-y-2 text-left" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        <h2 className="text-xl font-bold">Our Story</h2>
-                        {form.storyParagraphs.length > 0 ? (
-                            form.storyParagraphs.map((p, i) => (
-                                <p key={i} className="text-sm">
-                                    {p}
-                                </p>
-                            ))
-                        ) : (
-                            <p className="text-sm ">No story added.</p>
-                        )}
-                    </div>
-                );
-            case "gallery":
-                return (
-                    <div className="space-y-2 text-center" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        <p className="text-sm font-medium">Gallery Preview</p>
-                        {form.galleryDriveUrl ? (
-                            <a
-                                href={form.galleryDriveUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 underline"
-                            >
-                                View Gallery Folder
-                            </a>
-                        ) : (
-                            <p className="text-xs text-black">No gallery link provided.</p>
-                        )}
-                    </div>
-                );
-            case "party":
-                return (
-                    <div
-                        className="text-sm px-4 py-6 space-y-8"
-                        style={{
-                            color: form.selectedFontColor,
-                            backgroundColor: form.selectedColor || "#ffffff",
-                            fontFamily: fontMap[form.selectedFont] || "sans-serif",
-                        }}
-                    >
-                        {/* Our Family Section */}
-                        {(form.familyDetails.bride.length > 0 || form.familyDetails.groom.length > 0 || form.familyDetails.pets.length > 0) && (
-                            <div>
-                                <h3 className="text-center font-bold text-xl mb-6">Wedding Party</h3>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
-                                    {form.familyDetails.bride.map((member, i) => (
-                                        <div key={`family-bride-${i}`}>
-                                            <p className="font-bold">{member.name}</p>
-                                            <p style={{ fontSize: 12 }}>{member.relation}</p>
-                                        </div>
-                                    ))}
-                                    {form.familyDetails.groom.map((member, i) => (
-                                        <div key={`family-groom-${i}`}>
-                                            <p className="font-bold">{member.name}</p>
-                                            <p style={{ fontSize: 12 }}>{member.relation}</p>
-                                        </div>
-                                    ))}
-                                    {form.familyDetails.pets.map((pet, i) => (
-                                        <div key={`family-pet-${i}`}>
-                                            <p className="font-bold">{pet.name}</p>
-                                            <p>Beloved Pet</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Optional: Wedding Party Section */}
-                        {(form.weddingParty.bride.length > 0 || form.weddingParty.groom.length > 0) && (
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
-                                {form.weddingParty.bride.map((m, i) => (
-                                    <div key={`party-bride-${i}`}>
-                                        <p className="font-bold">{m.name}</p>
-                                        <p style={{ fontSize: 12 }}>{m.role} ({m.relation})</p>
-                                    </div>
-                                ))}
-                                {form.weddingParty.groom.map((m, i) => (
-                                    <div key={`party-groom-${i}`}>
-                                        <p className="font-bold">{m.name}</p>
-                                        <p style={{ fontSize: 12 }}>{m.role} ({m.relation})</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                        )}
-                    </div>
-                );
-
-            case "itinerary":
-                return (
-                    <div
-                        className="text-sm px-4 py-6 space-y-6"
-                        style={{
-                            color: form.selectedFontColor,
-                            backgroundColor: form.selectedColor || "#ffffff",
-                            fontFamily: fontMap[form.selectedFont] || "serif",
-                        }}
-                    >
-                        {form.brideEvents.length > 0 && (
-                            <div>
-                                <h2 className="text-lg font-bold mb-1">Bride Events</h2>
-                                {form.brideEvents.map((e, i) => (
-                                    <div key={i} className="flex items-start gap-2 mb-4">
-                                        <CalendarIcon className="mt-1" size={20} />
-                                        <div>
-                                            <p className="font-semibold">{e.name}</p>
-                                            <p className="text-sm">Venue: {e.location}</p>
-                                            <p className="font-semibold">
-                                                {formatFullDateTime(e.date, e.startTime, e.endTime)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {form.groomEvents.length > 0 && (
-                            <div>
-                                <h2 className="text-lg font-bold mb-1">Groom Events</h2>
-                                {form.groomEvents.map((e, i) => (
-                                    <div key={i} className="flex items-start gap-2 mb-4">
-                                        <CalendarIcon className="mt-1" size={20} />
-                                        <div>
-                                            <p className="font-semibold">{e.name}</p>
-                                            <p className="text-sm">Venue: {e.location}</p>
-                                            <p className="font-semibold">
-                                                {formatFullDateTime(e.date, e.startTime, e.endTime)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {form.weddingEvents.length > 0 && (
-                            <div>
-                                <h2 className="text-lg font-bold mb-1">Wedding Events</h2>
-                                {form.weddingEvents.map((e, i) => (
-                                    <div key={i} className="flex items-start gap-2 mb-4">
-                                        <CalendarIcon className="mt-1" size={20} />
-                                        <div>
-                                            <p className="font-semibold">{e.name}</p>
-                                            <p className="text-sm">Venue: {e.location}</p>
-                                            <p className="font-semibold">
-                                                {formatFullDateTime(e.date, e.startTime, e.endTime)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                );
-            case "settings":
-                return (
-                    <div className="text-sm space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        {/* FAQs */}
-                        <div>
-                            <button
-                                onClick={() => setFaqsOpen(!faqsOpen)}
-                                className="flex justify-between items-center w-full text-leftfont-semibold mb-2"
-                            >
-                                <span>FAQs</span>
-                                {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                            </button>
-                            {faqsOpen && (
-                                <ul className="space-y-3">
-                                    {Array.isArray(form.faqs) &&
-                                        form.faqs.map((faq, index) => (
-                                            <li key={index}>
-                                                <p className="font-bold">{faq.question}</p>
-                                                <p className="text-gray-300">{faq.answer}</p>
-                                            </li>
-                                        ))}
-                                </ul>
-                            )}
-                        </div>
-
-                        {/* Contact Info */}
-                        <div>
-                            <button
-                                onClick={() => setContactOpen(!contactOpen)}
-                                className="flex justify-between items-center w-full text-left  font-semibold mb-2"
-                            >
-                                <span>Contact Info</span>
-                                {contactOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                            </button>
-                            {contactOpen && (
-                                <ul className="space-y-3">
-                                    {Array.isArray(form.contactInfo) &&
-                                        form.contactInfo.map((contact, index) => (
-                                            <li key={index}>
-                                                <p>{contact.name}</p>
-                                                <p>{contact.phone}</p>
-                                                <p>{contact.email}</p>
-                                            </li>
-                                        ))}
-                                </ul>
-                            )}
-                        </div>
-
-                        {/* Venue Details */}
-                        <div style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                            <button
-                                onClick={() => setVenueOpen(!venueOpen)}
-                                className="flex justify-between items-center w-full text-left font-semibold mb-2"
-                            >
-                                <span>Venue Details</span>
-                                {venueOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                            </button>
-                            {venueOpen && (
-                                <ul className="space-y-3">
-                                    {Array.isArray(form.venueDetails) &&
-                                        form.venueDetails.map((venue, index) => (
-                                            <li key={index} className="text-black">
-                                                {venue}
-                                            </li>
-                                        ))}
-                                </ul>
-                            )}
-                        </div>
-
-                        {/* Hotel Info */}
-                        <div>
-                            <button
-                                onClick={() => setHotelOpen(!hotelOpen)}
-                                className="flex justify-between items-center w-full text-left font-semibold mb-2"
-                            >
-                                <span>Hotel Info</span>
-                                {hotelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                            </button>
-                            {hotelOpen && (
-                                <ul className="space-y-3">
-                                    {Array.isArray(form.hotelDetails) &&
-                                        form.hotelDetails.map((hotel, index) => (
-                                            <li key={index} className="text-black">
-                                                {hotel}
-                                            </li>
-                                        ))}
-                                </ul>
-                            )}
-                        </div>
-                    </div>
-                );
-
-            default:
-                return null;
-        }
-    };
-
-    const tabs = [
-        { id: "home", label: "Home", icon: <Home size={18} /> },
-        ...(form.enableStory ? [{ id: "story", label: "Our Story", icon: <BookOpen size={18} /> }] : []),
-        // ...(form.enableFamily ? [{ id: "family", label: "Family", icon: <Users size={18} /> }] : []),
-        ...(form.enableWeddingParty ? [{ id: "party", label: "Wedding Party", icon: <Users2 size={18} /> }] : []),
-        //...(form.enableGallery ? [{ id: "gallery", label: "Gallery", icon: <Image size={18} /> }] : []),
-        ...(form.enableItinerary ? [{ id: "itinerary", label: "Itinerary", icon: <CalendarDays size={18} /> }] : []),
-        ...(form.enableSettings ? [{ id: "settings", label: "Settings", icon: <Settings size={18} /> }] : []),
-    ];
 
     const validateRequiredFields = () => {
         const errors: string[] = [];
-
         if (!form.brideName.trim()) errors.push("Bride name");
         if (!form.groomName.trim()) errors.push("Groom name");
-        if (!form.weddingDate.trim()) errors.push("Wedding date ");
+        if (!form.weddingDate.trim()) errors.push("Wedding date");
         if (!form.weddingLocation.trim()) errors.push("Wedding location");
         if (!form.appName.trim()) errors.push("App name");
-
         setErrorMessages(errors);
         return errors;
     };
+
     const handleGenerateApp = async () => {
         if (!user) return false;
-
         const errors = validateRequiredFields();
         if (errors.length > 0) {
             setShowErrorModal(true);
-            return;
+            return false;
         }
 
-
         try {
-            saveFormToFirestore(user, form).catch(console.error);
+            await saveFormToFirestore(user, form);
             setIsSubmitted(true);
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
@@ -516,8 +84,7 @@ export default function Preview({ form, goBack }: Props) {
             await uploadBytes(storageRef, blob);
             const downloadURL = await getDownloadURL(storageRef);
 
-            const appDocRef = doc(db, "weddingApps", user.uid);
-            await setDoc(appDocRef, {
+            await setDoc(doc(db, "weddingApps", user.uid), {
                 ...form,
                 isSubmitted: true,
                 zipGenerated: true,
@@ -527,28 +94,20 @@ export default function Preview({ form, goBack }: Props) {
                 generatedAt: serverTimestamp(),
             }, { merge: true });
 
-            const zipDocRef = doc(db, "weddingAppZips", user.uid);
-            await setDoc(zipDocRef, {
+            await setDoc(doc(db, "weddingAppZips", user.uid), {
                 userId: user.uid,
                 downloadUrl: downloadURL,
                 zipPath,
                 generatedAt: serverTimestamp(),
             });
 
-            const workRequestsCollection = collection(db, "workRequests");
-            const latestQuery = query(workRequestsCollection, orderBy("__name__", "desc"), limit(1));
-            const latestSnap = await getDocs(latestQuery);
-            let newId = 1;
-            if (!latestSnap.empty) {
-                const latestId = parseInt(latestSnap.docs[0].id);
-                if (!isNaN(latestId)) newId = latestId + 1;
-            }
+            const latestSnap = await getDocs(query(collection(db, "workRequests"), orderBy("__name__", "desc"), limit(1)));
+            const newId = latestSnap.empty ? 1 : parseInt(latestSnap.docs[0].id) + 1;
 
-            const workRequestRef = doc(db, "workRequests", newId.toString());
-            await setDoc(workRequestRef, {
+            await setDoc(doc(db, "workRequests", newId.toString()), {
                 assignee: "Satya Vinjamuri",
                 userId: user.uid,
-                coupleName: form.brideName + "&" + form.groomName,
+                coupleName: `${form.brideName}&${form.groomName}`,
                 zipFileUrl: downloadURL,
                 authStatus: WorkStatus.Submitted,
                 feedback: "",
@@ -559,7 +118,7 @@ export default function Preview({ form, goBack }: Props) {
             await fetch('/api/send-alert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'App Submission Request' }), // or "Help Request", etc.
+                body: JSON.stringify({ type: 'App Submission Request' })
             });
 
             return true;
@@ -569,81 +128,16 @@ export default function Preview({ form, goBack }: Props) {
         }
     };
 
-    // const handleGenerateApp = async () => {
-    //     if (!user) return;
-    //     const errors = validateRequiredFields();
-    //     if (errors.length > 0) {
-    //         errors.forEach((message: string) => {
-    //             window.alert(message);
-    //         });
-    //         return;
-    //     }
-    //     // saveFormToFirestore(user, form).catch(console.error);
-    //     // setIsSubmitted(true);
-    //     // console.log("form", form);
-    //     // const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/generate-app`, {
-    //     //     method: "POST",
-    //     //     headers: { "Content-Type": "application/json" },
-    //     //     body: JSON.stringify(form),
-    //     // });
-
-    //     // if (!response.ok) return;
-
-    //     // const blob = await response.blob();
-    //     // const zipPath = `zips/${user.uid}/wedding_app.zip`;
-    //     // const storageRef = ref(storage, zipPath);
-    //     // await uploadBytes(storageRef, blob);
-    //     // const downloadURL = await getDownloadURL(storageRef);
-
-    //     // const appDocRef = doc(db, "weddingApps", user.uid);
-    //     // await setDoc(
-    //     //     appDocRef,
-    //     //     {
-    //     //         ...form,
-    //     //         isSubmitted: true,
-    //     //         zipGenerated: true,
-    //     //         formCompleted: true,
-    //     //         feedbackReceived: false,
-    //     //         published: false,
-    //     //         generatedAt: serverTimestamp(),
-    //     //     },
-    //     //     { merge: true }
-    //     // );
-
-    //     // const zipDocRef = doc(db, "weddingAppZips", user.uid);
-    //     // await setDoc(zipDocRef, {
-    //     //     userId: user.uid,
-    //     //     downloadUrl: downloadURL,
-    //     //     zipPath,
-    //     //     generatedAt: serverTimestamp(),
-    //     // });
-
-    //     // const workRequestsCollection = collection(db, "workRequests");
-    //     // const latestQuery = query(workRequestsCollection, orderBy("__name__", "desc"), limit(1));
-    //     // const latestSnap = await getDocs(latestQuery);
-    //     // let newId = 1;
-    //     // if (!latestSnap.empty) {
-    //     //     const latestId = parseInt(latestSnap.docs[0].id);
-    //     //     if (!isNaN(latestId)) {
-    //     //         newId = latestId + 1;
-    //     //     }
-    //     // }
-
-    //     // const workRequestRef = doc(db, "workRequests", newId.toString());
-    //     // await setDoc(workRequestRef, {
-    //     //     assignee: "Satya Vinjamuri",
-    //     //     userId: user.uid,
-    //     //     coupleName: form.coupleName,
-    //     //     zipFileUrl: downloadURL,
-    //     //     authStatus: WorkStatus.Submitted,
-    //     //     feedback: "",
-    //     //     dateCreated: serverTimestamp(),
-    //     //     dateCompleted: null,
-    //     // });
-    // };
+    const tabs = [
+        { id: "home", label: "Home", icon: <Home size={18} /> },
+        ...(form.enableStory ? [{ id: "story", label: "Our Story", icon: <BookOpen size={18} /> }] : []),
+        ...(form.enableWeddingParty ? [{ id: "party", label: "Wedding Party", icon: <Users2 size={18} /> }] : []),
+        ...(form.enableItinerary ? [{ id: "itinerary", label: "Itinerary", icon: <CalendarDays size={18} /> }] : []),
+        ...(form.enableSettings ? [{ id: "settings", label: "Settings", icon: <Settings size={18} /> }] : []),
+    ];
 
     return (
-        <div >
+        <div>
             <div className="pb-6">
                 <h2 className="text-2xl font-semibold text-pink-400">Preview of your Custom App</h2>
                 <p className="mt-4 text-sm text-red-500 font-bold italic bg-petal px-4 py-2 rounded-md border max-w-2xl">
@@ -652,31 +146,27 @@ export default function Preview({ form, goBack }: Props) {
             </div>
 
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-center gap-12">
-                <div className="flex flex-col items-center lg:items-start">
-                    <div className="relative shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200 text-black">
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-gray-300 rounded-b-xl z-10" />
-                        <div className="p-6 pt-8 overflow-y-auto pb-20 h-full" style={{ backgroundColor: form.selectedColor || "#ffffff", fontFamily: form.selectedFont }}>
-                            {renderContent()}
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 bg-neutral-100 p-2 rounded-b-[40px] flex justify-around text-xs border-t">
-                            {tabs.map((tab) => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`flex flex-col items-center w-[60px] text-center ${activeTab === tab.id ? "text-blue-600 font-semibold" : "text-gray-600"}`}
-                                >
-                                    {tab.icon}
-                                    <span className="text-[11px] leading-tight truncate">{tab.label}</span>
-                                </button>
-                            ))}
-                        </div>
+                <div className="relative shadow-2xl rounded-[40px] w-[300px] h-[600px] overflow-hidden border-[6px] border-gray-200 text-black">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-gray-300 rounded-b-xl z-10" />
+                    <div className="p-6 pt-8 overflow-y-auto pb-20 h-full">
+                        <AppPreviewRenderer form={form} activeTab={activeTab} setActiveTab={setActiveTab} />
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-neutral-100 p-2 rounded-b-[40px] flex justify-around text-xs border-t">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex flex-col items-center w-[60px] text-center ${activeTab === tab.id ? "text-blue-600 font-semibold" : "text-gray-600"}`}
+                            >
+                                {tab.icon}
+                                <span className="text-[11px] leading-tight truncate">{tab.label}</span>
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 <div className="flex flex-col items-center gap-4 pb-12">
-                    <div>
-                        <h2 className="text-2xl font-semibold text-black">{form.appName}</h2>
-                    </div>
+                    <h2 className="text-2xl font-semibold text-black">{form.appName}</h2>
                     <Button className="w-[200px] bg-pink-400 text-black font-bold" onClick={() => setShowConfirmModal(true)} disabled={isSubmitted}>
                         {isSubmitted ? "Submitted" : "Build My App"}
                     </Button>
@@ -689,21 +179,18 @@ export default function Preview({ form, goBack }: Props) {
             <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
                 <DialogContent className="bg-[#f5f5dc] text-black">
                     <DialogHeader>
-                        <DialogTitle className="text-black">Are you sure?</DialogTitle>
-                        <DialogDescription className="text-black">
-                            You won't be able to make changes after this step.
-                        </DialogDescription>
+                        <DialogTitle>Are you sure?</DialogTitle>
+                        <DialogDescription>You won't be able to make changes after this step.</DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className="flex justify-end gap-2">
-                        <Button variant="outline" className="text-black" onClick={() => setShowConfirmModal(false)}>Cancel</Button>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowConfirmModal(false)}>Cancel</Button>
                         <Button
+                            variant="outline"
                             onClick={async () => {
                                 setShowConfirmModal(false);
                                 const success = await handleGenerateApp();
                                 if (success) setShowSuccessModal(true);
                             }}
-                            variant="outline"
-                            className="text-black"
                         >
                             Yes, Continue
                         </Button>
@@ -724,6 +211,7 @@ export default function Preview({ form, goBack }: Props) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
             <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
                 <DialogContent className="bg-[#f5f5dc] text-black">
                     <DialogHeader>
@@ -736,14 +224,13 @@ export default function Preview({ form, goBack }: Props) {
                                 <li key={index}>{msg}</li>
                             ))}
                         </ul>
-                        <p className="text-red-500 font-bold font-italic">Please fill out the complete form to get the best experience! </p>
+                        <p className="text-red-500 font-bold font-italic">Please fill out the complete form to get the best experience!</p>
                     </div>
                     <DialogFooter>
                         <Button onClick={() => setShowErrorModal(false)}>OK</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-
         </div>
     );
 }

@@ -12,6 +12,7 @@ type Props = {
     handleChange: (field: keyof FormState, value: any) => void;
 };
 
+
 const fontOptions = ["Serif", "Sans", "Script"] as const;
 const colorOptions = ["#A17956", "#EECAC4", "#B0848B", "#826056", "#3C314D"];
 const fontColorOptions = [
@@ -232,6 +233,7 @@ const Themes: React.FC<Props> = ({ form, goNext, goBack, handleChange }) => {
                                         "text-2xl py-20"
                                     )}
                                 >
+                                    {form.brideName} & {form.groomName}
                                     {form.brideName} & {form.groomName}
                                 </p>
                                 <p className="text-xl mt-2">
