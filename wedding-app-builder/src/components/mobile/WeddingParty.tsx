@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { FormState } from "@/types/FormState";
+import { weddingPartyRoles } from "@/types/WeddingParty";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
 
@@ -174,29 +175,15 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
                                             className="w-full bg-[#FFF5F7] border border-gray-300 rounded px-3 py-2 text-sm text-black"
                                         >
                                             <option value="">Select a role</option>
-                                            <optgroup label="Bridal Party Roles">
-                                                <option value="Maid of Honor">Maid of Honor</option>
-                                                <option value="Man of Honor">Man of Honor</option>
-                                                <option value="Best Man">Best Man</option>
-                                                <option value="Best Woman">Best Woman</option>
-                                                <option value="Bridesmaid">Bridesmaid</option>
-                                                <option value="Groomsman">Groomsman</option>
-                                                <option value="Flower Girl">Flower Girl</option>
-                                                <option value="Ring Bearer">Ring Bearer</option>
-                                            </optgroup>
-                                            <optgroup label="Family Roles">
-                                                <option value="Mother of the Bride">Mother of the Bride</option>
-                                                <option value="Father of the Bride">Father of the Bride</option>
-                                                <option value="Mother of the Groom">Mother of the Groom</option>
-                                                <option value="Father of the Groom">Father of the Groom</option>
-                                                <option value="Sister of Bride">Sister of Bride</option>
-                                                <option value="Brother of Bride">Brother of Bride</option>
-                                                <option value="Sister of Groom">Sister of Groom</option>
-                                                <option value="Brother of Groom">Brother of Groom</option>
-                                                <option value="Grandparent of Bride">Grandparent of Bride</option>
-                                                <option value="Grandparent of Groom">Grandparent of Groom</option>
-                                                <option value="Other">Other</option>
-                                            </optgroup>
+                                            {weddingPartyRoles.map((group) => (
+                                                <optgroup key={group.label} label={group.label}>
+                                                    {group.options.map((role) => (
+                                                        <option key={role} value={role}>
+                                                            {role}
+                                                        </option>
+                                                    ))}
+                                                </optgroup>
+                                            ))}
                                         </select>
                                         <Label>Relation</Label>
                                         <Input value={member.relation} onChange={(e) => updateMember(side, index, "relation", e.target.value)} disabled={isSubmitted} />

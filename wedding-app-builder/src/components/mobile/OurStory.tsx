@@ -67,26 +67,28 @@ const OurStory: React.FC<OurStoryProps> = ({ form, setForm }) => {
 
             <div className="space-y-4">
                 {(form.storyParagraphs || []).map((text, idx) => (
-                    <div key={idx} className="relative">
+                    <div key={idx} className="relative w-full max-w-[750px]">
                         <Textarea
                             className="bg-beige text-black border border-pink-300 pr-10"
+                            style={{ width: "100%", height: "200px" }}
                             value={text}
                             onChange={(e) => handleParagraphChange(idx, e.target.value)}
                             placeholder={`Paragraph ${idx + 1}`}
                             disabled={isSubmitted}
                         />
                         {!isSubmitted && (
-                            <button
+                            <Button
                                 onClick={() => handleRemoveParagraph(idx)}
-                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700 bg-white rounded-full shadow-sm"
+                                style={{ padding: "2px" }}
                                 aria-label="Remove paragraph"
                             >
-                                <X size={16} />
-                            </button>
+                                <X size={14} />
+                            </Button>
                         )}
                     </div>
                 ))}
-                <Button onClick={handleAddParagraph} className="bg-pink-400 text-black font-bold" disabled={isSubmitted}>
+                <Button onClick={handleAddParagraph} className="bg-pink-400 text-white font-bold" disabled={isSubmitted}>
                     + Add Paragraph
                 </Button>
             </div>
@@ -120,7 +122,7 @@ const OurStory: React.FC<OurStoryProps> = ({ form, setForm }) => {
                         />
                     </div>
                 ))}
-                <Button onClick={handleAddImage} className="bg-pink-400 text-black font-bold" disabled={isSubmitted}>
+                <Button onClick={handleAddImage} className="bg-pink-400 text-white font-bold" style={{ width: "145px" }} disabled={isSubmitted}>
                     + Add Image
                 </Button>
             </div>

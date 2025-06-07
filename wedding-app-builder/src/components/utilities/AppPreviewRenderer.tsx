@@ -254,96 +254,126 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
             );
 
         case "settings":
+            const hasSettings =
+                (form.faqs?.length ?? 0) > 0 ||
+                (form.contactInfo?.length ?? 0) > 0 ||
+                (form.enableTravel &&
+                    ((form.venueDetails?.length ?? 0) > 0 || (form.hotelDetails?.length ?? 0) > 0));
+
             return (
-                <div className="text-sm space-y-6" style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                    {/* FAQs */}
-                    <div>
-                        <button
-                            onClick={() => setFaqsOpen(!faqsOpen)}
-                            className="flex justify-between items-center w-full text-left font-semibold mb-2"
-                        >
-                            <span>FAQs</span>
-                            {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                        </button>
-                        {faqsOpen && (
-                            <ul className="space-y-3">
-                                {Array.isArray(form.faqs) &&
-                                    form.faqs.map((faq, index) => (
-                                        <li key={index}>
-                                            <p className="font-bold">{faq.question}</p>
-                                            <p className="text-gray-300">{faq.answer}</p>
-                                        </li>
-                                    ))}
-                            </ul>
-                        )}
-                    </div>
+                <div
+                    className="text-sm space-y-6"
+                    style={{
+                        color: form.selectedFontColor,
+                        backgroundColor: form.selectedColor || "#ffffff",
+                        fontFamily: fontMap[form.selectedFont] || "sans-serif",
+                    }}
+                >
+                    {hasSettings ? (
+                        <>
+                            {/* FAQs */}
+                            {form.faqs.length > 0 && (
+                                <div>
+                                    <button
+                                        onClick={() => setFaqsOpen(!faqsOpen)}
+                                        className="flex justify-between items-center w-full text-left font-semibold mb-2"
+                                    >
+                                        <span>FAQs</span>
+                                        {faqsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {faqsOpen && (
+                                        <ul className="space-y-3">
+                                            {form.faqs.map((faq, index) => (
+                                                <li key={index}>
+                                                    <p className="font-bold">{faq.question}</p>
+                                                    <p className="text-gray-300">{faq.answer}</p>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            )}
 
-                    {/* Contact Info */}
-                    <div>
-                        <button
-                            onClick={() => setContactOpen(!contactOpen)}
-                            className="flex justify-between items-center w-full text-left  font-semibold mb-2"
-                        >
-                            <span>Contact Info</span>
-                            {contactOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                        </button>
-                        {contactOpen && (
-                            <ul className="space-y-3">
-                                {Array.isArray(form.contactInfo) &&
-                                    form.contactInfo.map((contact, index) => (
-                                        <li key={index}>
-                                            <p>{contact.name}</p>
-                                            <p>{contact.phone}</p>
-                                            <p>{contact.email}</p>
-                                        </li>
-                                    ))}
-                            </ul>
-                        )}
-                    </div>
+                            {/* Contact Info */}
+                            {form.contactInfo.length > 0 && (
+                                <div>
+                                    <button
+                                        onClick={() => setContactOpen(!contactOpen)}
+                                        className="flex justify-between items-center w-full text-left font-semibold mb-2"
+                                    >
+                                        <span>Contact Info</span>
+                                        {contactOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                    </button>
+                                    {contactOpen && (
+                                        <ul className="space-y-3">
+                                            {form.contactInfo.map((contact, index) => (
+                                                <li key={index}>
+                                                    <p>{contact.name}</p>
+                                                    <p>{contact.phone}</p>
+                                                    <p>{contact.email}</p>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            )}
 
-                    {/* Venue Details */}
-                    <div style={{ color: form.selectedFontColor, backgroundColor: form.selectedColor || "#ffffff", fontFamily: fontMap[form.selectedFont] || "sans-serif" }}>
-                        <button
-                            onClick={() => setVenueOpen(!venueOpen)}
-                            className="flex justify-between items-center w-full text-left font-semibold mb-2"
-                        >
-                            <span>Venue Details</span>
-                            {venueOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                        </button>
-                        {venueOpen && (
-                            <ul className="space-y-3">
-                                {Array.isArray(form.venueDetails) &&
-                                    form.venueDetails.map((venue, index) => (
-                                        <li key={index} className="text-black">
-                                            {venue}
-                                        </li>
-                                    ))}
-                            </ul>
-                        )}
-                    </div>
+                            {/* Venue and Hotel Info */}
+                            {form.enableTravel && (
+                                <div className="space-y-6">
+                                    {form.venueDetails.length > 0 && (
+                                        <div>
+                                            <button
+                                                onClick={() => setVenueOpen(!venueOpen)}
+                                                className="flex justify-between items-center w-full text-left font-semibold mb-2"
+                                            >
+                                                <span>Venue Details</span>
+                                                {venueOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                            </button>
+                                            {venueOpen && (
+                                                <ul className="space-y-3">
+                                                    {form.venueDetails.map((venue, index) => (
+                                                        <li key={index} className="text-black">
+                                                            {venue}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    )}
 
-                    {/* Hotel Info */}
-                    <div>
-                        <button
-                            onClick={() => setHotelOpen(!hotelOpen)}
-                            className="flex justify-between items-center w-full text-left font-semibold mb-2"
-                        >
-                            <span>Hotel Info</span>
-                            {hotelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                        </button>
-                        {hotelOpen && (
-                            <ul className="space-y-3">
-                                {Array.isArray(form.hotelDetails) &&
-                                    form.hotelDetails.map((hotel, index) => (
-                                        <li key={index} className="text-black">
-                                            {hotel}
-                                        </li>
-                                    ))}
-                            </ul>
-                        )}
-                    </div>
+                                    {form.hotelDetails.length > 0 && (
+                                        <div>
+                                            <button
+                                                onClick={() => setHotelOpen(!hotelOpen)}
+                                                className="flex justify-between items-center w-full text-left font-semibold mb-2"
+                                            >
+                                                <span>Hotel Info</span>
+                                                {hotelOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                            </button>
+                                            {hotelOpen && (
+                                                <ul className="space-y-3">
+                                                    {form.hotelDetails.map((hotel, index) => (
+                                                        <li key={index} className="text-black">
+                                                            {hotel}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div>
+                            <h2 className="italic text-center text-gray-500 font-bold" style={{ marginTop: "200px", fontSize: "18px" }}>No settings details</h2>
+                            <p className="italic text-center text-red-500 font-bold" style={{ fontSize: "18px" }}>Must enter setting details before submission</p>
+                        </div>
+                    )}
                 </div>
             );
+
 
         default:
             return null;
