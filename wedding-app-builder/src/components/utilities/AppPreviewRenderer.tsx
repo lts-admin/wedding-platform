@@ -8,6 +8,9 @@ import { CalendarIcon, ChevronDown, ChevronUp, ChevronLeft } from "lucide-react"
 import {
     Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
+
+import Image from "next/image";
+
 type Props = {
     form: FormState;
     activeTab: string;
@@ -157,48 +160,64 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
                     )}
                 </div>
             );
-
         case "party":
+            const familyRolesList = [
+                "Mother of the Bride",
+                "Father of the Bride",
+                "Mother of the Groom",
+                "Father of the Groom",
+                "Sister of Bride",
+                "Brother of Bride",
+                "Sister of Groom",
+                "Brother of Groom",
+                "Grandparent of Bride",
+                "Grandparent of Groom",
+                "Other",
+            ];
+
+            const splitRoles = (members: typeof form.weddingParty.bride) => {
+                const familyRoles = members.filter((m) => familyRolesList.includes(m.role));
+                const partyRoles = members.filter((m) => !familyRolesList.includes(m.role));
+                return { familyRoles, partyRoles };
+            };
+
+            const renderMembers = (members: typeof form.weddingParty.bride, prefix: string) =>
+                members.map((m, i) => (
+                    <div key={`${prefix}-${i}`} className="space-y-2">
+                        {m.image ? (
+                            <Image
+                                src={typeof m.image === "string" ? m.image : URL.createObjectURL(m.image)}
+                                alt={m.name || "Wedding party member"}
+                                width={80}
+                                height={80}
+                                className="w-20 h-20 mx-auto rounded-full object-cover"
+                            />
+                        ) : (
+                            <br />
+                        )}
+                        <p className="font-bold">{m.name || <br />}</p>
+                        <p className="text-xs">
+                            {m.role || <br />} <br /> {m.relation || <br />}
+                        </p>
+                    </div>
+                ));
+
+            const { familyRoles: brideFamily, partyRoles: brideParty } = splitRoles(form.weddingParty.bride);
+            const { familyRoles: groomFamily, partyRoles: groomParty } = splitRoles(form.weddingParty.groom);
+
             return (
                 <div className="text-sm px-4 py-6 space-y-8 text-center" style={sectionStyle}>
                     <h3 className="text-xl font-bold">Wedding Party</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {form.familyDetails.bride.map((m, i) => (
-                            <div key={`bride-family-${i}`}>
-                                <p className="font-bold">{m.name}</p>
-                                <p className="text-xs">{m.relation}</p>
-                            </div>
-                        ))}
-                        {form.familyDetails.groom.map((m, i) => (
-                            <div key={`groom-family-${i}`}>
-                                <p className="font-bold">{m.name}</p>
-                                <p className="text-xs">{m.relation}</p>
-                            </div>
-                        ))}
-                        {form.familyDetails.pets.map((m, i) => (
-                            <div key={`pet-${i}`}>
-                                <p className="font-bold">{m.name}</p>
-                                <p className="text-xs">Beloved Pet</p>
-                            </div>
-                        ))}
-                    </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {form.weddingParty.bride.map((m, i) => (
-                            <div key={`bride-party-${i}`}>
-                                <p className="font-bold">{m.name}</p>
-                                <p className="text-xs">{m.role} ({m.relation})</p>
-                            </div>
-                        ))}
-                        {form.weddingParty.groom.map((m, i) => (
-                            <div key={`groom-party-${i}`}>
-                                <p className="font-bold">{m.name}</p>
-                                <p className="text-xs">{m.role} ({m.relation})</p>
-                            </div>
-                        ))}
+                        {renderMembers(brideFamily, "bride-family")}
+                        {renderMembers(groomFamily, "groom-family")}
+                        {renderMembers(brideParty, "bride-party")}
+                        {renderMembers(groomParty, "groom-party")}
                     </div>
                 </div>
             );
+
 
         case "itinerary":
             return (
