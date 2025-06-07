@@ -36,8 +36,13 @@ export interface FormState {
 
     // Story
     enableStory: boolean;
-    storyParagraphs: string[];
-    storyImages: { file: File | null; caption: string }[];
+
+    storySections?: {
+        title: string;
+        paragraph: string;
+        image: File | null;
+    }[];
+
 
     // Travel
     enableTravel: boolean;
@@ -110,8 +115,6 @@ export const defaultFormState: FormState = {
 
     // Story
     enableStory: false,
-    storyParagraphs: [],
-    storyImages: [],
 
     // Travel
     enableTravel: false,

@@ -20,9 +20,16 @@ export const validateRequiredFields = (
 
     // Story
     if (form.enableStory) {
-        if (form.storyParagraphs.length === 0) errors.push("At least one story paragraph is required");
-        if (form.storyImages.length === 0) errors.push("At least one story image is required");
+        if (!form.storySections || form.storySections.length === 0) {
+            errors.push("At least one story section is required");
+        } else {
+            const hasParagraph = form.storySections.some((section) => section.paragraph.trim() !== "");
+            const hasImage = form.storySections.some((section) => section.image !== null);
+            if (!hasParagraph) errors.push("At least one story paragraph is required");
+            if (!hasImage) errors.push("At least one story image is required");
+        }
     }
+
 
     // Travel
     if (form.enableTravel) {
