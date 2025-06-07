@@ -229,7 +229,7 @@ const WeddingParty: React.FC<WeddingProps> = ({ form, setForm, goNext, goBack })
         <div className="space-y-6">
             <h2 className="text-2xl font-semibold text-pink-400">Wedding Party</h2>
             <h2 className="text-2xl font-semibold text-black">Our Close Friends & Family</h2>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-start gap-4">
                 <Dialog open={selectSideOpen} onOpenChange={setSelectSideOpen}>
                     <DialogTrigger asChild>
                         <Button className="bg-pink-400 text-white font-bold" disabled={isSubmitted}>+ Add</Button>

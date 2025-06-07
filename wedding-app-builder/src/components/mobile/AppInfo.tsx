@@ -274,7 +274,6 @@ export default function Home() {
         rsvpSheetUrl: "",
         enableGallery: false,
         galleryDriveUrl: "",
-        enableFamily: false,
         enableStory: false,
         familyDetails: { bride: [], groom: [], pets: [] },
         enableItinerary: true,
@@ -382,7 +381,6 @@ export default function Home() {
     const screenToggles: { label: string; field: keyof FormState }[] = [
         { label: "Our Story", field: "enableStory" },
         { label: "Gallery", field: "enableGallery" },
-        { label: "Our Family", field: "enableFamily" },
         { label: "Wedding Party", field: "enableWeddingParty" },
         { label: "Wedding Registry", field: "enableRegistry" },
         { label: "Travel", field: "enableTravel" },
@@ -391,9 +389,7 @@ export default function Home() {
     const sidebarItems = useMemo(() => [
         { label: "Getting Started", key: "appInfo" },
         { label: "App Home Page", key: "saveDate", condition: form.enableSaveDate },
-        // { label: "Gallery", key: "rsvpGallery", condition: form.enableGallery },
-        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty || form.enableFamily },
-        //{ label: "Itinerary", key: "itinerary", condition: form.enableItinerary },
+        { label: "Wedding Party", key: "weddingParty", condition: form.enableWeddingParty },
         { label: "Registry", key: "registry", condition: form.enableRegistry },
         { label: "Travel", key: "travel", condition: form.enableTravel },
         { label: "Settings", key: "settings", condition: form.enableSettings },

@@ -39,7 +39,6 @@ export type FormState = {
     rsvpSheetUrl: string;
     enableGallery: boolean;
     galleryDriveUrl: string;
-    enableFamily: boolean;
     enableSaveDate: boolean,
     enableStory: boolean;
     enableTravel: boolean;
