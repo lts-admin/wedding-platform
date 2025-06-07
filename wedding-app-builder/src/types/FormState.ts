@@ -1,11 +1,5 @@
-export type FamilyMember = {
-    name: string;
-    relation: string;
-    image: File | null;
-};
-
 export interface EventDetails {
-    id: string; // <-- Add this line
+    id: string;
     name: string;
     date: string;
     startTime: string;
@@ -14,13 +8,6 @@ export interface EventDetails {
     dressCode: string;
 }
 
-export type WeddingPartyMember = {
-    name: string;
-    role: string;
-    relation: string;
-    image: File | null;
-};
-
 export interface PartyMember {
     name: string;
     role: string;
@@ -28,63 +15,150 @@ export interface PartyMember {
     image: File | null;
 }
 
-
-export type FormState = {
+export interface FormState {
+    // Core Info
     brideName: string;
     groomName: string;
     weddingDate: string;
     weddingLocation: string;
     appName: string;
+
+    // RSVP & Gallery
     enableRSVP: boolean;
     rsvpSheetUrl: string;
     enableGallery: boolean;
     galleryDriveUrl: string;
-    enableFamily: boolean;
-    enableSaveDate: boolean,
+
+    // Save the Date
+    enableSaveDate: boolean;
+    saveTheDateImage: File | null;
+    saveTheDateImageUrl?: string;
+
+    // Story
     enableStory: boolean;
+
+    storySections?: {
+        title: string;
+        paragraph: string;
+        image: File | null;
+    }[];
+
+
+    // Travel
     enableTravel: boolean;
     hotelDetails: string[];
     venueDetails: string[];
-    familyDetails: {
-        bride: FamilyMember[];
-        groom: FamilyMember[];
-        pets: { name: string; image: File | null }[];
-    };
-    enableItinerary: boolean;
-    itineraryWedding: string;
-    itineraryBride: string;
-    itineraryGroom: string;
+
+
+    // Settings
     enableSettings: boolean;
     faqs: { question: string; answer: string }[];
-    contactInfo: { name: string, phone: string, email: string }[];
-    storyParagraphs: string[];
-    storyImages: { file: File | null; caption: string }[];
+    contactInfo: { name: string; phone: string; email: string }[];
+
+    // Wedding Party
     enableWeddingParty: boolean;
     weddingParty: {
         bride: PartyMember[];
         groom: PartyMember[];
     };
+
+    // Events
+    enableItinerary: boolean;
     weddingEvents: EventDetails[];
     brideEvents: EventDetails[];
     groomEvents: EventDetails[];
+
+    // Password Protection
     enablePassword: boolean;
     appPassword?: string;
-    saveTheDateImage: File | null;
-    saveTheDateImageUrl?: string; // ✅ Make this optional
-    enableCountdown: boolean;
-    isHomeScreen: boolean;
-    showRSVPButton: boolean;
-    enableRegistry: boolean;
-    isSubmitted: boolean,
-    enableAdminPassword: boolean,
-    adminAppPassword?: string,
+    enableAdminPassword: boolean;
+    adminAppPassword?: string;
+
+    // UI Preferences
     selectedFont: "Serif" | "Sans" | "Script";
     selectedColor: string;
     selectedFontColor: string;
     backgroundImage: string | File | null;
+
+    // Misc Features
+    enableCountdown: boolean;
+    isHomeScreen: boolean;
+    showRSVPButton: boolean;
+    enableRegistry: boolean;
     enableRSVPNotification: boolean;
     enableEventNotification: boolean;
     enablePlannerUpdates: boolean;
     rsvpDeadline?: string;
     registries: { label: string; url: string }[];
+
+    // Submission State
+    isSubmitted: boolean;
+}
+
+export const defaultFormState: FormState = {
+    // Core Info
+    brideName: "",
+    groomName: "",
+    weddingDate: "",
+    weddingLocation: "",
+    appName: "",
+
+    // RSVP & Gallery
+    enableRSVP: true,
+    rsvpSheetUrl: "",
+    enableGallery: false,
+    galleryDriveUrl: "",
+
+    // Save the Date
+    enableSaveDate: true,
+    saveTheDateImage: null,
+
+    // Story
+    enableStory: false,
+
+    // Travel
+    enableTravel: false,
+    hotelDetails: [],
+    venueDetails: [],
+
+    // Itinerary
+    enableItinerary: true,
+    weddingEvents: [],
+    brideEvents: [],
+    groomEvents: [],
+
+    // Settings
+    enableSettings: true,
+    faqs: [],
+    contactInfo: [],
+
+    // Wedding Party
+    enableWeddingParty: false,
+    weddingParty: {
+        bride: [],
+        groom: [],
+    },
+
+    // Registry
+    enableRegistry: false,
+    registries: [],
+
+    // Passwords
+    enablePassword: false,
+    enableAdminPassword: false,
+
+    // UI & Visuals
+    selectedFont: "Serif",
+    selectedColor: "",
+    selectedFontColor: "",
+    backgroundImage: "",
+
+    // Flags & Toggles
+    enableCountdown: true,
+    isHomeScreen: true,
+    showRSVPButton: true,
+    isSubmitted: false,
+    enableRSVPNotification: false,
+    enableEventNotification: false,
+    enablePlannerUpdates: false,
 };

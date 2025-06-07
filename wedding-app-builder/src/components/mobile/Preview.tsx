@@ -20,7 +20,7 @@ import {
 import Countdown from "@/components/utilities/Countdown";
 import { saveFormToFirestore } from "@/lib/saveFormToFirestore";
 import AppPreviewRenderer from "@/components/utilities/AppPreviewRenderer";
-
+import { validateRequiredFields } from "@/components/utilities/FormValidation";
 const db = getFirestore();
 
 type Props = {
@@ -47,20 +47,9 @@ export default function Preview({ form, goBack }: Props) {
         checkSubmissionStatus();
     }, [user]);
 
-    const validateRequiredFields = () => {
-        const errors: string[] = [];
-        if (!form.brideName.trim()) errors.push("Bride name");
-        if (!form.groomName.trim()) errors.push("Groom name");
-        if (!form.weddingDate.trim()) errors.push("Wedding date");
-        if (!form.weddingLocation.trim()) errors.push("Wedding location");
-        if (!form.appName.trim()) errors.push("App name");
-        setErrorMessages(errors);
-        return errors;
-    };
-
     const handleGenerateApp = async () => {
         if (!user) return false;
-        const errors = validateRequiredFields();
+        const errors = validateRequiredFields(form, setErrorMessages);
         if (errors.length > 0) {
             setShowErrorModal(true);
             return false;
@@ -167,7 +156,7 @@ export default function Preview({ form, goBack }: Props) {
 
                 <div className="flex flex-col items-center gap-4 pb-12">
                     <h2 className="text-2xl font-semibold text-black">{form.appName}</h2>
-                    <Button className="w-[200px] bg-pink-400 text-black font-bold" onClick={() => setShowConfirmModal(true)} disabled={isSubmitted}>
+                    <Button className="w-[200px] bg-pink-400 text-white font-bold" onClick={() => setShowConfirmModal(true)} disabled={isSubmitted}>
                         {isSubmitted ? "Submitted" : "Build My App"}
                     </Button>
                     <Button variant="outline" className="w-[200px] font-bold" onClick={goBack}>

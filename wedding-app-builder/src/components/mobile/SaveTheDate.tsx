@@ -64,96 +64,190 @@ const SaveTheDate: React.FC<SaveTheDateProps> = ({
     ];
 
     return (
-        <div className="max-w-xxl space-y-8 text-[#E4D7DE]">
+        <div className="max-w-6xl space-y-8 text-[#E4D7DE]">
             <h2 className="text-2xl font-semibold text-pink-400">Home Page</h2>
-            <div>
-                <h2 className="text-2xl font-semibold text-black">Save the Date</h2>
-                <div>
-                    <Label className="text-black pb-6 pt-6 font-bold text-lg">
-                        Upload an Image
-                    </Label>
-                    <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
-                        className="bg-beige text-black border border-pink-300"
-                        disabled={isSubmitted}
-                    />
-                    {form.saveTheDateImage && (
-                        <div className="mt-4">
-                            <p className="text-black font-medium">Current Image:</p>
-                            <img
-                                src={URL.createObjectURL(form.saveTheDateImage)}
-                                alt="Selected"
-                                className="w-48 h-auto rounded border mt-2"
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                {/* Left Column */}
+                <div className="space-y-8">
+                    {/* Save the Date Upload */}
+                    <div>
+                        <h2 className="text-2xl font-semibold text-black">Save the Date</h2>
+                        <Label className="text-black pb-6 pt-6 font-bold text-lg">Upload an Image</Label>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
+                            className="bg-beige text-black border border-pink-300 w-full"
+                            disabled={isSubmitted}
+                        />
+                        {form.saveTheDateImage && (
+                            <div className="mt-4">
+                                <p className="text-black font-medium">Current Image:</p>
+                                <img
+                                    src={URL.createObjectURL(form.saveTheDateImage)}
+                                    alt="Selected"
+                                    className="w-48 h-auto rounded border mt-2"
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Enable Countdown Button */}
+                    <div>
+                        <Label className="text-black font-semibold text-lg">Optional Home Screen Feature</Label>
+                        <div className="flex flex-wrap gap-4 pt-6">
+                            {screenToggles.map(({ label, field, tooltip }) => (
+                                <div key={field} className="relative group">
+                                    <Button
+                                        className={`px-4 py-2 rounded-full border text-sm font-bold transition ${form[field]
+                                            ? "bg-pink-400 text-white border-white"
+                                            : "bg-transparent text-black border-[#6B5A7A] hover:border-white"
+                                            }`}
+                                        onClick={() => handleToggle(field)}
+                                        disabled={isSubmitted}
+                                    >
+                                        {label}
+                                    </Button>
+                                    <div className="absolute z-10 hidden group-hover:block w-32 p-2 bg-gray-500 text-white text-xs rounded shadow-lg top-full left-1/2 -translate-x-1/2 mt-1 text-center">
+                                        {tooltip}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-8 py-8">
+                    {/* RSVP Google Sheet */}
+                    {form.enableRSVP && (
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <Label className="text-black font-bold text-lg pb-6 pt-6">RSVP Google Sheet Link</Label>
+                                <div className="relative group cursor-pointer">
+                                    <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
+                                    <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
+                                        Paste a link to your RSVP Google Sheet. Make sure it's set to “Anyone with the link can view”.
+                                    </div>
+                                </div>
+                            </div>
+                            <Input
+                                value={form.rsvpSheetUrl}
+                                onChange={(e) => handleChange("rsvpSheetUrl", e.target.value)}
+                                className="bg-beige text-black border border-pink-300 px-4 py-2 w-full"
+                                disabled={isSubmitted}
                             />
                         </div>
                     )}
-                </div>
-                <div className="flex flex-wrap gap-4 py-6">
-                    {screenToggles.map(({ label, field, tooltip }) => (
-                        <div key={field} className="relative group">
-                            <Button
-                                className={`px-4 py-2 rounded-full border text-sm font-bold transition 
-      ${form[field]
-                                        ? "bg-pink-400 text-white border-white"
-                                        : "bg-transparent text-black border-[#6B5A7A] hover:border-white"}`}
-                                onClick={() => handleToggle(field)}
-                                disabled={isSubmitted}
-                            >
-                                {label}
-                            </Button>
 
-                            <div className="absolute z-10 hidden group-hover:block w-32 p-2 bg-gray-500 text-white text-xs rounded shadow-lg top-full left-1/2 -translate-x-1/2 mt-1 whitespace-normal text-center">
-                                {tooltip}
-                            </div>
-                        </div>
-
-                    ))}
+                    {/* Gallery Google Drive */}
+                    {form.enableGallery && (
+                        <Gallery form={form} setForm={setForm} />
+                    )}
                 </div>
             </div>
-            <div>
-                {form.enableRSVP && (
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <Label className="text-black font-bold text-lg pb-6 pt-6">RSVP Google Sheet Link</Label>
-                            <div className="relative group cursor-pointer">
-                                <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
-                                <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
-                                    Paste a link to your RSVP Google Sheet. Make sure it's set to “Anyone with the link can view” so your app can access it.
-                                </div>
-                            </div>
-                        </div>
 
-                        <Input
-                            value={form.rsvpSheetUrl}
-                            onChange={(e) => handleChange("rsvpSheetUrl", e.target.value)}
-                            className="w-full bg-beige text-black border border-pink-300 px-4 py-2"
-                            disabled={isSubmitted}
-                        />
-                    </div>
-                )}
-
-                {form.enableGallery && (
-                    <Gallery form={form} setForm={setForm} />
-                )}
-            </div>
-
-            <div>
-                {form.enableStory && (
+            {/* Our Story below both columns */}
+            {form.enableStory && (
+                <div>
                     <OurStory form={form} setForm={setForm} />
-                )}
-            </div>
+                </div>
+            )}
 
-            <div className="flex justify-start gap-4 pt-12 pb-4">
-                <Button variant="outline" onClick={goBack} className="text-black font-bold">
-                    Back
-                </Button>
-                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>
-                    Next
-                </Button>
+            {/* Navigation Buttons */}
+            <div className="flex justify-start gap-4 pt-6 pb-4">
+                <Button variant="outline" onClick={goBack} className="text-black font-bold">Back</Button>
+                <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
             </div>
         </div>
+
+        // <div className="max-w-6xl space-y-8 text-[#E4D7DE]">
+        //     <h2 className="text-2xl font-semibold text-pink-400">Home Page</h2>
+
+        //     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        //         {/* Left Column */}
+        //         <div className="space-y-8">
+        //             <div>
+        //                 <h2 className="text-2xl font-semibold text-black">Save the Date</h2>
+        //                 <Label className="text-black pb-6 pt-6 font-bold text-lg">Upload an Image</Label>
+        //                 <Input
+        //                     type="file"
+        //                     accept="image/*"
+        //                     onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
+        //                     className="bg-beige text-black border border-pink-300 w-full"
+        //                     disabled={isSubmitted}
+        //                 />
+        //                 {form.saveTheDateImage && (
+        //                     <div className="mt-4">
+        //                         <p className="text-black font-medium">Current Image:</p>
+        //                         <img
+        //                             src={URL.createObjectURL(form.saveTheDateImage)}
+        //                             alt="Selected"
+        //                             className="w-48 h-auto rounded border mt-2"
+        //                         />
+        //                     </div>
+        //                 )}
+        //             </div>
+
+        //             <Label className="text-black font-semibold text-lg">
+        //                 Optional Home Screen Feature
+        //             </Label>
+        //             <div className="flex flex-wrap gap-4 s">
+        //                 {screenToggles.map(({ label, field, tooltip }) => (
+        //                     <div key={field} className="relative group">
+        //                         <Button
+        //                             className={`px-4 py-2 rounded-full border text-sm font-bold transition ${form[field]
+        //                                 ? "bg-pink-400 text-white border-white"
+        //                                 : "bg-transparent text-black border-[#6B5A7A] hover:border-white"
+        //                                 }`}
+        //                             onClick={() => handleToggle(field)}
+        //                             disabled={isSubmitted}
+        //                         >
+        //                             {label}
+        //                         </Button>
+        //                         <div className="absolute z-10 hidden group-hover:block w-32 p-2 bg-gray-500 text-white text-xs rounded shadow-lg top-full left-1/2 -translate-x-1/2 mt-1 text-center">
+        //                             {tooltip}
+        //                         </div>
+        //                     </div>
+        //                 ))}
+        //             </div>
+
+        //             {form.enableStory && <OurStory form={form} setForm={setForm} />}
+
+        //         </div>
+
+        //         {/* Right Column */}
+        //         <div className="space-y-12 py-8">
+        //             {form.enableRSVP && (
+        //                 <div>
+        //                     <div className="flex items-center gap-2">
+        //                         <Label className="text-black font-bold text-lg pb-6 pt-6">RSVP Google Sheet Link</Label>
+        //                         <div className="relative group cursor-pointer">
+        //                             <span className="text-white bg-gray-500 rounded-full px-2 text-xs font-bold">?</span>
+        //                             <div className="absolute z-10 hidden group-hover:block w-64 p-2 bg-black text-white text-sm rounded shadow-lg top-full mt-1">
+        //                                 Paste a link to your RSVP Google Sheet. Make sure it's set to “Anyone with the link can view”.
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                     <Input
+        //                         value={form.rsvpSheetUrl}
+        //                         onChange={(e) => handleChange("rsvpSheetUrl", e.target.value)}
+        //                         className="bg-beige text-black border border-pink-300 px-4 py-2 w-full"
+        //                         disabled={isSubmitted}
+        //                     />
+        //                 </div>
+        //             )}
+        //             {form.enableGallery && <Gallery form={form} setForm={setForm} />}
+        //         </div>
+        //     </div>
+
+        //     <div className="flex justify-start gap-4 pt-12 pb-4">
+        //         <Button variant="outline" onClick={goBack} className="text-black font-bold">Back</Button>
+        //         <Button className="bg-pink-400 text-white font-bold" onClick={goNext}>Next</Button>
+        //     </div>
+        // </div>
+
     );
 };
 
