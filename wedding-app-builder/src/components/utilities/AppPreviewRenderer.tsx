@@ -153,10 +153,12 @@ export default function AppPreviewRenderer({ form, activeTab, setActiveTab }: Pr
             return (
                 <div className="text-sm space-y-2 text-left" style={sectionStyle}>
                     <h2 className="text-xl font-bold">Our Story</h2>
-                    {form.storyParagraphs.length > 0 ? (
-                        form.storyParagraphs.map((p, i) => <p key={i}>{p}</p>)
+                    {form.storySections && form.storySections.length > 0 ? (
+                        form.storySections.map((section, i) => (
+                            <p key={i}>{section.paragraph}</p>
+                        ))
                     ) : (
-                        <p>No story added.</p>
+                        <p>No story added yet.</p>
                     )}
                 </div>
             );
